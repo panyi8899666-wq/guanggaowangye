@@ -1370,7 +1370,7 @@
 
     /* One stable mascot placement, inside the about story. */
     .mascot.section-mascot{display:none!important}
-    .about-portrait{min-height:520px;display:grid;place-items:end center;padding:28px 28px 0;background:url("assets/img-001.png") center bottom/contain no-repeat,linear-gradient(155deg,#1b1916,#0e0e10 68%);overflow:hidden}
+    .about-portrait{min-height:520px;display:grid;place-items:end center;padding:28px 28px 0;background:url("assets/img-000.png") center bottom/contain no-repeat,linear-gradient(155deg,#1b1916,#0e0e10 68%);overflow:hidden}
     .about-portrait>img{display:none}
     .about-portrait figcaption{z-index:2;background:linear-gradient(180deg,transparent,rgba(13,13,15,.92));padding:28px 0 0}
     .about-principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:54px;border:1px solid var(--line)}
@@ -1466,6 +1466,19 @@
     .consult-head-avatar{width:44px;height:44px}.consult-head-avatar img{width:100%;height:100%;object-fit:contain;object-position:center 2px}
     .consult-head-copy{flex:1}.consult-head-copy strong{margin:0;font-size:16px;font-weight:400;letter-spacing:.03em}.consult-head-copy span{display:flex;align-items:center;gap:6px;margin-top:6px;color:#969189;font:400 9px/1.2 var(--display);letter-spacing:.04em}.consult-head-copy span i{width:6px;height:6px;border-radius:50%;background:#7d9662;box-shadow:0 0 0 3px rgba(125,150,98,.1)}
     .consult-close{width:38px;height:38px;flex-basis:38px;border:0;color:#aaa59d;font-size:23px}.consult-close:hover,.consult-close:focus-visible{background:#28251f;color:var(--accent)}
+    .consult-minimize{width:38px;height:38px;flex:0 0 38px;border:0;background:transparent;color:#aaa59d;font-size:20px;line-height:1;transition:background .2s,color .2s}.consult-minimize:hover,.consult-minimize:focus-visible{background:#28251f;color:var(--accent)}
+    /* 2026-10-16: minimized state collapses the dialog to its header bar; click the header to restore. */
+    .consult-shell.minimized .consult-dialog{height:auto!important;min-height:0}
+    .consult-shell.minimized .consult-progress,.consult-shell.minimized .consult-body,.consult-shell.minimized .consult-composer{display:none!important}
+    .consult-shell.minimized .consult-head{cursor:pointer;border-bottom:0}
+    .consult-contact{width:min(330px,88%);margin:12px 0 0 43px;padding:14px 15px;background:#171719;border:1px solid #514a3e;border-radius:3px}
+    .consult-contact h4{margin:0 0 6px;font-size:13px;font-weight:400;letter-spacing:.04em;color:#eceae4}
+    .consult-contact p{margin:0 0 4px;font-size:11px;line-height:1.7;color:#969189}
+    .consult-contact-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid #2c2a28}
+    .consult-contact-row a{color:#d8c493;font-size:12px;word-break:break-all;text-decoration:none}
+    .consult-contact-row a:hover{text-decoration:underline}
+    .consult-contact-copy{min-height:34px;flex:0 0 auto;padding:6px 12px;border:1px solid #5d5341;border-radius:3px;background:#151513;color:#d8d3c9;font-size:11px;cursor:pointer}
+    .consult-contact-copy:hover,.consult-contact-copy:focus-visible{border-color:var(--accent);color:#fff}
     .consult-progress{padding:0;background:#111113;border-bottom-color:#29292c}.consult-progress-meta{padding:8px 16px;color:#77736c;font-size:8px;letter-spacing:.09em}.consult-progress-meta strong{color:#99958d}.consult-progress-track{height:1px;margin:0;background:#2b2a2d}.consult-progress-track i{width:0}
     .consult-body{padding:18px 15px 22px;background:radial-gradient(circle at 16% 8%,rgba(198,161,91,.04),transparent 24%),#101012}
     .consult-thread{gap:16px}.consult-turn{display:grid;grid-template-columns:34px minmax(0,1fr);column-gap:9px;align-items:start}.consult-turn.user{display:flex;align-items:flex-end}.consult-avatar{grid-column:1;width:34px;height:34px}.consult-avatar img{width:100%;height:100%;object-fit:contain}.consult-message-wrap{grid-column:2;min-width:0}.consult-role{display:block;margin:0 0 6px;color:#77736c;font:400 8px/1 var(--display);letter-spacing:.06em}.consult-bubble{position:relative;width:max-content;max-width:min(310px,88%);padding:10px 12px;border:1px solid #3c3934;background:#1b1b1d;border-radius:2px 12px 12px 12px;font-size:13px;line-height:1.65}.consult-bubble:before{content:"";position:absolute;left:-6px;top:10px;width:10px;height:10px;background:#1b1b1d;border-left:1px solid #3c3934;border-bottom:1px solid #3c3934;transform:rotate(45deg)}
@@ -1475,13 +1488,13 @@
     .consult-input-row{display:grid;grid-template-columns:minmax(0,1fr) 58px;gap:8px;align-items:end;min-width:0}.consult-composer textarea.consult-field{width:100%;min-width:0;min-height:43px;height:43px;max-height:100px;padding:10px 12px;border:1px solid #454248;border-radius:4px;background:#0d0d0f;font-size:13px;line-height:1.55;resize:none}.consult-send{width:58px;min-width:0;height:43px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:#111;font-size:12px;font-weight:400;}.consult-send:hover,.consult-send:focus-visible{background:#dbc18c;border-color:#dbc18c}.consult-send:disabled,.consult-field:disabled{opacity:.42;}.consult-validation{min-height:0;margin:6px 0 -2px;font-size:10px}.consult-validation:empty{display:none}
     .consult-summary{width:min(330px,88%);margin:0;padding:15px;background:#171719;border-color:#514a3e}.consult-summary h3{font-size:14px}.consult-summary div{grid-template-columns:72px minmax(0,1fr);padding:7px 0}.consult-summary-note{font-size:10px}.consult-finish-actions{width:min(330px,88%);margin:9px 0 0 43px}.consult-finish-actions .consult-action,.consult-restart{min-height:42px;border-radius:3px;padding:8px 10px}.consult-finish-actions .consult-action{font-size:11px}.consult-restart{width:min(330px,88%);margin:8px 0 0 43px}
     @media(max-width:620px){
-      .consult-fab{min-width:154px;min-height:54px}.consult-dialog{height:min(92dvh,760px);max-height:calc(100svh - 6px)}.consult-head{min-height:68px;padding:11px 14px}.consult-head-avatar{width:40px;height:40px}.consult-progress-meta{padding-inline:14px}.consult-body{padding:16px 12px 20px}.consult-composer{padding-inline:12px}.consult-bubble{max-width:min(290px,84vw)}.consult-options{margin-right:-12px;padding-right:12px}.consult-finish-actions,.consult-restart{margin-left:43px;width:calc(100% - 43px)}
+      .consult-fab{min-width:154px;min-height:54px}.consult-dialog{height:min(92dvh,760px);max-height:calc(100svh - 6px)}.consult-head{min-height:68px;padding:11px 14px}.consult-head-avatar{width:40px;height:40px}.consult-progress-meta{padding-inline:14px}.consult-body{padding:16px 12px 20px}.consult-composer{padding-inline:12px}.consult-bubble{max-width:min(290px,84vw)}.consult-options{margin-right:-12px;padding-right:12px}.consult-finish-actions,.consult-restart,.consult-contact{margin-left:43px;width:calc(100% - 43px)}
     }
     @media(max-width:380px){.consult-options{display:flex}.consult-fab{min-width:146px}.consult-summary div{grid-template-columns:68px minmax(0,1fr)}}
     @media(prefers-reduced-motion:reduce){.consult-typing-dot{animation:none;opacity:.7}}
 
     /* Keep the mascot fully inside its frame with a deliberate breathing edge. */
-    .about-portrait{background-image:url("assets/img-001.png"),linear-gradient(155deg,#1b1916,#0e0e10 68%);background-size:auto calc(100% - 50px),cover;background-position:center 16px,center;background-repeat:no-repeat;overflow:hidden}
+    .about-portrait{background-image:url("assets/img-000.png"),linear-gradient(155deg,#1b1916,#0e0e10 68%);background-size:auto calc(100% - 50px),cover;background-position:center 16px,center;background-repeat:no-repeat;overflow:hidden}
     @media(max-width:520px){.about-portrait{background-size:auto calc(100% - 42px),cover;background-position:center 12px,center}}
 
     /* Contact proportion refinement: compact information, equal QR codes. */
@@ -1562,7 +1575,7 @@
       display:block;
       padding:0;
       overflow:hidden;
-      background-image:url("assets/img-001.png"),linear-gradient(155deg,#1b1916,#0e0e10 68%)!important;
+      background-image:url("assets/img-000.png"),linear-gradient(155deg,#1b1916,#0e0e10 68%)!important;
       background-size:auto calc(100% - 64px),cover!important;
       background-position:center 16px,center!important;
       background-repeat:no-repeat!important;
@@ -2016,7 +2029,7 @@
     .footer-meta{font-size:8px!important}.footer-seal{opacity:.68}
 
     /* All true controls use one moderate radius: neither sharp nor pill-like. */
-    :is(.filter,.cta,.consult-pill,.consult-fab,.consult-close,.consult-send,.hero-actions>a,.process-tab,.process-jump,.step-trigger,.modal-close,.copy-btn,.copy-email,.explode-reset,.production-quote a,.chat-choice,.chat-close,.chat-minimize){border-radius:8px!important}
+    :is(.filter,.cta,.consult-pill,.consult-fab,.consult-close,.consult-minimize,.consult-send,.hero-actions>a,.process-tab,.process-jump,.step-trigger,.modal-close,.copy-btn,.copy-email,.explode-reset,.production-quote a,.chat-choice,.chat-close,.chat-minimize){border-radius:8px!important}
     body.hero-ready :is(.topline .consult-pill,.consult-fab,.consult-close,.consult-send,.contact-actions .cta,.filterbar .filter,.process-jump,.step-trigger,.modal-close,.copy-email,.explode-reset){border-radius:8px!important}
 
     @media(max-width:820px),(pointer:coarse){
@@ -2229,6 +2242,8 @@
         0 1px 0 rgba(255,255,255,.08),0 10px 24px rgba(0,0,0,.28)!important;
       text-shadow:0 1px 8px rgba(0,0,0,.7);transform:translateZ(0);
     }
+    /* 2026-10-16: the illustrated-button pass must not unpin the floating consult FAB. */
+    .hero-ready .consult-fab{position:fixed!important}
     .hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.production-quote a)::before{
       content:"";position:absolute;z-index:3;left:11px;top:50%;width:38px;height:38px;transform:translateY(-50%);
       border-radius:50%;background:linear-gradient(145deg,#efd9a5,#ad884a);box-shadow:inset 2px 2px 4px rgba(255,255,255,.45),inset -3px -4px 5px rgba(64,40,12,.35),0 4px 7px rgba(0,0,0,.38);
@@ -2381,13 +2396,13 @@
       box-shadow:inset 0 3px 4px rgba(255,255,255,.13),inset 0 -7px 11px rgba(0,0,0,.58),0 1px 0 rgba(255,255,255,.07),0 10px 24px rgba(0,0,0,.32)!important;
     }
     .hero-ready :is(.filterbar .filter,.copy-email,.consult-send),
-    :is(.process-jump,.consult-option,.consult-action,.consult-back,.consult-restart,.consult-close,.modal-close,.explode-reset,.detail-pill,.case-end button){
+    :is(.process-jump,.consult-option,.consult-action,.consult-back,.consult-restart,.consult-close,.consult-minimize,.modal-close,.explode-reset,.detail-pill,.case-end button){
       color:#e7e4dd!important;border-color:#4b4a4e!important;background:linear-gradient(145deg,#242427,#101012)!important;
       box-shadow:inset 0 1px 2px rgba(255,255,255,.08),inset 0 -3px 6px rgba(0,0,0,.38),0 4px 10px rgba(0,0,0,.18);
     }
     .hero-ready .filterbar .filter.active,
     :is(.process-jump.is-current,.detail-pill.active),
-    :is(.process-jump,.consult-option,.consult-action,.consult-back,.consult-restart,.consult-close,.modal-close,.explode-reset,.detail-pill,.case-end button):hover,
+    :is(.process-jump,.consult-option,.consult-action,.consult-back,.consult-restart,.consult-close,.consult-minimize,.modal-close,.explode-reset,.detail-pill,.case-end button):hover,
     .hero-ready :is(.filterbar .filter,.copy-email,.consult-send):hover{
       color:#fff!important;border-color:#737277!important;background:linear-gradient(145deg,#3a3a3f,#18181b)!important;
     }
@@ -2485,7 +2500,7 @@
     #services .capabilities-note span{display:block;color:rgba(198,161,91,.78);font:400 9px/1.55 var(--mono);letter-spacing:.14em;text-transform:uppercase}
     #services .capabilities-note p{margin:12px 0 0;color:rgba(236,234,228,.54);font:400 11px/1.75 var(--mono);letter-spacing:.045em}
     #services{position:relative;isolation:isolate;overflow:hidden}
-    #services:before{content:"";position:absolute;z-index:-2;inset:-24px;background:url("assets/img-002.png") center/cover no-repeat;filter:blur(8px) grayscale(.55) brightness(.25);transform:scale(1.06);opacity:.78}
+    #services:before{content:"";position:absolute;z-index:-2;inset:-24px;background:url("assets/img-001.png") center/cover no-repeat;filter:blur(8px) grayscale(.55) brightness(.25);transform:scale(1.06);opacity:.78}
     #services:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,rgba(17,17,19,.97) 0 58%,rgba(17,17,19,.78)),linear-gradient(180deg,rgba(17,17,19,.62),rgba(17,17,19,.94))}
     #services .section-head.capabilities-head{grid-template-columns:minmax(0,1.72fr) minmax(220px,.28fr)!important;gap:clamp(38px,6vw,88px)}
     #services .capabilities-main{width:100%;max-width:900px}#services .capabilities-head h2{max-width:17ch!important;font-size:clamp(40px,5.6vw,74px);line-height:1.16}#services .capabilities-head p{max-width:48em}
@@ -2499,7 +2514,7 @@
 
     /* Process: a two-column introduction and four-button disclosure over contextual working imagery. */
     .process-section{position:relative;padding-block:clamp(78px,9vw,124px);isolation:isolate}
-    .process-section:before{content:"";position:absolute;z-index:-2;inset:0 calc((100vw - 100%)/-2);background:url("assets/img-003.png") center/cover no-repeat;filter:blur(8px) grayscale(.62) brightness(.22);transform:scale(1.04)}
+    .process-section:before{content:"";position:absolute;z-index:-2;inset:0 calc((100vw - 100%)/-2);background:url("assets/img-002.png") center/cover no-repeat;filter:blur(8px) grayscale(.62) brightness(.22);transform:scale(1.04)}
     .process-section:after{content:"";position:absolute;z-index:-1;inset:0 calc((100vw - 100%)/-2);background:linear-gradient(90deg,rgba(13,13,15,.97),rgba(13,13,15,.76) 48%,rgba(13,13,15,.9)),linear-gradient(180deg,rgba(13,13,15,.52),rgba(13,13,15,.95))}
     .process-layout{display:grid;grid-template-columns:minmax(270px,.78fr) minmax(0,1.22fr);gap:clamp(42px,7vw,110px);align-items:start}
     .process-section .section-head{position:sticky;top:92px;display:block!important;margin:0;padding-top:0;border:0}.process-section .section-head h2{max-width:9ch}.process-section .section-head p{max-width:30em}
@@ -2511,7 +2526,7 @@
     .process-grid .step{grid-area:1/1;min-height:0;max-height:0;padding:0 30px;border:0;border-radius:0!important;background:rgba(12,12,14,.22);opacity:0;visibility:hidden;overflow:hidden;transform:translateY(12px)!important;transition:max-height .62s cubic-bezier(.16,1,.3,1),padding .48s ease,opacity .32s ease,transform .52s cubic-bezier(.16,1,.3,1),visibility .52s;pointer-events:none;isolation:isolate}
     .process-grid .step:after{content:"";position:absolute;z-index:-2;inset:0;background-position:center;background-size:cover;filter:blur(6px) grayscale(.52) brightness(.32);transform:scale(1.035)}
     .process-grid .step:before{content:"";position:absolute;z-index:-1;inset:0;width:auto;height:auto;border:0;transform:none;background:linear-gradient(90deg,rgba(11,11,13,.94),rgba(11,11,13,.72));box-shadow:none}
-    #process-step-1:after{background-image:url("assets/img-004.png")}#process-step-2:after{background-image:url("assets/img-005.png")}#process-step-3:after{background-image:url("assets/img-006.png")}#process-step-4:after{background-image:url("assets/img-007.png")}
+    #process-step-1:after{background-image:url("assets/img-003.png")}#process-step-2:after{background-image:url("assets/img-004.png")}#process-step-3:after{background-image:url("assets/img-005.png")}#process-step-4:after{background-image:url("assets/img-006.png")}
     .process-grid .step.is-open{max-height:900px;padding:34px 30px 30px;opacity:1;visibility:visible;transform:none!important;pointer-events:auto}
     .step-content{position:relative}.process-grid .step-num{margin:0 0 22px;color:var(--accent);letter-spacing:.14em}.process-grid .step h3{margin:0;font-size:clamp(29px,3vw,42px)}.process-grid .step-lead{max-width:610px;margin-top:16px}.process-grid .step-details{margin-top:24px}.process-grid .step-time{margin-top:18px}
 
@@ -2941,6 +2956,14 @@
     #services .capabilities-note li{counter-increment:cap-step;display:grid;grid-template-columns:24px 1fr;align-items:center;gap:10px;color:rgba(236,234,228,.48);font:400 8px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase}
     #services .capabilities-note li:before{content:"0" counter(cap-step);color:rgba(198,161,91,.8);font-size:7px}
     #services .capabilities-note li:after{content:"";height:1px;background:linear-gradient(90deg,rgba(198,161,91,.55),transparent)}
+    /* 2026-10-16: Think / Shape / Deliver each carries a full Chinese title + description. */
+    #services .capabilities-note .capability-steps{display:grid;gap:0;margin:22px 0 0!important;padding:0;list-style:none;counter-reset:none}
+    #services .capabilities-note .capability-steps li{display:block;padding:14px 0 16px;border-top:1px solid rgba(198,161,91,.28);counter-increment:none}
+    #services .capabilities-note .capability-steps li:before{content:none!important}
+    #services .capabilities-note .capability-steps li:after{content:none!important}
+    #services .capabilities-note .capability-steps b{display:block;color:rgba(198,161,91,.85);font:400 9px/1.5 var(--mono);letter-spacing:.18em;text-transform:uppercase}
+    #services .capabilities-note .capability-steps strong{display:block;margin:9px 0 7px;color:#eceae4;font-size:17px;font-weight:400;letter-spacing:.04em;line-height:1.4}
+    #services .capabilities-note .capability-steps p{margin:0!important;font-size:12.5px!important;line-height:1.8!important;letter-spacing:.03em!important;color:rgba(236,234,228,.62)!important;text-transform:none!important}
     @media(max-width:820px){
       .hero-afterword h2{font-size:clamp(30px,8.7vw,42px)!important;padding-inline:8px;letter-spacing:-.05em!important}
       .memory-line-one,.memory-line-two{transform:none}.memory-line-two{margin-top:.2em}
@@ -3125,7 +3148,7 @@
     .hero-ready .hero.wrap{isolation:isolate}
     .hero-ready .hero.wrap:before{
       content:"";position:absolute;z-index:-2;right:-8vw;top:4%;width:min(48vw,680px);height:min(52vw,700px);
-      background:url("assets/img-003.png") center/cover no-repeat;
+      background:url("assets/img-002.png") center/cover no-repeat;
       opacity:.12;filter:blur(10px) saturate(.7) brightness(.55);transform:scale(1.08);
       -webkit-mask-image:radial-gradient(ellipse at 56% 42%,#000 0 28%,rgba(0,0,0,.76) 48%,transparent 76%);mask-image:radial-gradient(ellipse at 56% 42%,#000 0 28%,rgba(0,0,0,.76) 48%,transparent 76%)
     }
@@ -3306,13 +3329,13 @@
     .availability-status:before{background:#c6a15b!important;box-shadow:0 0 0 6px rgba(198,161,91,.08)!important}
     .hero-eyebrow,.filter-status strong{color:#c6a15b!important}.hero-title-sweep:after{background:linear-gradient(90deg,transparent,rgba(198,161,91,.42),transparent)!important}
 
-    /* Category surfaces now breathe: slow, shallow, eased motion with no full revolution. */
-    .category-orbit-object,.ribbon-orbit-object{animation:categoryBreathe 13.5s ease-in-out infinite alternate!important;transform-origin:50% 55%}
-    .hero-ribbon-card .ribbon-orbit-object{animation-duration:15.5s!important}
+    /* Category surfaces breathe: slow, shallow, eased sway with no full revolution (18s / 20s cycle). */
+    .category-orbit-object,.ribbon-orbit-object{animation:categoryBreathe 18s ease-in-out infinite alternate!important;transform-origin:50% 55%}
+    .hero-ribbon-card .ribbon-orbit-object{animation-duration:20s!important}
     @keyframes categoryBreathe{
-      0%{transform:perspective(1200px) rotateX(1.5deg) rotateY(-16deg) translate3d(0,4px,0) scale(.97)}
-      48%{transform:perspective(1200px) rotateX(-1.5deg) rotateY(0deg) translate3d(0,-7px,10px) scale(1.03)}
-      100%{transform:perspective(1200px) rotateX(1deg) rotateY(16deg) translate3d(0,2px,0) scale(.985)}
+      0%{transform:perspective(1200px) rotateX(1deg) rotateY(-12deg) translate3d(0,8px,0) scale(.98)}
+      50%{transform:perspective(1200px) rotateX(-1deg) rotateY(0deg) translate3d(0,-8px,6px) scale(1.02)}
+      100%{transform:perspective(1200px) rotateX(1deg) rotateY(12deg) translate3d(0,8px,0) scale(.99)}
     }
 
     /* Case detail: black data-led opening, one large factual number, compact copy and a centred product image. */
@@ -3521,13 +3544,99 @@
       font-weight:700!important;
     }
 
+    /* 2026-10-16 measured bilingual CTA system: English expands to the live Chinese label width. */
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open){
+      position:relative;
+      display:inline-flex!important;
+      flex:0 0 auto!important;
+      width:fit-content!important;
+      min-width:0!important;
+      max-width:100%!important;
+      min-height:44px!important;
+      height:auto!important;
+      padding:15px 30px!important;
+      flex-direction:column!important;
+      align-items:center!important;
+      justify-content:center!important;
+      gap:4px!important;
+      text-align:center!important;
+      border:1px solid rgba(198,161,91,.72)!important;
+      border-radius:999px!important;
+      background:linear-gradient(180deg,#171719 0%,#0D0D0F 58%,#080809 100%)!important;
+      color:#ECEAE4!important;
+      box-shadow:inset 0 2px 2px rgba(236,234,228,.10),inset 0 -6px 12px rgba(0,0,0,.82),0 7px 0 #080809,0 13px 24px rgba(0,0,0,.42)!important;
+      text-shadow:0 1px 0 #000!important;
+      clip-path:none!important;
+      overflow:visible!important;
+      box-sizing:border-box!important;
+    }
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>span,
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>small{
+      display:block!important;
+      width:auto;
+      max-width:none!important;
+      margin:0!important;
+      padding:0!important;
+      line-height:1.2!important;
+      white-space:nowrap!important;
+      text-align:center!important;
+      text-align-last:center!important;
+      transform:none!important;
+      transform-origin:center!important;
+      word-break:keep-all!important;
+    }
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>span{
+      font-size:12px!important;
+      letter-spacing:.08em!important;
+    }
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>small{
+      color:rgba(236,234,228,.58)!important;
+      font-size:7px!important;
+      letter-spacing:var(--measured-english-spacing,.16em)!important;
+    }
+    /* The previous art-direction pass hid VIEW WORK; both hero actions belong in the conversion row. */
+    .hero-ready .hero-actions>a:nth-child(2){display:inline-flex!important}
+    /* Remove retired icon discs and inline arrows so both label lines share one true centre. */
+    body.hero-ready .topline .consult-pill::before,
+    body.hero-ready .topline .consult-pill::after,
+    .hero-actions>a small::after,
+    .contact-actions .cta small::after{content:none!important;display:none!important}
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open):hover{
+      background:linear-gradient(180deg,#201d1d 0%,#111113 58%,#080809 100%)!important;
+      color:#C6A15B!important;
+      border-color:#C6A15B!important;
+      box-shadow:inset 0 2px 3px rgba(236,234,228,.12),inset 0 -5px 11px rgba(0,0,0,.78),0 5px 0 #080809,0 12px 24px rgba(0,0,0,.48)!important;
+      transform:translateY(2px)!important;
+    }
+    :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open):active{
+      transform:translateY(7px)!important;
+      box-shadow:inset 0 6px 12px rgba(0,0,0,.9),inset 0 1px rgba(236,234,228,.06),0 1px 0 #080809!important;
+    }
+    @media(max-width:520px){
+      :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open){min-height:44px!important;padding:15px 28px!important}
+      .hero-ready .hero-actions{width:auto!important;flex-wrap:wrap!important;justify-content:center!important}
+      .hero-ready .hero-actions>a{flex:0 0 auto!important;min-width:0!important}
+      .hero-ready .topline .consult-pill{min-width:0!important}
+    }
+
+    /* 2026-10-17 final aesthetic audit fixes: typography, clean footer, stable service rows. */
+    *{font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Microsoft JhengHei",system-ui,sans-serif!important;}
+    #footerCoords{display:none!important;}
+    body .service-row:hover{padding-left:4px!important;padding-right:4px!important;background-color:rgba(236,234,228,.025)!important;}
+    .service-row>.service-copy{min-width:0!important;}
+    .service-row{grid-template-columns:minmax(0,1fr) auto!important;}
+    @media(max-width:520px){
+      .orbit-message{font-size:11px!important;letter-spacing:.08em!important;white-space:nowrap!important;transform:scale(.92)!important;transform-origin:center!important;}
+      .hero-ribbon-card .art-orbit .orbit-message{left:10%!important;right:0!important;}
+    }
+
 </style>
 </head>
 <body class="hero-ready">
   <div class="grainient" aria-hidden="true"></div>
   <div class="image-trail" id="imageTrail" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
-  <div class="mascot-3d mascot-sprite-2d" id="mascot3d" aria-hidden="true"><img id="mascotSpriteImage" src="assets/img-001.png" alt=""></div>
+  <div class="mascot-3d mascot-sprite-2d" id="mascot3d" aria-hidden="true"><img id="mascotSpriteImage" src="assets/img-000.png" alt=""></div>
   <header class="topline">
     <span class="availability-status">当前开放包月咨询 · 工作日集中回复</span>
     <a class="menu-mark" href="#work" aria-label="查看全部案例"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7h14"/><path d="M3 13h14"/></svg></a>
@@ -3561,7 +3670,7 @@
             </div>
           </div>
         </div>
-        <img class="hero-art" src="assets/img-001.png" alt="正鑫越文化传播个人工作室 Q 版人物挥手形象" />
+        <img class="hero-art" src="assets/img-000.png" alt="正鑫越文化传播个人工作室 Q 版人物挥手形象" />
       </div>
       <aside class="hero-aside"><span>ZHENGXINYUE CULTURE STUDIO</span><b>品牌视觉 · 广告画面 · 包装 · 空间应用</b></aside>
       <a class="scroll-mark" href="#work" aria-label="向下查看精选案例"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 4v18M7 15l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></a>
@@ -3573,10 +3682,10 @@
       <span class="vertical-index" aria-hidden="true">精选案例 · 作品索引</span>
       <div class="work-scene-banner">
         <div class="work-scene-media" aria-hidden="true">
+          <figure><img src="assets/img-007.webp" alt="" /></figure>
           <figure><img src="assets/img-008.webp" alt="" /></figure>
           <figure><img src="assets/img-009.webp" alt="" /></figure>
           <figure><img src="assets/img-010.webp" alt="" /></figure>
-          <figure><img src="assets/img-011.webp" alt="" /></figure>
         </div>
         <span class="work-scene-number" aria-hidden="true">01</span>
         <div class="work-scene-inner">
@@ -3587,48 +3696,48 @@
       <div class="filterbar reveal" role="group" aria-label="按产出类型筛选作品"><button class="filter active" type="button" data-filter="featured" aria-pressed="true">精选案例</button><button class="filter" type="button" data-filter="brand" aria-pressed="false">品牌视觉</button><button class="filter" type="button" data-filter="ad" aria-pressed="false">广告视觉</button><button class="filter" type="button" data-filter="packaging" aria-pressed="false">包装设计</button><button class="filter" type="button" data-filter="spatial" aria-pressed="false">空间导视</button></div>
       <p class="filter-status" id="filterStatus" aria-live="polite">当前显示：<strong>精选案例</strong></p>
       <div class="work-grid">
-        <button class="project reveal product-render-card" data-category="campaign graphic packaging threed" data-case="pulse"><span class="sample-tag">01 · 产品级 3D 渲染 · 概念案例</span><img class="product-render" src="assets/img-008.webp" alt="带真实材质反射、透视与冷凝水珠的气泡水瓶产品级 3D 渲染" /><span class="project-meta"><span><small>BEVERAGE PACKAGING / 3D CGI</small><strong>气泡水包装系统 01</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="campaign graphic" data-case="luma"><span class="sample-tag">02 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-009.webp" alt="LUMA 夜跑计划概念视觉：城市光轨与动态人物" /><span class="project-meta"><span><small>OOH / CAMPAIGN</small><strong>LUMA 夜跑</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="brand packaging" data-case="nova"><span class="sample-tag">03 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-012.webp" alt="咖啡包装系统 03：蓝红几何纸基复合袋" /><span class="project-meta"><span><small>BRANDING / PACKAGING</small><strong>咖啡包装系统 03</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="campaign graphic space" data-case="sway"><span class="sample-tag">04 · 真实客户项目 · 实际交付</span><img src="assets/img-013.webp" alt="新阳街道安全环保主题宣传方案主舞台效果图" /><span class="project-meta"><span><small>PUBLIC CAMPAIGN / EVENT</small><strong>新阳街道安全环保主题宣传</strong></span><i></i></span></button>
+        <button class="project reveal product-render-card" data-category="campaign graphic packaging threed" data-case="pulse"><span class="sample-tag">01 · 产品级 3D 渲染 · 概念案例</span><img class="product-render" src="assets/img-007.webp" alt="带真实材质反射、透视与冷凝水珠的气泡水瓶产品级 3D 渲染" /><span class="project-meta"><span><small>BEVERAGE PACKAGING / 3D CGI</small><strong>气泡水包装系统 01</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="campaign graphic" data-case="luma"><span class="sample-tag">02 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-008.webp" alt="LUMA 夜跑计划概念视觉：城市光轨与动态人物" /><span class="project-meta"><span><small>OOH / CAMPAIGN</small><strong>LUMA 夜跑</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="brand packaging" data-case="nova"><span class="sample-tag">03 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-011.webp" alt="咖啡包装系统 03：蓝红几何纸基复合袋" /><span class="project-meta"><span><small>BRANDING / PACKAGING</small><strong>咖啡包装系统 03</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="campaign graphic space" data-case="sway"><span class="sample-tag">04 · 真实客户项目 · 实际交付</span><img src="assets/img-012.webp" alt="新阳街道安全环保主题宣传方案主舞台效果图" /><span class="project-meta"><span><small>PUBLIC CAMPAIGN / EVENT</small><strong>新阳街道安全环保主题宣传</strong></span><i></i></span></button>
 
         <button class="project reveal" data-category="logo graphic" data-case="orbit"><span class="sample-tag">05 · 概念案例 · 应用场景示意</span><span class="concept-art art-orbit" aria-hidden="true"><span class="orbit-brand">ORBIT<small>音频实验室</small></span><strong class="orbit-message">让每一种声音<br>找到它的空间</strong><span class="orbit-services"><span>品牌声音设计</span><span>播客制作</span><span>广告配乐</span><span>空间音频</span></span><span class="orbit-scene">录音 · 混音 · 声音策略<br>STUDIO / PODCAST / CAMPAIGN</span></span><span class="project-meta"><span><small>AUDIO BRAND / VI</small><strong>ORBIT 音频实验室</strong></span><i></i></span></button>
         <button class="project reveal" data-category="packaging graphic" data-case="moss"><span class="sample-tag">06 · 概念案例 · 应用场景示意</span><span class="concept-art art-moss" aria-hidden="true"><strong class="tea-brand">MOSS 山岚茶事<small>ROASTED TEA SYSTEM</small></strong><span class="tea-cup"></span><span class="tea-tin"></span><span class="tea-sachet"></span><span class="tea-brew"><b>冲泡说明 / BREW GUIDE</b><span>茶叶 5 g · 90°C 热水 250 mL</span><span>浸泡 60–90 秒 · 可续泡 3 次</span><span>阴凉干燥处密封保存</span></span></span><span class="project-meta"><span><small>TEA / PACKAGING SYSTEM</small><strong>MOSS 山岚茶事</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="packaging threed" data-case="aera"><span class="sample-tag">07 · 概念案例 · 应用场景示意</span><img src="assets/img-014.webp" alt="AERA 香氛礼盒 45 度开箱 3D 渲染：香水、藤条香薰与香薰蜡烛固定在 EVA 植绒内托槽位中" /><span class="project-meta"><span><small>SCENT GIFT / PACKAGING</small><strong>AERA 香氛礼盒</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="packaging threed" data-case="kilo"><span class="sample-tag">08 · 六视图 · 真实结构 3D · 场景示意</span><img src="assets/img-015.webp" alt="KILO 潮流鞋盒真实结构 3D 渲染，展示瓦楞厚度、折边、接缝、纸张质感与棚拍阴影" /><span class="project-meta"><span><small>PACKAGING / 3D</small><strong>KILO 潮流鞋盒</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="packaging threed" data-case="aera"><span class="sample-tag">07 · 概念案例 · 应用场景示意</span><img src="assets/img-013.webp" alt="AERA 香氛礼盒 45 度开箱 3D 渲染：香水、藤条香薰与香薰蜡烛固定在 EVA 植绒内托槽位中" /><span class="project-meta"><span><small>SCENT GIFT / PACKAGING</small><strong>AERA 香氛礼盒</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="packaging threed" data-case="kilo"><span class="sample-tag">08 · 六视图 · 真实结构 3D · 场景示意</span><img src="assets/img-014.webp" alt="KILO 潮流鞋盒真实结构 3D 渲染，展示瓦楞厚度、折边、接缝、纸张质感与棚拍阴影" /><span class="project-meta"><span><small>PACKAGING / 3D</small><strong>KILO 潮流鞋盒</strong></span><i></i></span></button>
 
-        <button class="project reveal" data-category="space campaign graphic" data-case="field"><span class="sample-tag">09 · 真实客户项目 · 实际交付</span><img src="assets/img-016.webp" alt="厦门士兰集华12英寸高端模拟芯片制造一期工程开工典礼主题门头效果图" /><span class="project-meta"><span><small>OPENING CEREMONY / EVENT</small><strong>士兰集华开工典礼</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="campaign graphic space" data-case="arc"><span class="sample-tag">10 · 真实客户项目 · 实际交付</span><img src="assets/img-017.webp" alt="2025青年趣享时光活动策划执行方案封面" /><span class="project-meta"><span><small>YOUTH EVENT / PLANNING</small><strong>2025青年趣享时光</strong></span><i></i></span></button>
-        <button class="project reveal storefront-render-card" data-category="space logo threed" data-case="neon"><span class="sample-tag">11 · 正规 3D 渲染 · 概念案例</span><img class="storefront-render" src="assets/img-018.webp" alt="麦屿烘焙 MAIYU BAKERY 真实街铺门头日景 3D 渲染" /><span class="project-meta"><span><small>BAKERY STOREFRONT / 3D SIGNAGE</small><strong>麦屿烘焙门头 3D</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="space threed" data-case="mugu"><span class="sample-tag">12 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-019.webp" alt="MUGU 木谷烘焙门店真实空间 45 度 3D 渲染，展示木饰面、黄铜立体字、拱窗进深、玻璃反射与自然阴影" /><span class="project-meta"><span><small>STOREFRONT / SPATIAL</small><strong>MUGU 烘焙门店</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="space campaign graphic" data-case="field"><span class="sample-tag">09 · 真实客户项目 · 实际交付</span><img src="assets/img-015.webp" alt="厦门士兰集华12英寸高端模拟芯片制造一期工程开工典礼主题门头效果图" /><span class="project-meta"><span><small>OPENING CEREMONY / EVENT</small><strong>士兰集华开工典礼</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="campaign graphic space" data-case="arc"><span class="sample-tag">10 · 真实客户项目 · 实际交付</span><img src="assets/img-016.webp" alt="2025青年趣享时光活动策划执行方案封面" /><span class="project-meta"><span><small>YOUTH EVENT / PLANNING</small><strong>2025青年趣享时光</strong></span><i></i></span></button>
+        <button class="project reveal storefront-render-card" data-category="space logo threed" data-case="neon"><span class="sample-tag">11 · 正规 3D 渲染 · 概念案例</span><img class="storefront-render" src="assets/img-017.webp" alt="麦屿烘焙 MAIYU BAKERY 真实街铺门头日景 3D 渲染" /><span class="project-meta"><span><small>BAKERY STOREFRONT / 3D SIGNAGE</small><strong>麦屿烘焙门头 3D</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="space threed" data-case="mugu"><span class="sample-tag">12 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-018.webp" alt="MUGU 木谷烘焙门店真实空间 45 度 3D 渲染，展示木饰面、黄铜立体字、拱窗进深、玻璃反射与自然阴影" /><span class="project-meta"><span><small>STOREFRONT / SPATIAL</small><strong>MUGU 烘焙门店</strong></span><i></i></span></button>
 
-        <button class="project reveal" data-category="campaign graphic threed" data-case="tide"><span class="sample-tag">13 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-020.png" alt="TIDE 夏日企划 45 度户外显示屏 3D 渲染，包含完整活动主视觉与待确认字段" /><span class="project-meta"><span><small>CAMPAIGN / KEY VISUAL</small><strong>TIDE 夏日企划</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="digital graphic threed" data-case="mono"><span class="sample-tag">14 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-021.png" alt="MONO 家居大促数字会场 45 度设备 3D 渲染，包含全屋焕新主题与待确认促销字段" /><span class="project-meta"><span><small>E-COMMERCE / GRAPHIC</small><strong>MONO 家居大促</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="digital graphic threed" data-case="pink"><span class="sample-tag">15 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-022.png" alt="PINK DUST 社媒内容系统双设备 45 度 3D 渲染，包含图文模板与发布信息待确认字段" /><span class="project-meta"><span><small>SOCIAL / ILLUSTRATION</small><strong>PINK DUST 社媒</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="space graphic" data-case="grid"><span class="sample-tag">16 · 真实客户项目 · 实际交付</span><img src="assets/img-023.webp" alt="厦门市孝贤技工学校校门入口校风宣传效果图" /><span class="project-meta"><span><small>CAMPUS CULTURE / WAYFINDING</small><strong>孝贤技工学校校园文化提升</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="campaign graphic threed" data-case="tide"><span class="sample-tag">13 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-019.png" alt="TIDE 夏日企划 45 度户外显示屏 3D 渲染，包含完整活动主视觉与待确认字段" /><span class="project-meta"><span><small>CAMPAIGN / KEY VISUAL</small><strong>TIDE 夏日企划</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="digital graphic threed" data-case="mono"><span class="sample-tag">14 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-020.png" alt="MONO 家居大促数字会场 45 度设备 3D 渲染，包含全屋焕新主题与待确认促销字段" /><span class="project-meta"><span><small>E-COMMERCE / GRAPHIC</small><strong>MONO 家居大促</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="digital graphic threed" data-case="pink"><span class="sample-tag">15 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-021.png" alt="PINK DUST 社媒内容系统双设备 45 度 3D 渲染，包含图文模板与发布信息待确认字段" /><span class="project-meta"><span><small>SOCIAL / ILLUSTRATION</small><strong>PINK DUST 社媒</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="space graphic" data-case="grid"><span class="sample-tag">16 · 真实客户项目 · 实际交付</span><img src="assets/img-022.webp" alt="厦门市孝贤技工学校校门入口校风宣传效果图" /><span class="project-meta"><span><small>CAMPUS CULTURE / WAYFINDING</small><strong>孝贤技工学校校园文化提升</strong></span><i></i></span></button>
 
-        <button class="project reveal" data-category="graphic threed" data-case="lens"><span class="sample-tag">17 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-024.png" alt="LENS 影像节背光灯箱海报 45 度 3D 渲染，展示灯箱厚度、环形识别与待确认场次字段" /><span class="project-meta"><span><small>POSTER / VISUAL IDENTITY</small><strong>LENS 影像节</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="graphic brand threed" data-case="fold"><span class="sample-tag">18 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-002.png" alt="FOLD 家居手册展开跨页 45 度 3D 渲染，展示锁线装订、纸张材质与待确认产品字段" /><span class="project-meta"><span><small>EDITORIAL / CATALOG</small><strong>FOLD 家居手册</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="threed campaign" data-case="nexa"><span class="sample-tag">19 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-025.webp" alt="NEXA 智能设备真实产品 3D 渲染，展示铝合金机身、防眩玻璃、端口、散热孔、材质反射与接触阴影" /><span class="project-meta"><span><small>3D RENDER / PRODUCT</small><strong>NEXA 智能设备</strong></span><i></i></span></button>
-        <button class="project reveal beauty-render-card beauty-luxury-card" data-category="threed campaign packaging" data-case="luno"><span class="sample-tag">20 · 多示图 · 产品级 3D · 场景示意</span><img class="beauty-render" src="assets/img-026.png" alt="面膜礼盒系统 20 开箱 45 度产品级 3D 渲染，展示五片独立面膜袋与分格纸托" /><span class="project-meta"><span><small>PREMIUM MASK SYSTEM / 3D CGI</small><strong>面膜礼盒系统 20</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="graphic threed" data-case="lens"><span class="sample-tag">17 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-023.png" alt="LENS 影像节背光灯箱海报 45 度 3D 渲染，展示灯箱厚度、环形识别与待确认场次字段" /><span class="project-meta"><span><small>POSTER / VISUAL IDENTITY</small><strong>LENS 影像节</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="graphic brand threed" data-case="fold"><span class="sample-tag">18 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-001.png" alt="FOLD 家居手册展开跨页 45 度 3D 渲染，展示锁线装订、纸张材质与待确认产品字段" /><span class="project-meta"><span><small>EDITORIAL / CATALOG</small><strong>FOLD 家居手册</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="threed campaign" data-case="nexa"><span class="sample-tag">19 · 多示图 · 3D 渲染 · 场景示意</span><img src="assets/img-024.webp" alt="NEXA 智能设备真实产品 3D 渲染，展示铝合金机身、防眩玻璃、端口、散热孔、材质反射与接触阴影" /><span class="project-meta"><span><small>3D RENDER / PRODUCT</small><strong>NEXA 智能设备</strong></span><i></i></span></button>
+        <button class="project reveal beauty-render-card beauty-luxury-card" data-category="threed campaign packaging" data-case="luno"><span class="sample-tag">20 · 多示图 · 产品级 3D · 场景示意</span><img class="beauty-render" src="assets/img-025.png" alt="面膜礼盒系统 20 开箱 45 度产品级 3D 渲染，展示五片独立面膜袋与分格纸托" /><span class="project-meta"><span><small>PREMIUM MASK SYSTEM / 3D CGI</small><strong>面膜礼盒系统 20</strong></span><i></i></span></button>
 
-        <button class="project reveal portfolio-panel" data-category="threed campaign" data-case="runningcar"><span class="sample-tag">真实个人作品 · 3D 动画渲染</span><img src="assets/img-027.png" alt="跑动的小车 3D 动画渲染成品画面" /><span class="project-meta"><span><small>3D ANIMATION / VEHICLE</small><strong>跑动的小车</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="brand threed" data-case="robotip"><span class="sample-tag">真实个人作品 · BLENDER 建模</span><img src="assets/img-028.png" alt="机器人 IP 角色 Blender 建模界面截图" /><span class="project-meta"><span><small>CHARACTER IP / BLENDER</small><strong>机器人 IP 设计</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="threed packaging" data-case="coinbox"><span class="sample-tag">真实个人作品 · 3D 建模渲染</span><img src="assets/img-029.png" alt="投币盒子 3D 建模渲染成品画面" /><span class="project-meta"><span><small>PRODUCT MODELING / 3D</small><strong>投币盒子</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="threed campaign" data-case="sakura"><span class="sample-tag">真实个人作品 · 3D 建模渲染</span><img src="assets/img-030.png" alt="春日樱花主题 3D 建模渲染画面" /><span class="project-meta"><span><small>SEASONAL CGI / SPRING</small><strong>春日樱花</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="space campaign threed" data-case="mallbooth"><span class="sample-tag">真实个人作品 · 三套展台设计</span><img src="assets/img-031.png" alt="商城展台设计新春主题 3D 建模渲染" /><span class="project-meta"><span><small>MALL DISPLAY / 3D BOOTH</small><strong>商城展台设计</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="space threed" data-case="wayfinding"><span class="sample-tag">真实个人作品 · 两套标识方案</span><img src="assets/img-032.png" alt="户外标识与精神堡垒 3D 建模渲染方案一" /><span class="project-meta"><span><small>WAYFINDING / PYLON SIGN</small><strong>户外标识 · 精神堡垒</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="campaign graphic space" data-case="tianma"><span class="sample-tag">真实客户项目 · 实际交付</span><img src="assets/img-033.png" alt="天马微电子 2022 年奠基仪式 LED 大屏主视觉" /><span class="project-meta"><span><small>FOUNDATION CEREMONY / STAGE</small><strong>天马微电子 2022 年奠基仪式</strong></span><i></i></span></button>
-        <button class="project reveal portfolio-panel" data-category="space brand threed" data-case="signageseries"><span class="sample-tag">真实客户项目 · 实际交付</span><img src="assets/img-034.png" alt="发光字系列项目汇总，包含闪亮柚、哪吒汽车与良初肉业门头招牌" /><span class="project-meta"><span><small>ILLUMINATED SIGNAGE / DELIVERY</small><strong>发光字系列</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="threed campaign" data-case="runningcar"><span class="sample-tag">真实个人作品 · 3D 动画渲染</span><img src="assets/img-026.png" alt="跑动的小车 3D 动画渲染成品画面" /><span class="project-meta"><span><small>3D ANIMATION / VEHICLE</small><strong>跑动的小车</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="brand threed" data-case="robotip"><span class="sample-tag">真实个人作品 · BLENDER 建模</span><img src="assets/img-027.png" alt="机器人 IP 角色 Blender 建模界面截图" /><span class="project-meta"><span><small>CHARACTER IP / BLENDER</small><strong>机器人 IP 设计</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="threed packaging" data-case="coinbox"><span class="sample-tag">真实个人作品 · 3D 建模渲染</span><img src="assets/img-028.png" alt="投币盒子 3D 建模渲染成品画面" /><span class="project-meta"><span><small>PRODUCT MODELING / 3D</small><strong>投币盒子</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="threed campaign" data-case="sakura"><span class="sample-tag">真实个人作品 · 3D 建模渲染</span><img src="assets/img-029.png" alt="春日樱花主题 3D 建模渲染画面" /><span class="project-meta"><span><small>SEASONAL CGI / SPRING</small><strong>春日樱花</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="space campaign threed" data-case="mallbooth"><span class="sample-tag">真实个人作品 · 三套展台设计</span><img src="assets/img-030.png" alt="商城展台设计新春主题 3D 建模渲染" /><span class="project-meta"><span><small>MALL DISPLAY / 3D BOOTH</small><strong>商城展台设计</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="space threed" data-case="wayfinding"><span class="sample-tag">真实个人作品 · 两套标识方案</span><img src="assets/img-031.png" alt="户外标识与精神堡垒 3D 建模渲染方案一" /><span class="project-meta"><span><small>WAYFINDING / PYLON SIGN</small><strong>户外标识 · 精神堡垒</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="campaign graphic space" data-case="tianma"><span class="sample-tag">真实客户项目 · 实际交付</span><img src="assets/img-032.png" alt="天马微电子 2022 年奠基仪式 LED 大屏主视觉" /><span class="project-meta"><span><small>FOUNDATION CEREMONY / STAGE</small><strong>天马微电子 2022 年奠基仪式</strong></span><i></i></span></button>
+        <button class="project reveal portfolio-panel" data-category="space brand threed" data-case="signageseries"><span class="sample-tag">真实客户项目 · 实际交付</span><img src="assets/img-033.png" alt="发光字系列项目汇总，包含闪亮柚、哪吒汽车与良初肉业门头招牌" /><span class="project-meta"><span><small>ILLUMINATED SIGNAGE / DELIVERY</small><strong>发光字系列</strong></span><i></i></span></button>
       </div>
     </section>
 
     <div class="marquee-divider" aria-hidden="true"><div class="marquee-divider-track"><span>品牌识别 <b>✦</b> 广告主视觉 <b>✦</b> 包装系统 <b>✦</b> 空间视觉 <b>✦</b> 产品级 3D <b>✦</b> 生产落地 <b>✦</b></span><span>品牌识别 <b>✦</b> 广告主视觉 <b>✦</b> 包装系统 <b>✦</b> 空间视觉 <b>✦</b> 产品级 3D <b>✦</b> 生产落地 <b>✦</b></span></div></div>
 
     <section id="services" class="services">
-      <div class="capabilities-backdrop" aria-hidden="true"><figure class="backdrop-sketch" data-stage="01 / CONCEPT"><img src="assets/img-028.png" alt="" /></figure><figure class="backdrop-layout" data-stage="02 / DEVELOPMENT"><img src="assets/img-003.png" alt="" /></figure><figure class="backdrop-finish" data-stage="03 / DELIVERY"><img src="assets/img-006.png" alt="" /></figure></div>
+      <div class="capabilities-backdrop" aria-hidden="true"><figure class="backdrop-sketch" data-stage="01 / CONCEPT"><img src="assets/img-027.png" alt="" /></figure><figure class="backdrop-layout" data-stage="02 / DEVELOPMENT"><img src="assets/img-002.png" alt="" /></figure><figure class="backdrop-finish" data-stage="03 / DELIVERY"><img src="assets/img-005.png" alt="" /></figure></div>
       <div class="wrap">
-        <div class="section-head capabilities-head reveal"><div class="capabilities-main"><span class="num">02 / 服务能力</span><h2>从策略到落地，<span>持续补齐你的设计执行力</span></h2><p><span class="sentence">包月不是零散接单，而是一套稳定运行的设计支持。</span><span class="sentence">每月先排优先级，再把关键画面、日常延展与交付管理连成一体。</span></p></div><aside class="capabilities-note" lang="en"><span>CAPABILITIES</span><p>From early thinking and layout exploration to finished production files, every stage stays connected in one continuous design system.</p><ol><li>Think</li><li>Shape</li><li>Deliver</li></ol></aside></div>
+        <div class="section-head capabilities-head reveal"><div class="capabilities-main"><span class="num">02 / 服务能力</span><h2><span class="title-line">从项目策划到落地</span><span class="title-line">持续补齐您公司的</span><span class="title-line">设计执行力</span></h2><p><span class="sentence">包月不是零散接单，而是一套稳定运行的设计支持。</span><span class="sentence">每月先排优先级，再把关键画面、日常延展与交付管理连成一体。</span></p></div><aside class="capabilities-note" lang="en"><span>CAPABILITIES</span><p><span class="title-line">From project planning to implementation</span><span class="title-line">Continuously supplementing your company's</span><span class="title-line">Design execution capability</span></p><ol class="capability-steps"><li><b>01 / THINK</b><strong>策略思考</strong><p>先想清楚再动手——品牌定位、受众、核心信息，策略先行。</p></li><li><b>02 / SHAPE</b><strong>视觉成型</strong><p>把策略翻译成看得见的设计——主视觉、版式、延展规范。</p></li><li><b>03 / DELIVER</b><strong>落地交付</strong><p>生产文件、交付管理、持续跟进——每一稿都能用、都能印、都能发。</p></li></ol></aside></div>
         <div class="service-list service-flow reveal" aria-label="包月设计支持内容">
           <article class="service-row">
             <div class="service-copy"><h3>核心视觉持续推进</h3><p>围绕当月最重要的活动或品牌任务，完成主画面、传播概念与关键版式，让沟通从一开始就有清晰方向。</p><b>主任务始终优先</b></div>
@@ -3652,7 +3761,7 @@
     </section>
 
     <section class="wrap outline-manifesto manifesto-refined" aria-label="设计主张">
-      <figure class="manifesto-blueprint" aria-hidden="true"><img src="assets/img-006.png" alt="" /></figure>
+      <figure class="manifesto-blueprint" aria-hidden="true"><img src="assets/img-005.png" alt="" /></figure>
       <div class="manifesto-left"><span class="manifesto-index">DESIGN PRINCIPLE / 设计主张</span><strong>字有层级<br>设计有目的</strong></div>
       <div class="manifesto-right"><p class="manifesto-copy"><span class="manifesto-line">大字建立记忆，微字组织秩序。</span><span class="manifesto-line"><em>每一次视觉选择，</em></span><span class="manifesto-line">都服务于真实媒介与商业目标。</span></p><p class="manifesto-en" lang="en">Typography builds hierarchy. Every visual choice serves its medium, its message and its commercial purpose.</p></div>
     </section>
@@ -3664,9 +3773,9 @@
       <div class="about-layout career-layout">
         <figure class="about-portrait design-archive reveal" aria-labelledby="portraitCaption">
           <div class="archive-grid">
-            <figure class="archive-sheet archive-sheet-main"><img src="assets/img-004.png" alt="天马微电子奠基仪式舞台主视觉设计稿" loading="lazy" decoding="async" /><figcaption>舞台主视觉 / EVENT VISUAL</figcaption></figure>
-            <figure class="archive-sheet"><img src="assets/img-003.png" alt="商城展台三维设计工作稿" loading="lazy" decoding="async" /><figcaption>空间推演 / 3D DEVELOPMENT</figcaption></figure>
-            <figure class="archive-sheet"><img src="assets/img-034.png" alt="发光字与门头标识项目稿件合集" loading="lazy" decoding="async" /><figcaption>生产落地 / SIGNAGE DELIVERY</figcaption></figure>
+            <figure class="archive-sheet archive-sheet-main"><img src="assets/img-003.png" alt="天马微电子奠基仪式舞台主视觉设计稿" loading="lazy" decoding="async" /><figcaption>舞台主视觉 / EVENT VISUAL</figcaption></figure>
+            <figure class="archive-sheet"><img src="assets/img-002.png" alt="商城展台三维设计工作稿" loading="lazy" decoding="async" /><figcaption>空间推演 / 3D DEVELOPMENT</figcaption></figure>
+            <figure class="archive-sheet"><img src="assets/img-033.png" alt="发光字与门头标识项目稿件合集" loading="lazy" decoding="async" /><figcaption>生产落地 / SIGNAGE DELIVERY</figcaption></figure>
           </div>
           <figcaption id="portraitCaption"><span>SELECTED WORKING ARCHIVE</span><span>从画面、空间到生产交付</span></figcaption>
         </figure>
@@ -3762,7 +3871,7 @@
             <h2>开始合作</h2>
             <p class="contact-subline">MAKE YOUR NEXT VISUAL MOVE</p>
             <p><span class="sentence">先说目标，不必先写一份完美需求。</span><span class="sentence">带上项目类型、使用场景与期望时间，我会帮你把问题整理清楚。</span></p>
-            <div class="contact-actions"><a class="cta primary" href="mailto:784005231@qq.com?subject=%E9%A1%B9%E7%9B%AE%E5%92%A8%E8%AF%A2"><span>免费咨询</span><small>CONSULT</small></a><a class="cta" id="downloadBrief" href="assets/%E6%AD%A3%E9%91%AB%E8%B6%8A%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD-%E5%8D%95%E9%A1%B5%E9%A1%B9%E7%9B%AE%E7%AE%80%E6%8A%A5%E6%A8%A1%E6%9D%BF.txt" download="正鑫越文化传播-单页项目简报模板.txt"><span>下载项目简报模板</span><small>DOWNLOAD PROJECT BRIEF</small></a></div>
+            <div class="contact-actions"><button class="cta primary" type="button" id="consultOpenContact"><span>免费咨询</span><small>CONSULT</small></button><a class="cta" id="downloadBrief" href="assets/%E6%AD%A3%E9%91%AB%E8%B6%8A%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD-%E5%8D%95%E9%A1%B5%E9%A1%B9%E7%9B%AE%E7%AE%80%E6%8A%A5%E6%A8%A1%E6%9D%BF.txt" download="正鑫越文化传播-单页项目简报模板.txt"><span>下载项目简报模板</span><small>DOWNLOAD PROJECT BRIEF</small></a></div>
           </div>
           <figure class="contact-visual">
             <svg class="contact-collab-art" viewBox="0 0 720 560" role="img" aria-labelledby="contactArtTitle contactArtDesc" preserveAspectRatio="xMidYMid slice">
@@ -3821,8 +3930,9 @@
   <div class="consult-shell" id="consultShell" aria-hidden="true">
     <section class="consult-dialog" role="dialog" aria-modal="true" aria-labelledby="consultTitle" tabindex="-1">
       <header class="consult-head">
-        <div class="consult-head-avatar" aria-hidden="true"><img src="assets/img-001.png" alt=""></div>
+        <div class="consult-head-avatar" aria-hidden="true"><img src="assets/img-000.png" alt=""></div>
         <div class="consult-head-copy"><strong id="consultTitle">正鑫越需求助手</strong><span><i aria-hidden="true"></i>在线 · 先把项目聊清楚</span></div>
+        <button class="consult-minimize" id="consultMinimize" type="button" aria-label="最小化咨询窗口">—</button>
         <button class="consult-close" id="consultClose" type="button" aria-label="关闭咨询窗口">×</button>
       </header>
       <div class="consult-progress" aria-label="需求沟通进度">
@@ -3847,7 +3957,7 @@
     <div class="modal-card" tabindex="-1">
       <button class="modal-close" aria-label="关闭案例">×</button>
       <section class="case-hero">
-        <div class="modal-visual" id="modalVisual"><img id="modalImage" src="assets/img-008.webp" alt="" /><div class="modal-art" id="modalArt" hidden></div></div>
+        <div class="modal-visual" id="modalVisual"><img id="modalImage" src="assets/img-007.webp" alt="" /><div class="modal-art" id="modalArt" hidden></div></div>
         <div class="case-hero-data" aria-label="案例数据概览">
           <strong id="caseHeroMetric">06+</strong>
           <div><span>CASE SYSTEM / DATA OVERVIEW</span><p id="caseHeroSummary">以交付触点、设计角色与多视图输出，建立可检查的案例系统。</p></div>
@@ -4021,36 +4131,36 @@
   <script>
     (function(){
       var cases={
-        pulse:{title:'气泡水包装系统 01',image:'assets/img-008.webp',alt:'带真实光影、PET 材质反射、瓶身透视与冷凝水珠的气泡水成品 3D 渲染',text:'从标准 500 mL PET 瓶的真实结构出发重做产品级 3D 成品：瓶肩、瓶颈、瓶底与标签都服从同一透视，标签沿圆柱曲面自然包覆，真实高光、折射、阴影与冷凝水珠共同呈现冰饮状态。标签正面保留明确的品类、口味与净含量层级，画面用于验证量产包装在真实光照下的材质与可读性。',role:'包装策略 / 标签设计 / 产品级 3D 渲染',strategy:'真实瓶型 × 曲面贴标 × 冷凝材质',deliverables:'正面标签、背标信息区、环标刀版、产品级 CGI、冰饮场景'},
+        pulse:{title:'气泡水包装系统 01',image:'assets/img-007.webp',alt:'带真实光影、PET 材质反射、瓶身透视与冷凝水珠的气泡水成品 3D 渲染',text:'从标准 500 mL PET 瓶的真实结构出发重做产品级 3D 成品：瓶肩、瓶颈、瓶底与标签都服从同一透视，标签沿圆柱曲面自然包覆，真实高光、折射、阴影与冷凝水珠共同呈现冰饮状态。标签正面保留明确的品类、口味与净含量层级，画面用于验证量产包装在真实光照下的材质与可读性。',role:'包装策略 / 标签设计 / 产品级 3D 渲染',strategy:'真实瓶型 × 曲面贴标 × 冷凝材质',deliverables:'正面标签、背标信息区、环标刀版、产品级 CGI、冰饮场景'},
 
-        luma:{title:'LUMA 夜跑',image:'assets/img-035.webp',alt:'LUMA 城市夜跑计划发光灯箱正视 3D 渲染，含完整活动层级、路线说明与报名提示',text:'以城市脉冲为视觉母题，完成一套可进入真实夜间媒介的夜跑传播系统。完整平面稿保留活动名称、10 KM 路线、夜间安全提示、补给与存包信息区，并将日期、地点和报名方式明确标记为待主办方确认；两张灯箱 3D 渲染分别检查正视阅读与 45° 箱体厚度，两张城市实景检查远距识别、环境光和行人尺度。',role:'战役概念 / 活动信息设计 / 户外 3D 渲染',strategy:'城市脉冲 × 三秒阅读 × 夜间媒介校色',deliverables:'完整活动平面稿、正视灯箱渲染、45° 灯箱渲染、路线大牌实景、候车亭实景、灯箱结构特写'},
-        nova:{title:'咖啡包装系统 03',image:'assets/img-036.webp',alt:'咖啡包装系统 03 蓝红纸基复合自立袋正视 3D 渲染，含排气阀、拉链、规格与批次信息',text:'移除疑似在先品牌名称，以 COFFEE 03 中性代号建立纸基复合自立袋系统。平面稿完整标出正面、背面、底插、拉链、热封区、排气阀与待确认生产字段；两张 3D 渲染检查袋体站立、侧面厚度和阀体位置，两张实景检查货架系列识别与烘焙工作台使用状态。所有尚未取得的产区、配料、批号与生产信息均明确标为待确认，不编造内容。',role:'包装策略 / 信息设计 / 包装 3D 渲染',strategy:'中性代号 × 可制袋结构 × 待确认字段透明标注',deliverables:'完整袋体平面稿、正视袋体渲染、45° 袋体渲染、零售货架实景、烘焙工作台实景、拉链排气阀特写'},
+        luma:{title:'LUMA 夜跑',image:'assets/img-034.webp',alt:'LUMA 城市夜跑计划发光灯箱正视 3D 渲染，含完整活动层级、路线说明与报名提示',text:'以城市脉冲为视觉母题，完成一套可进入真实夜间媒介的夜跑传播系统。完整平面稿保留活动名称、10 KM 路线、夜间安全提示、补给与存包信息区，并将日期、地点和报名方式明确标记为待主办方确认；两张灯箱 3D 渲染分别检查正视阅读与 45° 箱体厚度，两张城市实景检查远距识别、环境光和行人尺度。',role:'战役概念 / 活动信息设计 / 户外 3D 渲染',strategy:'城市脉冲 × 三秒阅读 × 夜间媒介校色',deliverables:'完整活动平面稿、正视灯箱渲染、45° 灯箱渲染、路线大牌实景、候车亭实景、灯箱结构特写'},
+        nova:{title:'咖啡包装系统 03',image:'assets/img-035.webp',alt:'咖啡包装系统 03 蓝红纸基复合自立袋正视 3D 渲染，含排气阀、拉链、规格与批次信息',text:'移除疑似在先品牌名称，以 COFFEE 03 中性代号建立纸基复合自立袋系统。平面稿完整标出正面、背面、底插、拉链、热封区、排气阀与待确认生产字段；两张 3D 渲染检查袋体站立、侧面厚度和阀体位置，两张实景检查货架系列识别与烘焙工作台使用状态。所有尚未取得的产区、配料、批号与生产信息均明确标为待确认，不编造内容。',role:'包装策略 / 信息设计 / 包装 3D 渲染',strategy:'中性代号 × 可制袋结构 × 待确认字段透明标注',deliverables:'完整袋体平面稿、正视袋体渲染、45° 袋体渲染、零售货架实景、烘焙工作台实景、拉链排气阀特写'},
 
-        sway:{title:'新阳街道安全环保主题宣传方案',image:'assets/img-037.webp',alt:'2024年新阳街道安全环保主题宣传方案封面',actual:true,text:'围绕食品安全、消防安全与生态环保三条主题线，完成活动策划、主背景视觉、主舞台效果、互动区与宣传展板的系统方案。方案单位为厦门宝船传媒有限公司；精选页来自2024年8月29日实际交付文件，保留方案结构与效果呈现。',role:'活动策划 / 主题视觉 / 场景布置',strategy:'三大公共安全主题 × 互动传播 × 现场视觉统一',deliverables:'方案封面、内容目录、现场位置摆放、主舞台效果、互动拍照区、宣传展板'},
+        sway:{title:'新阳街道安全环保主题宣传方案',image:'assets/img-036.webp',alt:'2024年新阳街道安全环保主题宣传方案封面',actual:true,text:'围绕食品安全、消防安全与生态环保三条主题线，完成活动策划、主背景视觉、主舞台效果、互动区与宣传展板的系统方案。方案单位为厦门宝船传媒有限公司；精选页来自2024年8月29日实际交付文件，保留方案结构与效果呈现。',role:'活动策划 / 主题视觉 / 场景布置',strategy:'三大公共安全主题 × 互动传播 × 现场视觉统一',deliverables:'方案封面、内容目录、现场位置摆放、主舞台效果、互动拍照区、宣传展板'},
         orbit:{title:'ORBIT 音频实验室',text:'把抽象轨道退到辅助层，品牌主张“让每一种声音找到它的空间”成为第一阅读信息；品牌声音设计、播客制作、广告配乐与空间音频四项服务在同一画面中直接说明，并用录音、混音与声音策略等场景文字帮助客户理解业务。',role:'品牌策略 / 信息设计 / 音频品牌视觉',strategy:'先讲清楚做什么，再用声音轨道建立识别',deliverables:'品牌主张、服务信息页、录音室墙面、播客封面、数字端模板'},
         moss:{title:'MOSS 山岚茶事',text:'围绕 MOSS 山岚茶事建立可生产的完整包装体系：纸杯以山岚绿和纸色形成杯身识别，茶叶罐明确品牌、焙茶品名与 80 g 规格，独立茶包标注 3 g × 10 包；冲泡说明固定为茶叶 5 g、90°C 热水 250 mL、浸泡 60–90 秒，可续泡三次。',role:'茶品品牌 / 包装系统 / 信息设计',strategy:'统一品牌骨架 × 明确规格 × 可读冲泡说明',deliverables:'纸杯、茶叶罐、独立茶包、组合陈列、冲泡说明'},
-        aera:{title:'AERA 香氛礼盒',image:'assets/img-014.webp',alt:'AERA 香氛礼盒 45 度开箱 3D 渲染：香水、藤条香薰与香薰蜡烛固定在 EVA 植绒内托槽位中',text:'将错层概念落实为真实矩形礼盒：闭合外盒使用 1200 g 灰板裱特种纸、柔触哑膜与压凹字标；开箱后，香水瓶、藤条香薰与香薰蜡烛分别固定在 EVA 植绒内托的独立槽位中，并补充单品特写以检查标签、瓶盖与产品比例。',role:'礼盒结构 / 产品包装 / 3D 场景呈现',strategy:'错层开箱 × 三件香氛 × 独立内托固定',deliverables:'完整包装平面稿、闭合礼盒渲染、开箱礼盒渲染、梳妆台开箱陈列、产品与内托陈列、材质结构特写'},
-        kilo:{title:'KILO 潮流鞋盒',image:'assets/img-015.webp',alt:'KILO 潮流鞋盒闭合状态 3D 渲染，展示盒盖、盒身、斜切专色图形与短边商品信息区',text:'把 18° 斜切轴线落实到真实天地盖鞋盒结构：完整平面稿明确盒盖、盒身、短边尺码与货号字段、内衬纸和 3 mm 出血；闭合与开箱两张 3D 渲染检查装配间隙、盒体厚度及内衬关系，两张零售实景验证堆叠识别和打包流程。未取得具体鞋款、尺码、货号与颜色资料时统一标记“以最终商品资料为准”。',role:'包装设计 / 鞋盒结构 / 发售 3D 视觉',strategy:'18° 斜切轴线 × 堆叠识别 × 真实开箱结构',deliverables:'完整鞋盒平面稿、闭合鞋盒渲染、开箱鞋盒渲染、零售墙实景、打包台实景、瓦楞材质特写'},
-        field:{title:'厦门士兰集华12英寸高端模拟芯片制造（一期）开工典礼',image:'assets/img-038.webp',alt:'厦门士兰集华12英寸高端模拟芯片制造一期工程开工典礼策划执行方案封面',actual:true,text:'为厦门士兰集华微电子有限公司2026年1月4日举行的开工典礼提供完整策划执行方案，覆盖100人规模的场地动线、主题门头、迎宾与签到、观礼区、舞美区、品牌墙及流程规划。精选页集中呈现活动信息与空间布置；原方案中的主视觉仍标记为待定，不将其表述为已完成定稿。',role:'典礼策划 / 空间规划 / 活动物料',strategy:'工业项目语境 × 完整动线 × 全套现场布置',deliverables:'方案封面、目录、活动概况、布置动线、主题门头、主会场规划'},
-        arc:{title:'2025青年趣享时光活动策划执行方案',image:'assets/img-017.webp',alt:'2025青年趣享时光活动策划执行方案封面',actual:true,text:'为2025年11月22日海沧金沙书院活动提供从概况、流程到现场布置的完整策划执行方案。主办单位为海沧嵩屿街道团工委、厦门弘爱妇产医院、厦门弘爱康复医院，承办单位为铁血狼魂（厦门）户外运动服务有限公司。项目围绕青年交流设计签到、互动游戏、茶歇与同行邀约等环节，并形成主视觉及现场物料延展。',role:'活动策划 / 视觉设计 / 执行规划',strategy:'青年交流场景 × 分段流程 × 轻松统一视觉',deliverables:'方案封面、活动概况、流程规划、主背景、签到与物料、现场布置参考'},
-        neon:{title:'麦屿烘焙门头 3D',image:'assets/img-018.webp',nightImage:'assets/img-010.webp',alt:'麦屿烘焙 MAIYU BAKERY 真实街铺立面、玻璃反射与立体金属字材质的门头日景 3D 渲染',text:'本案不是只做一块门头效果图，而是围绕「麦屿烘焙 MAIYU BAKERY」完成主招牌、侧招、橱窗陈列、菜单灯箱与包装延展五项设计，并用日夜两套 3D 场景检查实际效果。主招立体金属字、结构柱、玻璃门窗、入口进深与人行界面处在同一透视空间；白天验证材质与阴影，夜间验证暖白发光、橱窗照明和远距识别。',role:'烘焙品牌 / 店招与橱窗 / 菜单灯箱 / 包装延展 / 正规 3D 渲染',strategy:'五项设计清单 × 真实街铺 × 日夜光照',deliverables:'主招牌、侧招、橱窗陈列、菜单灯箱、包装延展、日夜 CGI'},
-        mugu:{title:'MUGU 烘焙门店',image:'assets/img-019.webp',alt:'MUGU 木谷烘焙门店 45 度 3D 渲染，暖黄招牌、深棕饰面与三组拱窗处于同一真实透视',text:'以“刚出炉的拱窗”为核心识别，将门头、橱窗、菜单与外带包装收进同一套暖黄、深棕与纸白系统。平面稿完整标出品牌名、门头尺寸、招牌材料、营业时间与现场复尺待确认项；正视和 45° 两张 3D 渲染检查建筑进深、招牌厚度与拱窗结构，两张街景检查白天材质和夜间发光可读性。',role:'门店视觉 / 空间基调 / 包装延展 / 3D 场景呈现',strategy:'拱窗识别 × 日夜双态 × 可维护招牌结构',deliverables:'完整门店平面稿、门店正视渲染、门店 45° 渲染、白天街景、夜间街景、招牌结构特写'},
-        tide:{title:'TIDE 夏日企划',image:'assets/img-020.png',alt:'TIDE 夏日企划 45 度户外显示屏 3D 渲染，蓝黄橙主视觉、完整标题与待确认活动字段清晰可见',text:'以海岸蓝、日光黄和珊瑚橙建立可跨户外屏与候车亭复用的夏日活动系统。完整平面稿固定 TIDE、夏日企划、SUMMER OPEN DAY 与“日期／场地／活动规则待确认”字段；正视和 45° 两张显示屏 3D 渲染检查箱体、边框与画面发光关系，两张实景检验商场广场和候车亭的远近阅读。',role:'广告战役 / 平面 KV / 户外媒体 3D 渲染',strategy:'海岸色块 × 三秒阅读 × 多比例媒体改编',deliverables:'完整活动平面稿、正视显示屏渲染、45° 显示屏渲染、商场广场实景、候车亭实景、LED 模组特写'},
-        mono:{title:'MONO 家居大促',image:'assets/img-021.png',alt:'MONO 家居大促 45 度数字设备 3D 渲染，展示全屋焕新主题、三类家居入口与待确认促销字段',text:'把高密度促销页面改成可在桌面与移动端重排的模块系统：主层只保留“MONO 家居大促／全屋焕新”，客厅、餐厅、卧室进入第二层，优惠规则、活动时间与库存统一标为待确认。两张设备 3D 渲染检查屏幕材质与界面层级，两张真实场景分别模拟家居购物和订单处理环境。',role:'电商视觉 / 活动页面 / 响应式组件 / 设备 3D 呈现',strategy:'强网格 × 单一主行动 × 移动端重排',deliverables:'完整会场平面稿、桌面设备正视渲染、设备 45° 渲染、家居购物实景、订单处理实景、屏幕界面结构特写'},
-        pink:{title:'PINK DUST 社媒',image:'assets/img-039.png',alt:'PINK DUST 社媒内容系统竖屏设备正视 3D 渲染，图文模板、标题安全区和发布待确认字段清晰可见',text:'以亮粉、紫色与柠檬黄建立连续发布的社媒栏目系统。完整平面稿定义图文、短视频和头像的比例、标题安全区与可编辑字段；两张设备 3D 渲染检查屏幕反射、机身厚度与内容层级，两张真实场景分别模拟创作者工作台和数字内容亭。具体发布日期、栏目标题与账号信息未取得，统一标记待确认。',role:'社媒视觉 / 插画系统 / 数字设备 3D 呈现',strategy:'固定模板骨架 × 高识别色块 × 多比例安全区',deliverables:'完整社媒平面稿、竖屏设备正视渲染、双设备 45° 渲染、创作者工作台实景、数字内容亭实景、屏幕组件特写'},
-        grid:{title:'厦门市孝贤技工学校校园文化提升效果方案',image:'assets/img-023.webp',alt:'厦门市孝贤技工学校校门入口校风宣传效果图',actual:true,text:'围绕校园入口、停车场、宿舍区与运动场等关键节点，完成校风宣传、校园总平图、导视路标、景观雕塑、宣传栏及党建长廊的视觉提升方案。精选页保留实际效果图与点位说明。',role:'校园文化 / 导视系统 / 环境视觉',strategy:'校园节点梳理 × 导视统一 × 文化场景提升',deliverables:'校门宣传、校园总平图、指引路标、运动场雕塑、文化宣传栏、党建长廊'},
-        lens:{title:'LENS 影像节',image:'assets/img-040.png',alt:'LENS 影像节背光灯箱海报正视 3D 渲染，环形取景识别、单元分类与待确认场次字段完整',text:'以环形取景结构统一主单元、特别展映与论坛三类内容，并按真实灯箱材料组织明暗层次。完整平面稿固定主视觉、片单区、场次区与场馆字段；两张灯箱 3D 渲染检查磁吸边框、背光厚度与暗部层次，两张影院环境实景检验大厅连续识别和入口导视。片单、场次、场馆与票务信息均标记待确认。',role:'节展视觉 / 灯箱海报 / 影院导视 / 3D 呈现',strategy:'环形取景 × 背光层次 × 单元系列变化',deliverables:'完整灯箱平面稿、正视灯箱渲染、45° 灯箱渲染、影院大厅实景、入口导视实景、灯片结构特写'},
-        fold:{title:'FOLD 家居手册',image:'assets/img-002.png',alt:'FOLD 家居手册展开跨页 45 度 3D 渲染，展示锁线胶装、书脊、纸张与待确认产品信息',text:'以纸张折叠、材质留白与细密信息层级建立家居目录系统。完整平面稿定义封面、目录、产品页、材质索引和页脚规则；闭合与展开两张 3D 渲染检查书脊、跨页和纸张厚度，两张真实场景分别验证客厅翻阅和材料图书馆陈列。产品图、价格、材质来源、页数与印刷纸张均保留待确认字段。',role:'画册设计 / 编辑系统 / 装订 3D 呈现',strategy:'留白节奏 × 材质索引 × 可持续跨页系统',deliverables:'完整目录平面稿、闭合画册渲染、展开跨页渲染、客厅茶几实景、材料图书馆实景、装订结构特写'},
-        nexa:{title:'NEXA 智能设备',image:'assets/img-025.webp',alt:'NEXA 智能设备正视产品 3D 渲染，阳极氧化铝机身、防眩玻璃屏幕和待确认产品参数清晰可见',text:'以阳极氧化铝、深色防眩玻璃和三组弧线状态图形建立智能设备的产品视觉。完整平面稿定义产品主张、屏幕界面、安全区和待确认参数；正视与 45° 两张 3D 渲染检查机身厚度、装配缝与屏幕层次，两张真实场景验证家庭办公和零售展示距离。产品型号、功能参数、接口、散热与发布时间均标为待工程确认。',role:'产品视觉 / 3D 渲染 / 界面系统 / 艺术指导',strategy:'金属精度 × 环形状态语言 × 双场景验证',deliverables:'完整产品平面稿、设备正视渲染、设备 45° 渲染、家庭办公实景、零售展示实景、机身结构特写'},
-        luno:{title:'面膜礼盒系统 20',image:'assets/img-041.png',alt:'面膜礼盒系统 20 闭合礼盒正视产品级 3D 渲染，矿物灰绿与象牙白盒面、五片规格及待确认生产字段清晰可见',text:'以“面膜礼盒系统 20”作为中性项目名，移除不属于本案的其他品牌字样。完整平面稿固定盒面、独立袋、开盒指引、5 片 × 25 mL 规格和法规预留区；闭合与开箱两张 3D 渲染检查纸盒体积、分格纸托、易撕口与拿取空间，两张真实场景检验梳妆台使用和零售陈列。配方、批次、生产日期、责任主体与备案信息均标记待确认。',role:'美妆包装 / 面膜袋与礼盒结构 / 产品级 3D 渲染',strategy:'中性项目名 × 单一网格 × 工程化开口 × 克制材质',deliverables:'完整包装平面稿、闭合礼盒渲染、开箱礼盒渲染、梳妆台实景、零售陈列实景、袋体纸托特写'},
-        runningcar:{title:'跑动的小车',image:'assets/img-027.png',alt:'跑动的小车 3D 动画渲染成品画面',text:'从素模建立车体比例、轮胎结构与表面细节，再完成材质、灯光、森林道路场景与动画渲染。案例同时保留成品画面和素模版，展示从建模到最终视觉的完整过程。',role:'3D 建模 / 材质灯光 / 动画渲染',strategy:'车辆造型 × 场景叙事 × 动态呈现',deliverables:'成品渲染、素模版、动画画面'},
-        robotip:{title:'机器人 IP 设计',image:'assets/img-028.png',alt:'机器人 IP 角色 Blender 建模界面截图',text:'以友好、轻巧的机器人角色为方向，在 Blender 中完成形体比例、头身结构、面部表情与身体组件建模。原始建模截图保留网格与软件界面，直接呈现真实制作过程。',role:'IP 设定 / 角色建模 / Blender',strategy:'亲和轮廓 × 清晰表情 × 可延展角色结构',deliverables:'角色设定、Blender 建模截图、模型细节'},
-        coinbox:{title:'投币盒子',image:'assets/img-029.png',alt:'投币盒子 3D 建模渲染成品画面',text:'围绕投币动作建立盒体、投币口、内部结构与顶部造型，并通过成品渲染和素模版对照呈现造型与结构。材质、灯光和视角共同强化产品体积感。',role:'产品建模 / 结构表达 / 3D 渲染',strategy:'功能结构 × 卡通造型 × 材质表现',deliverables:'成品渲染、素模版、结构展示'},
-        sakura:{title:'春日樱花',image:'assets/img-030.png',alt:'春日樱花主题 3D 建模渲染画面',text:'以春日天空、樱花枝与轻盈色彩建立季节氛围，通过 3D 建模、材质和镜头组织完成清透的主题画面。作品保留原始渲染，呈现对光线、层次与空间气氛的控制。',role:'主题设计 / 3D 建模 / 场景渲染',strategy:'春日色彩 × 空间层次 × 轻盈光感',deliverables:'主题画面、场景建模、成品渲染'},
-        mallbooth:{title:'商城展台设计',image:'assets/img-031.png',alt:'商城展台设计新春主题 3D 建模渲染',text:'围绕商业中庭快闪与节庆陈列，分别完成新春主题、元旦主题和萌宠主题三套展台方案。原始渲染覆盖 Blender 建模过程与三套不同主题的空间效果，展示从结构搭建到视觉落地的连续能力。',role:'展台设计 / 空间建模 / 3D 渲染',strategy:'统一结构 × 三套主题 × 商场人流视角',deliverables:'新春主题展台、元旦主题展台、萌宠主题展台、Blender 建模截图'},
-        wayfinding:{title:'户外标识 · 精神堡垒',image:'assets/img-032.png',alt:'户外标识与精神堡垒 3D 建模渲染方案一',text:'以户外导视和精神堡垒为核心，完成两套不同造型语言的标识方案。原始图中同时呈现主标识、导向牌与多视角组合，重点验证尺度、识别方向和环境中的体量关系。',role:'标识系统 / 精神堡垒 / 3D 建模渲染',strategy:'远距识别 × 结构比例 × 环境适配',deliverables:'方案一标识系统、方案二精神堡垒、多视角渲染'},
-        tianma:{title:'天马微电子 2022 年奠基仪式',image:'assets/img-033.png',alt:'天马微电子 2022 年奠基仪式 LED 大屏主视觉',actual:true,text:'围绕天马微电子 2022 年奠基仪式完成舞台主视觉、LED 大屏与城市天际线舞台画面。本站直接使用作品集原图，呈现真实客户项目中的屏幕内容、舞台结构和视觉延展。',role:'活动主视觉 / LED 大屏 / 舞台视觉',strategy:'科技蓝调 × 仪式主题 × 城市天际线',deliverables:'舞台主视觉、LED 大屏、城市天际线舞台'},
-        signageseries:{title:'发光字系列',image:'assets/img-034.png',alt:'发光字系列项目汇总，包含闪亮柚、哪吒汽车与良初肉业门头招牌',actual:true,text:'发光字系列均为已落地安装施工交付项目，包含闪亮柚、哪吒汽车与良初肉业门头招牌。作品集原图呈现不同品牌字形、门头尺度与发光结构的应用结果。',role:'门头招牌 / 发光字深化 / 生产落地',strategy:'字形识别 × 发光工艺 × 门头尺度',deliverables:'闪亮柚发光字、哪吒汽车门头招牌、良初肉业门头招牌'}
+        aera:{title:'AERA 香氛礼盒',image:'assets/img-013.webp',alt:'AERA 香氛礼盒 45 度开箱 3D 渲染：香水、藤条香薰与香薰蜡烛固定在 EVA 植绒内托槽位中',text:'将错层概念落实为真实矩形礼盒：闭合外盒使用 1200 g 灰板裱特种纸、柔触哑膜与压凹字标；开箱后，香水瓶、藤条香薰与香薰蜡烛分别固定在 EVA 植绒内托的独立槽位中，并补充单品特写以检查标签、瓶盖与产品比例。',role:'礼盒结构 / 产品包装 / 3D 场景呈现',strategy:'错层开箱 × 三件香氛 × 独立内托固定',deliverables:'完整包装平面稿、闭合礼盒渲染、开箱礼盒渲染、梳妆台开箱陈列、产品与内托陈列、材质结构特写'},
+        kilo:{title:'KILO 潮流鞋盒',image:'assets/img-014.webp',alt:'KILO 潮流鞋盒闭合状态 3D 渲染，展示盒盖、盒身、斜切专色图形与短边商品信息区',text:'把 18° 斜切轴线落实到真实天地盖鞋盒结构：完整平面稿明确盒盖、盒身、短边尺码与货号字段、内衬纸和 3 mm 出血；闭合与开箱两张 3D 渲染检查装配间隙、盒体厚度及内衬关系，两张零售实景验证堆叠识别和打包流程。未取得具体鞋款、尺码、货号与颜色资料时统一标记“以最终商品资料为准”。',role:'包装设计 / 鞋盒结构 / 发售 3D 视觉',strategy:'18° 斜切轴线 × 堆叠识别 × 真实开箱结构',deliverables:'完整鞋盒平面稿、闭合鞋盒渲染、开箱鞋盒渲染、零售墙实景、打包台实景、瓦楞材质特写'},
+        field:{title:'厦门士兰集华12英寸高端模拟芯片制造（一期）开工典礼',image:'assets/img-037.webp',alt:'厦门士兰集华12英寸高端模拟芯片制造一期工程开工典礼策划执行方案封面',actual:true,text:'为厦门士兰集华微电子有限公司2026年1月4日举行的开工典礼提供完整策划执行方案，覆盖100人规模的场地动线、主题门头、迎宾与签到、观礼区、舞美区、品牌墙及流程规划。精选页集中呈现活动信息与空间布置；原方案中的主视觉仍标记为待定，不将其表述为已完成定稿。',role:'典礼策划 / 空间规划 / 活动物料',strategy:'工业项目语境 × 完整动线 × 全套现场布置',deliverables:'方案封面、目录、活动概况、布置动线、主题门头、主会场规划'},
+        arc:{title:'2025青年趣享时光活动策划执行方案',image:'assets/img-016.webp',alt:'2025青年趣享时光活动策划执行方案封面',actual:true,text:'为2025年11月22日海沧金沙书院活动提供从概况、流程到现场布置的完整策划执行方案。主办单位为海沧嵩屿街道团工委、厦门弘爱妇产医院、厦门弘爱康复医院，承办单位为铁血狼魂（厦门）户外运动服务有限公司。项目围绕青年交流设计签到、互动游戏、茶歇与同行邀约等环节，并形成主视觉及现场物料延展。',role:'活动策划 / 视觉设计 / 执行规划',strategy:'青年交流场景 × 分段流程 × 轻松统一视觉',deliverables:'方案封面、活动概况、流程规划、主背景、签到与物料、现场布置参考'},
+        neon:{title:'麦屿烘焙门头 3D',image:'assets/img-017.webp',nightImage:'assets/img-009.webp',alt:'麦屿烘焙 MAIYU BAKERY 真实街铺立面、玻璃反射与立体金属字材质的门头日景 3D 渲染',text:'本案不是只做一块门头效果图，而是围绕「麦屿烘焙 MAIYU BAKERY」完成主招牌、侧招、橱窗陈列、菜单灯箱与包装延展五项设计，并用日夜两套 3D 场景检查实际效果。主招立体金属字、结构柱、玻璃门窗、入口进深与人行界面处在同一透视空间；白天验证材质与阴影，夜间验证暖白发光、橱窗照明和远距识别。',role:'烘焙品牌 / 店招与橱窗 / 菜单灯箱 / 包装延展 / 正规 3D 渲染',strategy:'五项设计清单 × 真实街铺 × 日夜光照',deliverables:'主招牌、侧招、橱窗陈列、菜单灯箱、包装延展、日夜 CGI'},
+        mugu:{title:'MUGU 烘焙门店',image:'assets/img-018.webp',alt:'MUGU 木谷烘焙门店 45 度 3D 渲染，暖黄招牌、深棕饰面与三组拱窗处于同一真实透视',text:'以“刚出炉的拱窗”为核心识别，将门头、橱窗、菜单与外带包装收进同一套暖黄、深棕与纸白系统。平面稿完整标出品牌名、门头尺寸、招牌材料、营业时间与现场复尺待确认项；正视和 45° 两张 3D 渲染检查建筑进深、招牌厚度与拱窗结构，两张街景检查白天材质和夜间发光可读性。',role:'门店视觉 / 空间基调 / 包装延展 / 3D 场景呈现',strategy:'拱窗识别 × 日夜双态 × 可维护招牌结构',deliverables:'完整门店平面稿、门店正视渲染、门店 45° 渲染、白天街景、夜间街景、招牌结构特写'},
+        tide:{title:'TIDE 夏日企划',image:'assets/img-019.png',alt:'TIDE 夏日企划 45 度户外显示屏 3D 渲染，蓝黄橙主视觉、完整标题与待确认活动字段清晰可见',text:'以海岸蓝、日光黄和珊瑚橙建立可跨户外屏与候车亭复用的夏日活动系统。完整平面稿固定 TIDE、夏日企划、SUMMER OPEN DAY 与“日期／场地／活动规则待确认”字段；正视和 45° 两张显示屏 3D 渲染检查箱体、边框与画面发光关系，两张实景检验商场广场和候车亭的远近阅读。',role:'广告战役 / 平面 KV / 户外媒体 3D 渲染',strategy:'海岸色块 × 三秒阅读 × 多比例媒体改编',deliverables:'完整活动平面稿、正视显示屏渲染、45° 显示屏渲染、商场广场实景、候车亭实景、LED 模组特写'},
+        mono:{title:'MONO 家居大促',image:'assets/img-020.png',alt:'MONO 家居大促 45 度数字设备 3D 渲染，展示全屋焕新主题、三类家居入口与待确认促销字段',text:'把高密度促销页面改成可在桌面与移动端重排的模块系统：主层只保留“MONO 家居大促／全屋焕新”，客厅、餐厅、卧室进入第二层，优惠规则、活动时间与库存统一标为待确认。两张设备 3D 渲染检查屏幕材质与界面层级，两张真实场景分别模拟家居购物和订单处理环境。',role:'电商视觉 / 活动页面 / 响应式组件 / 设备 3D 呈现',strategy:'强网格 × 单一主行动 × 移动端重排',deliverables:'完整会场平面稿、桌面设备正视渲染、设备 45° 渲染、家居购物实景、订单处理实景、屏幕界面结构特写'},
+        pink:{title:'PINK DUST 社媒',image:'assets/img-038.png',alt:'PINK DUST 社媒内容系统竖屏设备正视 3D 渲染，图文模板、标题安全区和发布待确认字段清晰可见',text:'以亮粉、紫色与柠檬黄建立连续发布的社媒栏目系统。完整平面稿定义图文、短视频和头像的比例、标题安全区与可编辑字段；两张设备 3D 渲染检查屏幕反射、机身厚度与内容层级，两张真实场景分别模拟创作者工作台和数字内容亭。具体发布日期、栏目标题与账号信息未取得，统一标记待确认。',role:'社媒视觉 / 插画系统 / 数字设备 3D 呈现',strategy:'固定模板骨架 × 高识别色块 × 多比例安全区',deliverables:'完整社媒平面稿、竖屏设备正视渲染、双设备 45° 渲染、创作者工作台实景、数字内容亭实景、屏幕组件特写'},
+        grid:{title:'厦门市孝贤技工学校校园文化提升效果方案',image:'assets/img-022.webp',alt:'厦门市孝贤技工学校校门入口校风宣传效果图',actual:true,text:'围绕校园入口、停车场、宿舍区与运动场等关键节点，完成校风宣传、校园总平图、导视路标、景观雕塑、宣传栏及党建长廊的视觉提升方案。精选页保留实际效果图与点位说明。',role:'校园文化 / 导视系统 / 环境视觉',strategy:'校园节点梳理 × 导视统一 × 文化场景提升',deliverables:'校门宣传、校园总平图、指引路标、运动场雕塑、文化宣传栏、党建长廊'},
+        lens:{title:'LENS 影像节',image:'assets/img-039.png',alt:'LENS 影像节背光灯箱海报正视 3D 渲染，环形取景识别、单元分类与待确认场次字段完整',text:'以环形取景结构统一主单元、特别展映与论坛三类内容，并按真实灯箱材料组织明暗层次。完整平面稿固定主视觉、片单区、场次区与场馆字段；两张灯箱 3D 渲染检查磁吸边框、背光厚度与暗部层次，两张影院环境实景检验大厅连续识别和入口导视。片单、场次、场馆与票务信息均标记待确认。',role:'节展视觉 / 灯箱海报 / 影院导视 / 3D 呈现',strategy:'环形取景 × 背光层次 × 单元系列变化',deliverables:'完整灯箱平面稿、正视灯箱渲染、45° 灯箱渲染、影院大厅实景、入口导视实景、灯片结构特写'},
+        fold:{title:'FOLD 家居手册',image:'assets/img-001.png',alt:'FOLD 家居手册展开跨页 45 度 3D 渲染，展示锁线胶装、书脊、纸张与待确认产品信息',text:'以纸张折叠、材质留白与细密信息层级建立家居目录系统。完整平面稿定义封面、目录、产品页、材质索引和页脚规则；闭合与展开两张 3D 渲染检查书脊、跨页和纸张厚度，两张真实场景分别验证客厅翻阅和材料图书馆陈列。产品图、价格、材质来源、页数与印刷纸张均保留待确认字段。',role:'画册设计 / 编辑系统 / 装订 3D 呈现',strategy:'留白节奏 × 材质索引 × 可持续跨页系统',deliverables:'完整目录平面稿、闭合画册渲染、展开跨页渲染、客厅茶几实景、材料图书馆实景、装订结构特写'},
+        nexa:{title:'NEXA 智能设备',image:'assets/img-024.webp',alt:'NEXA 智能设备正视产品 3D 渲染，阳极氧化铝机身、防眩玻璃屏幕和待确认产品参数清晰可见',text:'以阳极氧化铝、深色防眩玻璃和三组弧线状态图形建立智能设备的产品视觉。完整平面稿定义产品主张、屏幕界面、安全区和待确认参数；正视与 45° 两张 3D 渲染检查机身厚度、装配缝与屏幕层次，两张真实场景验证家庭办公和零售展示距离。产品型号、功能参数、接口、散热与发布时间均标为待工程确认。',role:'产品视觉 / 3D 渲染 / 界面系统 / 艺术指导',strategy:'金属精度 × 环形状态语言 × 双场景验证',deliverables:'完整产品平面稿、设备正视渲染、设备 45° 渲染、家庭办公实景、零售展示实景、机身结构特写'},
+        luno:{title:'面膜礼盒系统 20',image:'assets/img-040.png',alt:'面膜礼盒系统 20 闭合礼盒正视产品级 3D 渲染，矿物灰绿与象牙白盒面、五片规格及待确认生产字段清晰可见',text:'以“面膜礼盒系统 20”作为中性项目名，移除不属于本案的其他品牌字样。完整平面稿固定盒面、独立袋、开盒指引、5 片 × 25 mL 规格和法规预留区；闭合与开箱两张 3D 渲染检查纸盒体积、分格纸托、易撕口与拿取空间，两张真实场景检验梳妆台使用和零售陈列。配方、批次、生产日期、责任主体与备案信息均标记待确认。',role:'美妆包装 / 面膜袋与礼盒结构 / 产品级 3D 渲染',strategy:'中性项目名 × 单一网格 × 工程化开口 × 克制材质',deliverables:'完整包装平面稿、闭合礼盒渲染、开箱礼盒渲染、梳妆台实景、零售陈列实景、袋体纸托特写'},
+        runningcar:{title:'跑动的小车',image:'assets/img-026.png',alt:'跑动的小车 3D 动画渲染成品画面',text:'从素模建立车体比例、轮胎结构与表面细节，再完成材质、灯光、森林道路场景与动画渲染。案例同时保留成品画面和素模版，展示从建模到最终视觉的完整过程。',role:'3D 建模 / 材质灯光 / 动画渲染',strategy:'车辆造型 × 场景叙事 × 动态呈现',deliverables:'成品渲染、素模版、动画画面'},
+        robotip:{title:'机器人 IP 设计',image:'assets/img-027.png',alt:'机器人 IP 角色 Blender 建模界面截图',text:'以友好、轻巧的机器人角色为方向，在 Blender 中完成形体比例、头身结构、面部表情与身体组件建模。原始建模截图保留网格与软件界面，直接呈现真实制作过程。',role:'IP 设定 / 角色建模 / Blender',strategy:'亲和轮廓 × 清晰表情 × 可延展角色结构',deliverables:'角色设定、Blender 建模截图、模型细节'},
+        coinbox:{title:'投币盒子',image:'assets/img-028.png',alt:'投币盒子 3D 建模渲染成品画面',text:'围绕投币动作建立盒体、投币口、内部结构与顶部造型，并通过成品渲染和素模版对照呈现造型与结构。材质、灯光和视角共同强化产品体积感。',role:'产品建模 / 结构表达 / 3D 渲染',strategy:'功能结构 × 卡通造型 × 材质表现',deliverables:'成品渲染、素模版、结构展示'},
+        sakura:{title:'春日樱花',image:'assets/img-029.png',alt:'春日樱花主题 3D 建模渲染画面',text:'以春日天空、樱花枝与轻盈色彩建立季节氛围，通过 3D 建模、材质和镜头组织完成清透的主题画面。作品保留原始渲染，呈现对光线、层次与空间气氛的控制。',role:'主题设计 / 3D 建模 / 场景渲染',strategy:'春日色彩 × 空间层次 × 轻盈光感',deliverables:'主题画面、场景建模、成品渲染'},
+        mallbooth:{title:'商城展台设计',image:'assets/img-030.png',alt:'商城展台设计新春主题 3D 建模渲染',text:'围绕商业中庭快闪与节庆陈列，分别完成新春主题、元旦主题和萌宠主题三套展台方案。原始渲染覆盖 Blender 建模过程与三套不同主题的空间效果，展示从结构搭建到视觉落地的连续能力。',role:'展台设计 / 空间建模 / 3D 渲染',strategy:'统一结构 × 三套主题 × 商场人流视角',deliverables:'新春主题展台、元旦主题展台、萌宠主题展台、Blender 建模截图'},
+        wayfinding:{title:'户外标识 · 精神堡垒',image:'assets/img-031.png',alt:'户外标识与精神堡垒 3D 建模渲染方案一',text:'以户外导视和精神堡垒为核心，完成两套不同造型语言的标识方案。原始图中同时呈现主标识、导向牌与多视角组合，重点验证尺度、识别方向和环境中的体量关系。',role:'标识系统 / 精神堡垒 / 3D 建模渲染',strategy:'远距识别 × 结构比例 × 环境适配',deliverables:'方案一标识系统、方案二精神堡垒、多视角渲染'},
+        tianma:{title:'天马微电子 2022 年奠基仪式',image:'assets/img-032.png',alt:'天马微电子 2022 年奠基仪式 LED 大屏主视觉',actual:true,text:'围绕天马微电子 2022 年奠基仪式完成舞台主视觉、LED 大屏与城市天际线舞台画面。本站直接使用作品集原图，呈现真实客户项目中的屏幕内容、舞台结构和视觉延展。',role:'活动主视觉 / LED 大屏 / 舞台视觉',strategy:'科技蓝调 × 仪式主题 × 城市天际线',deliverables:'舞台主视觉、LED 大屏、城市天际线舞台'},
+        signageseries:{title:'发光字系列',image:'assets/img-033.png',alt:'发光字系列项目汇总，包含闪亮柚、哪吒汽车与良初肉业门头招牌',actual:true,text:'发光字系列均为已落地安装施工交付项目，包含闪亮柚、哪吒汽车与良初肉业门头招牌。作品集原图呈现不同品牌字形、门头尺度与发光结构的应用结果。',role:'门头招牌 / 发光字深化 / 生产落地',strategy:'字形识别 × 发光工艺 × 门头尺度',deliverables:'闪亮柚发光字、哪吒汽车门头招牌、良初肉业门头招牌'}
       };
       var actualProjects={sway:true,field:true,arc:true,grid:true,tianma:true,signageseries:true};
       var personalProjects={runningcar:true,robotip:true,coinbox:true,sakura:true,mallbooth:true,wayfinding:true};
@@ -4245,73 +4355,73 @@
           figure.dataset.view=view[0];if(isBatchOne){figure.classList.add('batch-one','priority-'+key);}figure.classList.toggle('is-packaging',category.indexOf('packaging')>-1);figure.classList.toggle('is-space',category.indexOf('space')>-1);figure.classList.toggle('is-digital',category.indexOf('digital')>-1);figure.setAttribute('aria-label',c.title+' '+view[1]+'：'+view[2]);stamp.textContent=projectLabel(key);title.textContent=view[1];note.textContent=view[2];caption.appendChild(title);caption.appendChild(note);
           var dedicatedAssets={
             luma:{
-              'render-front':'assets/img-035.webp',
-              'render-angle':'assets/img-042.webp',
-              'scene-main':'assets/img-043.webp',
-              'scene-alt':'assets/img-044.webp',
-              'detail':'assets/img-045.webp'
+              'render-front':'assets/img-034.webp',
+              'render-angle':'assets/img-041.webp',
+              'scene-main':'assets/img-042.webp',
+              'scene-alt':'assets/img-043.webp',
+              'detail':'assets/img-044.webp'
             },
             nova:{
-              'render-front':'assets/img-036.webp',
-              'render-angle':'assets/img-046.webp',
-              'scene-main':'assets/img-047.webp',
-              'scene-alt':'assets/img-048.webp',
-              'detail':'assets/img-049.webp'
+              'render-front':'assets/img-035.webp',
+              'render-angle':'assets/img-045.webp',
+              'scene-main':'assets/img-046.webp',
+              'scene-alt':'assets/img-047.webp',
+              'detail':'assets/img-048.webp'
             },
             kilo:{
-              'render-front':'assets/img-015.webp',
-              'render-angle':'assets/img-050.webp',
-              'scene-main':'assets/img-051.webp',
-              'scene-alt':'assets/img-052.webp',
-              'detail':'assets/img-053.webp'
+              'render-front':'assets/img-014.webp',
+              'render-angle':'assets/img-049.webp',
+              'scene-main':'assets/img-050.webp',
+              'scene-alt':'assets/img-051.webp',
+              'detail':'assets/img-052.webp'
             },
             orbit:{
-              'render-front':'assets/img-054.webp',
-              'render-angle':'assets/img-055.webp',
-              'scene-main':'assets/img-056.webp',
-              'scene-alt':'assets/img-057.webp',
-              'detail':'assets/img-058.webp'
+              'render-front':'assets/img-053.webp',
+              'render-angle':'assets/img-054.webp',
+              'scene-main':'assets/img-055.webp',
+              'scene-alt':'assets/img-056.webp',
+              'detail':'assets/img-057.webp'
             },
-            sway:{'flat':'assets/img-037.webp','render-front':'assets/img-059.webp','render-angle':'assets/img-060.webp','scene-main':'assets/img-013.webp','scene-alt':'assets/img-061.webp','detail':'assets/img-062.webp'},
+            sway:{'flat':'assets/img-036.webp','render-front':'assets/img-058.webp','render-angle':'assets/img-059.webp','scene-main':'assets/img-012.webp','scene-alt':'assets/img-060.webp','detail':'assets/img-061.webp'},
             moss:{
-              'render-front':'assets/img-063.webp',
-              'render-angle':'assets/img-064.webp',
-              'scene-main':'assets/img-065.webp',
-              'scene-alt':'assets/img-066.webp',
-              'detail':'assets/img-067.webp'
+              'render-front':'assets/img-062.webp',
+              'render-angle':'assets/img-063.webp',
+              'scene-main':'assets/img-064.webp',
+              'scene-alt':'assets/img-065.webp',
+              'detail':'assets/img-066.webp'
             },
             aera:{
-              'render-front':'assets/img-068.webp',
-              'render-angle':'assets/img-014.webp',
-              'scene-main':'assets/img-069.webp',
-              'scene-alt':'assets/img-070.webp',
-              'detail':'assets/img-071.webp'
+              'render-front':'assets/img-067.webp',
+              'render-angle':'assets/img-013.webp',
+              'scene-main':'assets/img-068.webp',
+              'scene-alt':'assets/img-069.webp',
+              'detail':'assets/img-070.webp'
             },
-            field:{'flat':'assets/img-038.webp','render-front':'assets/img-072.webp','render-angle':'assets/img-073.webp','scene-main':'assets/img-074.webp','scene-alt':'assets/img-016.webp','detail':'assets/img-075.webp'},
-            arc:{'flat':'assets/img-017.webp','render-front':'assets/img-076.webp','render-angle':'assets/img-077.webp','scene-main':'assets/img-078.webp','scene-alt':'assets/img-079.webp','detail':'assets/img-080.webp'},
+            field:{'flat':'assets/img-037.webp','render-front':'assets/img-071.webp','render-angle':'assets/img-072.webp','scene-main':'assets/img-073.webp','scene-alt':'assets/img-015.webp','detail':'assets/img-074.webp'},
+            arc:{'flat':'assets/img-016.webp','render-front':'assets/img-075.webp','render-angle':'assets/img-076.webp','scene-main':'assets/img-077.webp','scene-alt':'assets/img-078.webp','detail':'assets/img-079.webp'},
             mugu:{
-              'render-front':'assets/img-081.png','render-angle':'assets/img-019.webp','scene-main':'assets/img-082.png','scene-alt':'assets/img-083.png','detail':'assets/img-084.png'
+              'render-front':'assets/img-080.png','render-angle':'assets/img-018.webp','scene-main':'assets/img-081.png','scene-alt':'assets/img-082.png','detail':'assets/img-083.png'
             },
             tide:{
-              'render-front':'assets/img-085.png','render-angle':'assets/img-020.png','scene-main':'assets/img-086.png','scene-alt':'assets/img-087.png','detail':'assets/img-088.png'
+              'render-front':'assets/img-084.png','render-angle':'assets/img-019.png','scene-main':'assets/img-085.png','scene-alt':'assets/img-086.png','detail':'assets/img-087.png'
             },
             mono:{
-              'render-front':'assets/img-089.png','render-angle':'assets/img-021.png','scene-main':'assets/img-090.png','scene-alt':'assets/img-091.png','detail':'assets/img-092.png'
+              'render-front':'assets/img-088.png','render-angle':'assets/img-020.png','scene-main':'assets/img-089.png','scene-alt':'assets/img-090.png','detail':'assets/img-091.png'
             },
-            pink:{'render-front':'assets/img-039.png','render-angle':'assets/img-022.png','scene-main':'assets/img-093.png','scene-alt':'assets/img-094.png','detail':'assets/img-095.png'},
-            grid:{'flat':'assets/img-023.webp','render-front':'assets/img-096.webp','render-angle':'assets/img-097.webp','scene-main':'assets/img-098.webp','scene-alt':'assets/img-099.webp','detail':'assets/img-100.webp'},
-            lens:{'render-front':'assets/img-040.png','render-angle':'assets/img-024.png','scene-main':'assets/img-101.png','scene-alt':'assets/img-102.png','detail':'assets/img-103.png'},
-            fold:{'render-front':'assets/img-006.png','render-angle':'assets/img-002.png','scene-main':'assets/img-104.png','scene-alt':'assets/img-105.png','detail':'assets/img-007.png'},
-            nexa:{'render-front':'assets/img-025.webp','render-angle':'assets/img-106.webp','scene-main':'assets/img-107.webp','scene-alt':'assets/img-108.webp','detail':'assets/img-109.webp'},
-            luno:{'render-front':'assets/img-041.png','render-angle':'assets/img-026.png','scene-main':'assets/img-110.png','scene-alt':'assets/img-111.png','detail':'assets/img-112.png'},
-            runningcar:{'render-front':'assets/img-027.png','flat':'assets/img-113.png'},
-            robotip:{'render-front':'assets/img-028.png','detail':'assets/img-114.png'},
-            coinbox:{'render-front':'assets/img-029.png','flat':'assets/img-115.png'},
-            sakura:{'render-front':'assets/img-030.png'},
-            mallbooth:{'flat':'assets/img-003.png','render-front':'assets/img-031.png','render-angle':'assets/img-116.png','scene-main':'assets/img-117.png'},
-            wayfinding:{'render-front':'assets/img-032.png','render-angle':'assets/img-118.png'},
-            tianma:{'flat':'assets/img-033.png','render-front':'assets/img-004.png','scene-main':'assets/img-005.png'},
-            signageseries:{'flat':'assets/img-034.png','render-front':'assets/img-119.png','render-angle':'assets/img-120.png','scene-main':'assets/img-121.png'}
+            pink:{'render-front':'assets/img-038.png','render-angle':'assets/img-021.png','scene-main':'assets/img-092.png','scene-alt':'assets/img-093.png','detail':'assets/img-094.png'},
+            grid:{'flat':'assets/img-022.webp','render-front':'assets/img-095.webp','render-angle':'assets/img-096.webp','scene-main':'assets/img-097.webp','scene-alt':'assets/img-098.webp','detail':'assets/img-099.webp'},
+            lens:{'render-front':'assets/img-039.png','render-angle':'assets/img-023.png','scene-main':'assets/img-100.png','scene-alt':'assets/img-101.png','detail':'assets/img-102.png'},
+            fold:{'render-front':'assets/img-005.png','render-angle':'assets/img-001.png','scene-main':'assets/img-103.png','scene-alt':'assets/img-104.png','detail':'assets/img-006.png'},
+            nexa:{'render-front':'assets/img-024.webp','render-angle':'assets/img-105.webp','scene-main':'assets/img-106.webp','scene-alt':'assets/img-107.webp','detail':'assets/img-108.webp'},
+            luno:{'render-front':'assets/img-040.png','render-angle':'assets/img-025.png','scene-main':'assets/img-109.png','scene-alt':'assets/img-110.png','detail':'assets/img-111.png'},
+            runningcar:{'render-front':'assets/img-026.png','flat':'assets/img-112.png'},
+            robotip:{'render-front':'assets/img-027.png','detail':'assets/img-113.png'},
+            coinbox:{'render-front':'assets/img-028.png','flat':'assets/img-114.png'},
+            sakura:{'render-front':'assets/img-029.png'},
+            mallbooth:{'flat':'assets/img-002.png','render-front':'assets/img-030.png','render-angle':'assets/img-115.png','scene-main':'assets/img-116.png'},
+            wayfinding:{'render-front':'assets/img-031.png','render-angle':'assets/img-117.png'},
+            tianma:{'flat':'assets/img-032.png','render-front':'assets/img-003.png','scene-main':'assets/img-004.png'},
+            signageseries:{'flat':'assets/img-033.png','render-front':'assets/img-118.png','render-angle':'assets/img-119.png','scene-main':'assets/img-120.png'}
           },assetSet=dedicatedAssets[key];
           if(assetSet&&assetSet[view[0]]){var dedicated=document.createElement('img');dedicated.src=assetSet[view[0]];dedicated.alt=c.title+' '+view[1]+'：'+view[2];dedicated.style.width='100%';dedicated.style.height='100%';dedicated.style.objectFit=(actualProjects[key]||personalProjects[key])?'contain':'cover';if(actualProjects[key]||personalProjects[key]) dedicated.className='actual-page';canvas.appendChild(dedicated);}
           else{
@@ -4392,7 +4502,7 @@
         if(app.scene==='beautySet'){if(c.image){slot('beauty-render');}else{clonePart('.beauty-carton');clonePart('.beauty-bottle.serum');clonePart('.beauty-bottle.pump');clonePart('.beauty-bottle.jar');}var finish=makeElement('div','finish-note');finish.textContent='MASK SYSTEM / SACHET · SLEEVE · DIVIDED PAPER TRAY';scene.appendChild(finish);}
         if(app.scene==='festivalScene'){[['stage','LED 主屏＋演讲台'],['truss','桁架背景板＋签到墙'],['flags','三联道旗'],['checkin','签到区']].forEach(function(item){var panel=makeElement('div','festival-mock '+item[0]);if(item[0]==='flags'){for(var f=0;f<3;f++)panel.appendChild(artworkFor(card,c));}else panel.appendChild(artworkFor(card,c));var label=makeElement('span','festival-label');label.textContent=item[1];panel.appendChild(label);scene.appendChild(panel);});}
         if(app.scene==='audioStudio'){var wall=makeElement('div','audio-wall');wall.appendChild(artworkFor(card,c));scene.appendChild(wall);scene.appendChild(makeElement('div','audio-console'));var board=makeElement('div','audio-service-board');board.innerHTML='<b>SERVICES / 服务内容</b><span>品牌声音设计</span><span>播客制作</span><span>广告配乐</span><span>空间音频</span>';scene.appendChild(board);var room=makeElement('span','audio-room-label');room.textContent='RECORDING · MIXING · SOUND STRATEGY';scene.appendChild(room);}
-        if(app.scene==='giftSet'){[['closed','礼盒外观 / 标准矩形盒体','assets/img-068.webp'],['open','开箱状态 / EVA 植绒内托','assets/img-014.webp'],['detail','单品与内托 / 三件香氛','assets/img-070.webp']].forEach(function(item){var panel=makeElement('div','gift-panel'),img=document.createElement('img');panel.dataset.view=item[0];img.src=item[2];img.alt='AERA '+item[1]+'概念应用场景示意';img.className='scene-art';panel.appendChild(img);var caption=makeElement('span','panel-caption');caption.textContent=item[1];panel.appendChild(caption);scene.appendChild(panel);});}
+        if(app.scene==='giftSet'){[['closed','礼盒外观 / 标准矩形盒体','assets/img-067.webp'],['open','开箱状态 / EVA 植绒内托','assets/img-013.webp'],['detail','单品与内托 / 三件香氛','assets/img-069.webp']].forEach(function(item){var panel=makeElement('div','gift-panel'),img=document.createElement('img');panel.dataset.view=item[0];img.src=item[2];img.alt='AERA '+item[1]+'概念应用场景示意';img.className='scene-art';panel.appendChild(img);var caption=makeElement('span','panel-caption');caption.textContent=item[1];panel.appendChild(caption);scene.appendChild(panel);});}
         if(app.scene==='teaSystem'){[['cup','纸杯 / 杯身图案与容量'],['tin','茶叶罐 / 茶品与规格'],['set','组合陈列 / 茶包与冲泡说明']].forEach(function(item){var panel=makeElement('div','tea-panel');panel.dataset.view=item[0];panel.appendChild(artworkFor(card,c));var caption=makeElement('span','panel-caption');caption.textContent=item[1];panel.appendChild(caption);scene.appendChild(panel);});}
         if(app.scene==='lightbox'){slot('mock-frame');scene.appendChild(makeElement('i','mock-post'));scene.appendChild(makeElement('i','mock-person'));}
         if(app.scene==='storefront'){var sign=slot('store-sign'),name=makeElement('b','');name.textContent=c.title.split(' ')[0];sign.appendChild(name);var windowRow=makeElement('div','store-window');windowRow.appendChild(makeElement('i',''));windowRow.appendChild(makeElement('i',''));scene.appendChild(windowRow);}
@@ -4541,27 +4651,31 @@
       document.querySelectorAll('.copy-email').forEach(function(button){button.addEventListener('click',function(){var value=button.dataset.copy,done=function(){button.textContent='已复制';showToast('邮箱已复制');setTimeout(function(){button.textContent='复制';},1800);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(value).then(done).catch(function(){if(fallbackCopy(value))done();else showToast('复制失败，请长按邮箱复制');});}else if(fallbackCopy(value)){done();}else{showToast('复制失败，请长按邮箱复制');}});});
 
       /* WeChat-style guided consultation. Answers live only for this open page, then hand off by copy or email. */
-      var consultFab=document.getElementById('consultFab'),footerConsult=document.querySelector('.footer-consult'),consultShell=document.getElementById('consultShell'),consultDialog=consultShell.querySelector('.consult-dialog'),consultClose=document.getElementById('consultClose'),consultBody=document.getElementById('consultBody'),consultThread=document.getElementById('consultThread'),consultComposer=document.getElementById('consultComposer'),consultOptions=document.getElementById('consultOptions'),consultInputRow=document.getElementById('consultInputRow'),consultField=document.getElementById('consultField'),consultSend=document.getElementById('consultSend'),consultValidation=document.getElementById('consultValidation'),consultStepLabel=document.getElementById('consultStepLabel'),consultStepName=document.getElementById('consultStepName'),consultProgressBar=document.getElementById('consultProgressBar'),consultStep=0,consultAnswers={},consultLastFocus=null,consultPreviousOverflow='';
+      var consultFab=document.getElementById('consultFab'),footerConsult=document.querySelector('.footer-consult'),consultShell=document.getElementById('consultShell'),consultDialog=consultShell.querySelector('.consult-dialog'),consultClose=document.getElementById('consultClose'),consultMinimize=document.getElementById('consultMinimize'),consultBody=document.getElementById('consultBody'),consultThread=document.getElementById('consultThread'),consultComposer=document.getElementById('consultComposer'),consultOptions=document.getElementById('consultOptions'),consultInputRow=document.getElementById('consultInputRow'),consultField=document.getElementById('consultField'),consultSend=document.getElementById('consultSend'),consultValidation=document.getElementById('consultValidation'),consultStepLabel=document.getElementById('consultStepLabel'),consultStepName=document.getElementById('consultStepName'),consultProgressBar=document.getElementById('consultProgressBar'),consultStep=0,consultAnswers={},consultLastFocus=null,consultPreviousOverflow='';
       var consultSteps=[
-        {key:'project',label:'项目类型',question:'先从项目类型开始：你这次准备做哪一类设计？',type:'options',options:['品牌视觉','广告画面','包装设计','空间应用','其他设计']},
+        {key:'project',label:'项目类型',question:'先从项目类型开始：你这次准备做哪一类设计？',type:'options',options:['品牌视觉','包装设计','广告画面','其他']},
         {key:'description',label:'具体需求',question:'具体需要设计什么？也可以告诉我希望解决的问题。',type:'textarea',placeholder:'示例（虚构）：为“山海小店”设计新品主视觉，并延展两张宣传海报。'},
         {key:'size',label:'尺寸规格',question:'需要哪些尺寸、数量或文件格式？',type:'input',placeholder:'示例（虚构）：横版 3000 × 1800 mm，1 张，需要 PDF 与源文件。'},
         {key:'deadline',label:'截止时间',question:'希望在什么时间收到最终文件？',type:'input',placeholder:'示例（虚构）：11 月 20 日前；不确定可填写“待确认”。'},
         {key:'budget',label:'预算安排',question:'这次需求更接近哪种预算安排？',type:'options',options:['设计包月 ¥5,000／月起','季度包月 ¥14,250／季','包含实体制作，按规格另计','先沟通需求，再确认预算']},
-        {key:'contact',label:'联系方式',question:'最后，请留下便于回复的联系方式。',type:'input',placeholder:'示例（虚构）：微信 design_demo_01，或邮箱 sample@example.com'}
+        {key:'contact',label:'联系方式',question:'最后一步：留下你的微信号或邮箱，方便我联系你~',type:'input',placeholder:'示例（虚构）：微信 design_demo_01，或邮箱 sample@example.com'}
       ];
       var consultLabels={project:'项目类型',description:'具体需求',size:'尺寸规格',deadline:'截止时间',budget:'预算安排',contact:'联系方式'};
-      function consultAvatar(){var avatar=document.createElement('div'),img=document.createElement('img');avatar.className='consult-avatar';img.src='assets/img-001.png';img.alt='';avatar.appendChild(img);return avatar;}
+      function consultAvatar(){var avatar=document.createElement('div'),img=document.createElement('img');avatar.className='consult-avatar';img.src='assets/img-000.png';img.alt='';avatar.appendChild(img);return avatar;}
       function makeConsultTurn(role,text){var turn=document.createElement('div'),wrap=document.createElement('div'),roleLabel=document.createElement('span'),bubble=document.createElement('div');turn.className='consult-turn '+role;roleLabel.className='consult-role';roleLabel.textContent=role==='user'?'你':'正鑫越需求助手';bubble.className='consult-bubble';bubble.textContent=text;if(role!=='user'){turn.appendChild(consultAvatar());wrap.className='consult-message-wrap';wrap.appendChild(roleLabel);wrap.appendChild(bubble);turn.appendChild(wrap);}else{turn.appendChild(bubble);}return turn;}
       function consultScroll(){requestAnimationFrame(function(){consultBody.scrollTop=consultBody.scrollHeight;});}
-      function consultOpen(){consultLastFocus=document.activeElement;consultPreviousOverflow=document.body.style.overflow;consultShell.classList.add('open');consultShell.setAttribute('aria-hidden','false');consultFab.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';renderConsult();setTimeout(function(){consultDialog.focus();},30);}
+      function consultOpen(){consultLastFocus=document.activeElement;consultPreviousOverflow=document.body.style.overflow;consultShell.classList.remove('minimized');if(consultMinimize){consultMinimize.textContent='—';consultMinimize.setAttribute('aria-label','最小化咨询窗口');}consultShell.classList.add('open');consultShell.setAttribute('aria-hidden','false');consultFab.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';renderConsult();setTimeout(function(){consultDialog.focus();},30);}
       function consultClosePanel(){consultShell.classList.remove('open');consultShell.setAttribute('aria-hidden','true');consultFab.setAttribute('aria-expanded','false');document.body.style.overflow=consultPreviousOverflow;if(consultLastFocus&&consultLastFocus.focus)consultLastFocus.focus();}
+      function consultToggleMinimize(){var minimized=consultShell.classList.toggle('minimized');consultMinimize.textContent=minimized?'+':'—';consultMinimize.setAttribute('aria-label',minimized?'展开咨询窗口':'最小化咨询窗口');}
+      consultMinimize.addEventListener('click',function(e){e.stopPropagation();consultToggleMinimize();});
+      consultDialog.addEventListener('click',function(e){if(consultShell.classList.contains('minimized')&&!e.target.closest('.consult-minimize,.consult-close'))consultToggleMinimize();});
       function buildConsultBrief(){return '【正鑫越文化传播个人工作室｜项目需求摘要】\n\n项目类型：'+(consultAnswers.project||'待确认')+'\n具体需求：'+(consultAnswers.description||'待确认')+'\n尺寸规格：'+(consultAnswers.size||'待确认')+'\n截止时间：'+(consultAnswers.deadline||'待确认')+'\n预算安排：'+(consultAnswers.budget||'待确认')+'\n联系方式：'+(consultAnswers.contact||'待确认')+'\n\n合作说明：\n- 设计服务采用包月合作，¥5,000／月起。\n- 如涉及灯箱、展架、包装、印刷品等实体制作，按规格、数量、材质与工艺另计。';}
       function consultCopy(button){var done=function(){button.textContent='已复制';showToast('需求摘要已复制');setTimeout(function(){button.textContent='复制摘要';},1800);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(buildConsultBrief()).then(done).catch(function(){if(fallbackCopy(buildConsultBrief()))done();else showToast('复制失败，请长按摘要复制');});}else if(fallbackCopy(buildConsultBrief()))done();else showToast('复制失败，请长按摘要复制');}
-      function renderConsultSummary(){consultStepLabel.textContent='第 7 / 7 步';consultStepName.textContent='需求摘要';consultProgressBar.style.width='100%';consultThread.replaceChildren();consultThread.appendChild(makeConsultTurn('assistant','谢谢，需求摘要已经整理好了。确认无误后，可以复制内容或调起邮件发送。'));var summary=document.createElement('div');summary.className='consult-summary';var title=document.createElement('h3');title.textContent='需求摘要';summary.appendChild(title);var dl=document.createElement('dl');consultSteps.forEach(function(step){var row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=consultLabels[step.key];dd.textContent=consultAnswers[step.key]||'待确认';row.appendChild(dt);row.appendChild(dd);dl.appendChild(row);});summary.appendChild(dl);var note=document.createElement('p');note.className='consult-summary-note';note.textContent='设计服务采用包月合作，¥5,000／月起；实体制作按规格、数量、材质与工艺另行报价。';summary.appendChild(note);consultThread.appendChild(summary);var actions=document.createElement('div');actions.className='consult-finish-actions';var copy=document.createElement('button');copy.type='button';copy.className='consult-action';copy.textContent='复制摘要';copy.addEventListener('click',function(){consultCopy(copy);});var mail=document.createElement('a');mail.className='consult-action';mail.href='mailto:784005231@qq.com?subject='+encodeURIComponent('项目咨询｜'+(consultAnswers.project||'设计需求'))+'&body='+encodeURIComponent(buildConsultBrief());mail.textContent='发送邮件';actions.appendChild(copy);actions.appendChild(mail);consultThread.appendChild(actions);var restart=document.createElement('button');restart.type='button';restart.className='consult-restart';restart.textContent='重新填写';restart.addEventListener('click',function(){consultStep=0;consultAnswers={};renderConsult();});consultThread.appendChild(restart);consultComposer.hidden=true;consultScroll();}
-      function renderConsult(){consultOptions.replaceChildren();consultValidation.textContent='';consultComposer.hidden=false;consultThread.replaceChildren();consultThread.appendChild(makeConsultTurn('assistant','你好，我是正鑫越需求助手。回答 6 个问题，我会在第 7 步为你整理一份需求摘要。'));for(var i=0;i<Math.min(consultStep,consultSteps.length);i++){var prior=consultSteps[i];consultThread.appendChild(makeConsultTurn('assistant',prior.question));consultThread.appendChild(makeConsultTurn('user',consultAnswers[prior.key]||'待确认'));}if(consultStep>=consultSteps.length){renderConsultSummary();return;}var step=consultSteps[consultStep];consultStepLabel.textContent='第 '+(consultStep+1)+' / 7 步';consultStepName.textContent=step.label;consultProgressBar.style.width=(((consultStep+1)/7)*100)+'%';consultThread.appendChild(makeConsultTurn('assistant',step.question));consultInputRow.hidden=step.type==='options';consultField.value=consultAnswers[step.key]||'';consultField.placeholder=step.placeholder||'';consultField.rows=step.type==='textarea'?3:1;consultField.style.height=step.type==='textarea'?'76px':'43px';if(step.type==='options'){step.options.forEach(function(label){var button=document.createElement('button');button.type='button';button.className='consult-option';var span=document.createElement('span');span.textContent=label;button.appendChild(span);button.addEventListener('click',function(){consultAnswers[step.key]=label;consultStep+=1;renderConsult();});consultOptions.appendChild(button);});}else{setTimeout(function(){consultField.focus();},30);}consultScroll();}
+      function consultCopyText(button,text){var resetLabel=button.textContent;var done=function(){button.textContent='已复制';showToast('已复制到剪贴板');setTimeout(function(){button.textContent=resetLabel;},1800);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(function(){if(fallbackCopy(text))done();else showToast('复制失败，请长按复制');});}else if(fallbackCopy(text))done();else showToast('复制失败，请长按复制');}
+      function renderConsultSummary(){consultStepLabel.textContent='第 7 / 7 步';consultStepName.textContent='需求摘要';consultProgressBar.style.width='100%';consultThread.replaceChildren();consultThread.appendChild(makeConsultTurn('assistant','谢谢，需求摘要已经整理好了。确认无误后，可以复制内容或调起邮件发送。'));var summary=document.createElement('div');summary.className='consult-summary';var title=document.createElement('h3');title.textContent='需求摘要';summary.appendChild(title);var dl=document.createElement('dl');consultSteps.forEach(function(step){var row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=consultLabels[step.key];dd.textContent=consultAnswers[step.key]||'待确认';row.appendChild(dt);row.appendChild(dd);dl.appendChild(row);});summary.appendChild(dl);var note=document.createElement('p');note.className='consult-summary-note';note.textContent='设计服务采用包月合作，¥5,000／月起；实体制作按规格、数量、材质与工艺另行报价。';summary.appendChild(note);consultThread.appendChild(summary);var actions=document.createElement('div');actions.className='consult-finish-actions';var copy=document.createElement('button');copy.type='button';copy.className='consult-action';copy.textContent='复制摘要';copy.addEventListener('click',function(){consultCopy(copy);});var mail=document.createElement('a');mail.className='consult-action';mail.href='mailto:784005231@qq.com?subject='+encodeURIComponent('项目咨询｜'+(consultAnswers.project||'设计需求'))+'&body='+encodeURIComponent(buildConsultBrief());mail.textContent='发送邮件';actions.appendChild(copy);actions.appendChild(mail);consultThread.appendChild(actions);var contactBlock=document.createElement('div');contactBlock.className='consult-contact';var contactTitle=document.createElement('h4');contactTitle.textContent='联系工作室';contactBlock.appendChild(contactTitle);var contactHint=document.createElement('p');contactHint.textContent='需求也可以直接发到工作室邮箱，点击即可复制：';contactBlock.appendChild(contactHint);['784005231@qq.com','panyi8899666@gmail.com'].forEach(function(email){var row=document.createElement('div');row.className='consult-contact-row';var link=document.createElement('a');link.href='mailto:'+email;link.textContent=email;row.appendChild(link);var copyBtn=document.createElement('button');copyBtn.type='button';copyBtn.className='consult-contact-copy';copyBtn.textContent='复制';copyBtn.addEventListener('click',function(){consultCopyText(copyBtn,email);});row.appendChild(copyBtn);contactBlock.appendChild(row);});consultThread.appendChild(contactBlock);var restart=document.createElement('button');restart.type='button';restart.className='consult-restart';restart.textContent='重新填写';restart.addEventListener('click',function(){consultStep=0;consultAnswers={};renderConsult();});consultThread.appendChild(restart);consultComposer.hidden=true;consultScroll();}
+      function renderConsult(){consultOptions.replaceChildren();consultValidation.textContent='';consultComposer.hidden=false;consultThread.replaceChildren();consultThread.appendChild(makeConsultTurn('assistant','你好呀，我是正鑫越工作室的小助手👋 想做什么设计？跟我说说~'));for(var i=0;i<Math.min(consultStep,consultSteps.length);i++){var prior=consultSteps[i];consultThread.appendChild(makeConsultTurn('assistant',prior.question));consultThread.appendChild(makeConsultTurn('user',consultAnswers[prior.key]||'待确认'));}if(consultStep>=consultSteps.length){renderConsultSummary();return;}var step=consultSteps[consultStep];consultStepLabel.textContent='第 '+(consultStep+1)+' / 7 步';consultStepName.textContent=step.label;consultProgressBar.style.width=(((consultStep+1)/7)*100)+'%';consultThread.appendChild(makeConsultTurn('assistant',step.question));consultInputRow.hidden=step.type==='options';consultField.value=consultAnswers[step.key]||'';consultField.placeholder=step.placeholder||'';consultField.rows=step.type==='textarea'?3:1;consultField.style.height=step.type==='textarea'?'76px':'43px';if(step.type==='options'){step.options.forEach(function(label){var button=document.createElement('button');button.type='button';button.className='consult-option';var span=document.createElement('span');span.textContent=label;button.appendChild(span);button.addEventListener('click',function(){consultAnswers[step.key]=label;consultStep+=1;renderConsult();});consultOptions.appendChild(button);});}else{setTimeout(function(){consultField.focus();},30);}consultScroll();}
       function submitConsultField(){if(consultStep>=consultSteps.length)return;var step=consultSteps[consultStep],value=consultField.value.trim();if(!value){consultValidation.textContent='请填写后再发送；不确定时可以填写“待确认”。';consultField.focus();return;}consultAnswers[step.key]=value;consultStep+=1;renderConsult();}
-      consultSend.addEventListener('click',submitConsultField);consultField.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitConsultField();}});consultFab.addEventListener('click',consultOpen);if(footerConsult)footerConsult.addEventListener('click',consultOpen);consultClose.addEventListener('click',consultClosePanel);consultShell.addEventListener('click',function(e){if(e.target===consultShell)consultClosePanel();});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&consultShell.classList.contains('open'))consultClosePanel();if(e.key==='Tab'&&consultShell.classList.contains('open')){var focusables=Array.prototype.slice.call(consultDialog.querySelectorAll('button,a[href],textarea')).filter(function(node){return !node.disabled&&node.offsetParent!==null;});if(!focusables.length)return;var first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+      consultSend.addEventListener('click',submitConsultField);consultField.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitConsultField();}});consultFab.addEventListener('click',consultOpen);if(footerConsult)footerConsult.addEventListener('click',consultOpen);var consultOpenContact=document.getElementById('consultOpenContact');if(consultOpenContact)consultOpenContact.addEventListener('click',consultOpen);consultClose.addEventListener('click',consultClosePanel);consultShell.addEventListener('click',function(e){if(e.target===consultShell)consultClosePanel();});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&consultShell.classList.contains('open'))consultClosePanel();if(e.key==='Tab'&&consultShell.classList.contains('open')){var focusables=Array.prototype.slice.call(consultDialog.querySelectorAll('button,a[href],textarea')).filter(function(node){return !node.disabled&&node.offsetParent!==null;});if(!focusables.length)return;var first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 
       /* Award-portfolio interaction layer: restrained movement, no blocking loading gate. */
       var heroTitle=document.querySelector('.hero h1'),charIndex=0;
@@ -4699,7 +4813,7 @@
 
       /* Seasonal 3D mascot system: the twelve supplied poses rotate gradually while
          the character wanders only along the viewport rails, away from core copy. */
-      var mascotSource='assets/img-001.png';
+      var mascotSource='assets/img-000.png';
       document.querySelectorAll('.mascot').forEach(function(button){var img=button.querySelector('img'),bubbleTimer=0;img.src=mascotSource;button.addEventListener('click',function(e){e.stopPropagation();document.querySelectorAll('.mascot.is-speaking').forEach(function(other){if(other!==button)other.classList.remove('is-speaking');});button.classList.toggle('is-speaking');clearTimeout(bubbleTimer);if(button.classList.contains('is-speaking'))bubbleTimer=setTimeout(function(){button.classList.remove('is-speaking');},3400);});});
       var portraitMascot=document.querySelector('.about-portrait>img');if(portraitMascot)portraitMascot.src=mascotSource;
       /* The roaming mascot uses the supplied high-quality avatar artwork as a single 2D sprite. */
@@ -4732,22 +4846,36 @@
       caseCards.forEach(function(card){card.addEventListener('touchstart',function(){caseCards.forEach(function(other){if(other!==card)other.classList.remove('is-touch-revealed');});card.classList.add('is-touch-revealed');},{passive:true});});
       document.addEventListener('touchstart',function(e){if(!e.target.closest('.project,.featured-card,.hero-ribbon-card'))caseCards.forEach(function(card){card.classList.remove('is-touch-revealed');});},{passive:true});
 
-      /* Keep every bilingual control on one line, with the English line no wider than its Chinese label. */
-      function fitBilingualButtons(){
-        document.querySelectorAll('button,a').forEach(function(control){
-          var chinese=null,english=null;
-          Array.prototype.forEach.call(control.children,function(child){if(!chinese&&child.tagName==='SPAN')chinese=child;if(!english&&child.tagName==='SMALL')english=child;});
+      /* Measure the live Chinese line after fonts settle, then expand (never squash) English with tracking. */
+      var bilingualSelector='.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open';
+      function measureTextInk(node){
+        if(!node||!node.firstChild)return 0;
+        var range=document.createRange();range.selectNodeContents(node);return range.getBoundingClientRect().width;
+      }
+      function balanceBilingualButtons(){
+        document.querySelectorAll(bilingualSelector).forEach(function(control){
+          var chinese=control.querySelector(':scope > span'),english=control.querySelector(':scope > small');
           if(!chinese||!english)return;
-          chinese.style.whiteSpace='nowrap';english.style.whiteSpace='nowrap';english.style.wordBreak='keep-all';
-          english.style.removeProperty('transform');english.style.removeProperty('width');english.style.removeProperty('max-width');
-          var chineseWidth=Math.ceil(chinese.getBoundingClientRect().width);if(!chineseWidth)return;
-          english.style.setProperty('width',chineseWidth+'px','important');english.style.setProperty('max-width',chineseWidth+'px','important');
-          var naturalWidth=english.scrollWidth,scale=Math.min(1,chineseWidth/Math.max(1,naturalWidth));
-          if(scale<.995){english.style.transform='scaleX('+scale.toFixed(3)+')';english.style.transformOrigin=getComputedStyle(english).textAlign==='center'?'center center':'left center';}
+          chinese.style.removeProperty('width');english.style.removeProperty('width');english.style.removeProperty('max-width');
+          english.style.removeProperty('transform');english.style.setProperty('letter-spacing','0px','important');
+          control.style.removeProperty('--measured-english-spacing');
+          var chineseWidth=measureTextInk(chinese);if(!chineseWidth)return;
+          var glyphs=Array.from(english.textContent.trim()).length;
+          var gaps=Math.max(1,glyphs-1),naturalWidth=measureTextInk(english);
+          var spacing=Math.max(0,(chineseWidth-naturalWidth)/gaps);
+          english.style.setProperty('letter-spacing',spacing.toFixed(3)+'px','important');
+          var correction=(chineseWidth-measureTextInk(english))/gaps;
+          spacing=Math.max(0,spacing+correction);
+          control.style.setProperty('--measured-english-spacing',spacing.toFixed(3)+'px');
+          english.style.setProperty('letter-spacing',spacing.toFixed(3)+'px','important');
+          control.dataset.labelFit='tracked';
+          control.dataset.chineseWidth=chineseWidth.toFixed(2);
+          control.dataset.englishWidth=measureTextInk(english).toFixed(2);
         });
       }
-      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitBilingualButtons);else requestAnimationFrame(fitBilingualButtons);
-      window.addEventListener('resize',fitBilingualButtons,{passive:true});
+      function scheduleBilingualBalance(){requestAnimationFrame(balanceBilingualButtons);}
+      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(scheduleBilingualBalance);else scheduleBilingualBalance();
+      window.addEventListener('resize',scheduleBilingualBalance,{passive:true});
       document.addEventListener('click',function(){document.querySelectorAll('.mascot.is-speaking').forEach(function(node){node.classList.remove('is-speaking');});});
 
       /* Keep the redesigned data opening and forecast board grounded in the visible case data. */
