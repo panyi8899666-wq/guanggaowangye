@@ -3797,6 +3797,141 @@
       .hero-ready .pricing-modal .production-quote a:hover .production-cta-arrow{transform:none}
     }
 
+    /* 2026-10-17 button internal-layout standard: no text-only buttons anywhere.
+       Every labelled control is [icon] 9px [label] — icon on the left, label on the right, one fixed
+       9px gutter that never squeezes. Padding follows one ratio at every tier: horizontal padding is
+       exactly twice the vertical (2:1 capsule proportion), the left inset equals the right inset, and
+       tiers differ only by scale. Bilingual capsules become a two-column grid — icon column plus the
+       centred Chinese/English label column — so the icon+label group centres as one unit while the
+       measured English spacing and bilingual centring from the earlier system stay untouched.
+       Copy and colours are unchanged; this pass only re-lays-out the inside of each button. */
+    :root{
+      --btn-gap:9px;
+      --icon-back:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5.5 8 12l6.5 6.5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      --icon-restart:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4.8 4.4v5h5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5.6 9.4a7.6 7.6 0 1 1-.9 5.1' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    }
+
+    /* Icon assignment: one identifying mark per action. */
+    body.hero-ready .topline .consult-pill{--control-icon:var(--icon-chat)}
+    body.hero-ready .hero-actions>a:nth-child(1){--control-icon:var(--icon-chat)}
+    body.hero-ready .hero-actions>a:nth-child(2){--control-icon:var(--icon-eye)}
+    body.hero-ready .contact-actions .cta{--control-icon:var(--icon-chat)}
+    body.hero-ready .contact-actions a.cta{--control-icon:var(--icon-download)}
+    body.hero-ready .pricing-open{--control-icon:var(--icon-eye)}
+    body.hero-ready :is(.consult-fab,.footer-consult){--control-icon:var(--icon-chat)}
+    body.hero-ready .consult-send{--control-icon:var(--icon-send)}
+    body.hero-ready .copy-email{--control-icon:var(--icon-copy)}
+    body.hero-ready .case-end button{--control-icon:var(--icon-grid)}
+    body.hero-ready .detail-pill{--control-icon:var(--icon-diamond)}
+    body.hero-ready .consult-contact-copy{--control-icon:var(--icon-copy)}
+    body.hero-ready .consult-action{--control-icon:var(--icon-brief)}
+    body.hero-ready .consult-finish-actions .consult-action:first-child{--control-icon:var(--icon-copy)}
+    body.hero-ready .consult-finish-actions .consult-action:last-child{--control-icon:var(--icon-send)}
+    body.hero-ready .consult-back{--control-icon:var(--icon-back)}
+    body.hero-ready .consult-restart{--control-icon:var(--icon-restart)}
+    body.hero-ready .consult-option{--control-icon:var(--icon-diamond)}
+    body.hero-ready .pricing-modal .production-quote a{--control-icon:var(--icon-chat)}
+    body.hero-ready .footer-meta .footer-links a{--control-icon:var(--icon-diamond)}
+
+    /* ——— Bilingual capsules (tiers 1–2): icon column + centred label column ——— */
+    /* The .btnstd.btnstd.btnstd argument never matches an element; it only lifts :is() specificity
+       above the earlier tier blocks, whose own :is() lists peak at .contact-actions .cta.primary. */
+    body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open,.btnstd.btnstd.btnstd){
+      display:inline-grid!important;
+      grid-template-columns:auto auto;
+      grid-template-areas:"btnicon btnlabel" "btnicon btnsub";
+      align-items:center!important;justify-content:center!important;align-content:center;
+      gap:3px var(--btn-gap)!important;
+      box-sizing:border-box!important;
+    }
+    body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.pricing-open,.btnstd.btnstd.btnstd){
+      padding:12px 24px!important;min-height:50px!important;
+    }
+    body.hero-ready :is(.consult-fab,.footer-consult,.btnstd.btnstd.btnstd){
+      padding:15px 30px!important;min-height:58px!important;--btn-icon:20px;
+    }
+    body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open,.btnstd.btnstd.btnstd)::before{
+      content:""!important;display:block!important;position:static!important;
+      grid-area:btnicon;align-self:center;justify-self:center;
+      width:var(--btn-icon,18px);height:var(--btn-icon,18px);flex:0 0 auto;
+      background:currentColor!important;border:0!important;border-radius:0!important;
+      box-shadow:none!important;transform:none!important;opacity:.92;pointer-events:none;
+      -webkit-mask:var(--control-icon,var(--icon-chat)) center/contain no-repeat;
+      mask:var(--control-icon,var(--icon-chat)) center/contain no-repeat;
+    }
+    body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open,.btnstd.btnstd.btnstd)::after{
+      content:none!important;display:none!important;
+    }
+    body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>span{
+      grid-area:btnlabel;justify-self:center;
+    }
+    body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>small{
+      grid-area:btnsub;justify-self:center;
+    }
+
+    /* ——— Compact labelled controls (tier 2 small): one-line icon + label ——— */
+    body.hero-ready :is(.consult-send,.copy-email,.case-end button,.detail-pill,.consult-contact-copy,.consult-action,.consult-back,.consult-restart,.consult-option,.btnstd.btnstd.btnstd){
+      display:inline-flex!important;flex-direction:row!important;align-items:center;justify-content:center;
+      gap:var(--btn-gap)!important;box-sizing:border-box!important;
+    }
+    body.hero-ready :is(.consult-send,.copy-email,.case-end button,.consult-action,.consult-back,.consult-restart,.btnstd.btnstd.btnstd){
+      padding:10px 20px!important;min-height:44px!important;
+    }
+    body.hero-ready .consult-finish-actions .consult-action,body.hero-ready .consult-restart{width:100%}
+    /* The composer row gave 发送 a fixed 58px track; with its icon restored the track sizes to the
+       button's standard content width instead of letting the label overflow the box. */
+    body.hero-ready .consult-input-row{grid-template-columns:minmax(0,1fr) auto!important}
+    body.hero-ready .consult-send{min-width:0!important}
+    body.hero-ready .detail-pill{padding:10px 20px!important;min-height:44px!important}
+    body.hero-ready .consult-contact-copy{padding:8px 16px!important;min-height:44px!important}
+    body.hero-ready .consult-option{padding:9px 18px!important;min-height:44px!important}
+    body.hero-ready :is(.consult-send,.copy-email,.case-end button,.detail-pill,.consult-contact-copy,.consult-action,.consult-back,.consult-restart,.consult-option,.btnstd.btnstd.btnstd)::before{
+      content:""!important;display:block!important;position:static!important;
+      width:15px;height:15px;flex:0 0 auto;
+      background:currentColor!important;border:0!important;border-radius:0!important;
+      box-shadow:none!important;transform:none!important;opacity:.88;pointer-events:none;
+      -webkit-mask:var(--control-icon,var(--icon-diamond)) center/contain no-repeat;
+      mask:var(--control-icon,var(--icon-diamond)) center/contain no-repeat;
+    }
+    body.hero-ready .consult-option::before{width:11px;height:11px}
+    body.hero-ready .consult-contact-copy::before{width:13px;height:13px}
+    /* The case-end button trades its trailing paper-plane for the standard leading icon. */
+    body.hero-ready .case-end button::after{content:none!important;display:none!important}
+
+    /* ——— Case filters: same standard, icon + label, 2:1 padding ——— */
+    body.hero-ready :is(.filterbar .filter,.btnstd.btnstd.btnstd){
+      display:inline-flex!important;align-items:center;justify-content:center;
+      gap:var(--btn-gap)!important;padding:10px 20px!important;min-height:44px!important;
+      box-sizing:border-box!important;
+    }
+
+    /* ——— Tier 3 text links: leading mark, 9px gutter, full 44px touch row ——— */
+    body.hero-ready :is(.pricing-modal .production-quote a,.pricing-modal .production-quote .production-quote a,.footer-meta .footer-links a,.btnstd.btnstd.btnstd){
+      display:inline-flex!important;flex-direction:row!important;align-items:center;
+      gap:var(--btn-gap)!important;min-height:44px!important;box-sizing:border-box!important;
+    }
+    body.hero-ready :is(.pricing-modal .production-quote a,.pricing-modal .production-quote .production-quote a,.btnstd.btnstd.btnstd){padding:10px 8px!important}
+    body.hero-ready .footer-meta .footer-links a{padding:10px 4px!important}
+    body.hero-ready :is(.pricing-modal .production-quote a,.footer-meta .footer-links a,.btnstd.btnstd.btnstd)::before{
+      content:""!important;display:block!important;position:static!important;
+      flex:0 0 auto;background:currentColor!important;border:0!important;
+      box-shadow:none!important;transform:none!important;pointer-events:none;
+      -webkit-mask:var(--control-icon,var(--icon-diamond)) center/contain no-repeat;
+      mask:var(--control-icon,var(--icon-diamond)) center/contain no-repeat;
+    }
+    body.hero-ready .pricing-modal .production-quote a::before{width:14px;height:14px;opacity:.92}
+    body.hero-ready .footer-meta .footer-links a::before{width:9px;height:9px;opacity:.75}
+
+    /* Mobile: the same system one scale down, touch height never below 44px. */
+    @media(max-width:520px){
+      body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open,.btnstd.btnstd.btnstd){--btn-icon:17px}
+      body.hero-ready :is(.consult-fab,.footer-consult,.btnstd.btnstd.btnstd){padding:13px 26px!important;min-height:52px!important;--btn-icon:19px}
+      body.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.pricing-open,.btnstd.btnstd.btnstd){padding:11px 22px!important}
+      body.hero-ready :is(.consult-send,.copy-email,.case-end button,.consult-action,.consult-back,.consult-restart,.btnstd.btnstd.btnstd){padding:9px 18px!important}
+      body.hero-ready :is(.filterbar .filter,.btnstd.btnstd.btnstd){padding:9px 18px!important;gap:var(--btn-gap)!important}
+      body.hero-ready .filterbar .filter::before{width:14px;height:14px}
+    }
+
 </style>
 </head>
 <body class="hero-ready">
