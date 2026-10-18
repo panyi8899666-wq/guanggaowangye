@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://panyi8899666-wq.github.io/guanggaowangye/sitemap.xml
