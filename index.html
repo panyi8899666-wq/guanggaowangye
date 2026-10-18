@@ -4092,6 +4092,21 @@
     .partners-slot-item{display:flex;align-items:center;justify-content:center;width:120px;height:60px;border:1px solid rgba(198,161,91,.4);border-radius:6px;color:rgba(198,161,91,.55);font-size:11px;letter-spacing:.22em;text-indent:.22em}
     @media(max-width:620px){.partners-slot{padding:18px}.partners-head{flex-direction:column;align-items:flex-start}.partners-cta{align-self:flex-start}.partners-slots{flex-direction:column}.partners-slot-item{width:100%;max-width:220px}}
 
+    /* 2026-10-18 repair pass: image fallback tone, whitespace compression, CTA clipping, summary overlap. */
+    img.img-fallback{visibility:hidden!important}
+    .img-fallback-host{background:radial-gradient(130% 105% at 50% 0%,#26262b 0%,#17171a 58%,#101013 100%)!important}
+    .hero-ready .hero-afterword{margin-top:clamp(22px,3vw,38px)!important;padding-top:clamp(30px,4vw,52px)!important;padding-bottom:clamp(36px,4.5vw,58px)!important}
+    @media(max-width:820px){.hero-ready .hero-afterword{margin-top:26px!important;padding-top:34px!important;padding-bottom:38px!important}}
+    #services{padding-top:clamp(34px,4.5vw,58px)!important}
+    #services .service-flow .service-row{min-height:0!important;height:auto!important;padding-top:clamp(22px,3vw,38px)!important;padding-bottom:clamp(22px,3vw,38px)!important}
+    .cooperation-entry{flex-wrap:wrap!important;row-gap:20px!important}
+    .cooperation-entry>div{flex:1 1 320px!important;min-width:0!important}
+    .pricing-open{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:100%!important;overflow:visible!important}
+    .pricing-open span{white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
+    .work-scene-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px 26px!important;height:auto!important;max-height:none!important;overflow:visible!important}
+    .work-scene-summary span{display:block!important;position:static!important;float:none!important;transform:none!important;font-size:13.5px!important;line-height:1.8!important}
+    @media(max-width:820px){.work-scene-summary{grid-template-columns:1fr!important}}
+
 </style>
 </head>
 <body class="hero-ready">
@@ -4588,7 +4603,7 @@
           <div><h4 id="processDraftTitle">先有结构，再有成品</h4><p>成品图之前，先用白膜与线稿把结构、比例与版式推敲成立：产品与包装类先做 3D 白膜确认体积、开合与装配，平面与视觉类先以线稿锁定网格、信息层级与媒介尺寸。</p></div>
         </div>
         <figure class="process-draft-figure">
-          <img id="processDraftImage" decoding="async" loading="lazy" width="1600" height="1000" src="" alt="" />
+          <img id="processDraftImage" decoding="async" loading="lazy" width="1600" height="1000" src="assets/process-fold.webp" alt="" />
           <figcaption><span><b>设计过程稿 / Process</b></span><span id="processDraftKind"></span></figcaption>
         </figure>
       </section>
@@ -5328,6 +5343,45 @@
       window.Tawk_API=window.Tawk_API||{};
       var tawkReady=false,tawkPendingOpen=false,tawkWaitStarted=0;
       window.Tawk_API.onLoad=function(){tawkReady=true;if(typeof window.Tawk_API.hideWidget==='function')window.Tawk_API.hideWidget();if(tawkPendingOpen){tawkPendingOpen=false;openTawkChat();}};
+      /* Forward every visitor chat message to the studio webhook so each message (not just chat start/end) is picked up promptly. Reporting only — the widget's open/hide behaviour and styling are untouched. Primary path: Tawk_API chat-message callbacks; fallback: watch the page DOM for new visitor message bubbles. */
+      var tawkWebhookUrl='https://zxy-reg-api.zxy-reg-api.workers.dev/api/chat-webhook';
+      var tawkReported={};
+      function reportTawkVisitorMessage(text){
+        text=(text==null?'':String(text)).replace(/\s+/g,' ').trim();
+        if(!text)return;
+        var key=text+'|'+Math.floor(Date.now()/3000);
+        if(tawkReported[key])return;tawkReported[key]=true;
+        try{fetch(tawkWebhookUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:{text:text},visitor:{name:'网站访客'},chatId:'webchat'})}).catch(function(){});}catch(e){}
+      }
+      function handleTawkChatMessage(message){
+        var text='';
+        if(typeof message==='string')text=message;
+        else if(message&&typeof message==='object')text=message.message||message.text||message.content||'';
+        reportTawkVisitorMessage(text);
+      }
+      window.Tawk_API.onChatMessage=handleTawkChatMessage;
+      window.Tawk_API.onChatMessageVisitor=handleTawkChatMessage;
+      if(window.MutationObserver&&document.body){
+        var tawkDomSeen={};
+        var tawkObserver=new MutationObserver(function(mutations){
+          mutations.forEach(function(mutation){
+            Array.prototype.slice.call(mutation.addedNodes||[]).forEach(function(node){
+              if(node.nodeType!==1)return;
+              var bubbles=[];
+              if(node.matches&&node.matches('[class*="tawk"] [class*="message"],[id*="tawk"] [class*="message"]'))bubbles.push(node);
+              if(node.querySelectorAll)bubbles=bubbles.concat(Array.prototype.slice.call(node.querySelectorAll('[class*="tawk"] [class*="message"],[id*="tawk"] [class*="message"]')));
+              bubbles.forEach(function(bubble){
+                var text=(bubble.textContent||'').replace(/\s+/g,' ').trim();
+                if(!text||text.length>2000)return;
+                var seenKey=text+'|'+bubble.className;
+                if(tawkDomSeen[seenKey])return;tawkDomSeen[seenKey]=true;
+                reportTawkVisitorMessage(text);
+              });
+            });
+          });
+        });
+        tawkObserver.observe(document.body,{childList:true,subtree:true});
+      }
       function openTawkChat(){if(window.Tawk_API&&typeof window.Tawk_API.maximize==='function'){window.Tawk_API.maximize();consultClosePanel();}}
       function openLiveChat(){
         if(tawkReady){openTawkChat();return;}
@@ -5671,6 +5725,21 @@
     <span>网站已更新到新版本</span>
     <button type="button" id="pwaUpdateBtn">刷新查看</button>
   </div>
+<script type="text/javascript">
+/* Image fallback: a failed image never renders as a broken icon or a pure-black card — it is hidden and its frame keeps a lifted charcoal placeholder tone instead. */
+(function(){
+  function mark(img){
+    if(img.classList.contains('img-fallback'))return;
+    img.classList.add('img-fallback');
+    var host=img.closest('.project,.featured-card,.hero-ribbon-card,figure,.modal-visual,.archive-sheet,.pixel-preview')||img.parentElement;
+    if(host)host.classList.add('img-fallback-host');
+  }
+  document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG')mark(t);},true);
+  function sweep(){Array.prototype.slice.call(document.querySelectorAll('img')).forEach(function(img){if(img.getAttribute('src')&&img.complete&&img.naturalWidth===0)mark(img);});}
+  if(document.readyState==='complete')sweep();else window.addEventListener('load',sweep);
+  document.addEventListener('DOMContentLoaded',sweep);
+})();
+</script>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
