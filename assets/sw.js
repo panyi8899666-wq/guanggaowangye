@@ -1,7 +1,7 @@
 /* 正鑫越文化传播个人工作室 — Service Worker
    缓存应用外壳与核心资源，支持离线访问；图片走缓存优先策略。
    改版时递增 VERSION，页面会提示用户刷新到新版本。 */
-var VERSION = 'zxy-pwa-v6';
+var VERSION = 'zxy-pwa-v7';
 var CORE_CACHE = VERSION + '-core';
 var RUNTIME_CACHE = VERSION + '-runtime';
 
