@@ -1959,5 +1959,12 @@ body.hero-ready :is(.cta.cta.cta.cta,.nav-cta.nav-cta.nav-cta,.consult-pill.cons
 .price-note{line-height:1.65}
 .faq-dialog h2,.retainer h3{text-wrap:balance}
 </style>
+<style id="round3-fix-20261020">
+/* Round3 (2026-10-20): trim vertical padding on short sections (process/faq padding was 43-46% of section height on desktop); cooperation band padding 90px around ~54px content */
+#process,#faq{padding-block:clamp(64px,6vw,84px)}
+.cooperation-entry{padding-block:clamp(46px,5vw,64px)!important}
+/* Round3: mobile contact intro paragraph ended with a 2-char orphan line; balance the wrap */
+.contact-panel .contact-copy p{text-wrap:balance}
+</style>
 </body>
 </html>
