@@ -1139,12 +1139,13 @@ body.hero-ready #consultOpenContact{--control-icon:var(--icon-chat)}
           {name:'盒身',mat:'灰板裱特种纸',note:'320 × 240 × 105 mm，闭合后回到标准矩形',y:85,x:50,side:'r'}],
           steps:[['外盒成型','天地盖裱纸成型，盖身间隙校准'],['内托落位','EVA 植绒内托落入盒身，槽位朝上'],['三件入槽','香水、藤条香薰、蜡烛逐件入槽'],['合盖成品','合盖后做跌落与摩擦测试']],
           dieKeys:'盒底粘合 / 磁吸位'},
-        kilo:{img:'assets/explode-kilo.webp',finished:'assets/kilo-render-front-true3d.webp',axis:49,finishedCap:'KILO 潮流鞋盒 · 抽屉式套筒盒闭合正视',finishedSub:'哑光黑正面板、白字标与宝蓝 18° 斜切带，鞋带穿孔系结居中。',viewCap:'盒盖 → 内衬纸 → 鞋 → 盒身，自上而下垂直拆解。',parts:[
-          {name:'盒盖',mat:'E 楞瓦楞裱 250 g 白卡',note:'蓝色盖面与黄色撕纸点，预留 2 mm 装配间隙',y:15,x:49,side:'r'},
-          {name:'内衬纸',mat:'28 g 拷贝纸',note:'包覆鞋面，防刮擦、防灰尘，开盒第一层触感',y:33,x:49,side:'l'},
-          {name:'鞋（内容物）',mat:'以最终商品资料为准',note:'按最大鞋码核盒体内径，决定盒体长宽与堆码强度',y:52,x:49,side:'r'},
-          {name:'盒身',mat:'E 楞瓦楞',note:'340 × 220 × 120 mm，短边保留尺码、货号与条码区',y:77,x:49,side:'l'}],
-          steps:[['外盒成型','瓦楞模切成型，盒盖盒身分开'],['内衬铺底','拷贝纸铺入盒身，预折包覆位'],['鞋入盒','鞋入盒后衬纸包覆鞋面'],['合盖成品','合盖做三层堆码与跌落测试']],
+        kilo:{img:'assets/explode-kilo.webp',finished:'assets/kilo-render-front-true3d.webp',axis:49,finishedCap:'KILO 潮流鞋盒 · 抽屉式套筒盒闭合正视',finishedSub:'哑光黑正面板、白字标与宝蓝 18° 斜切带，鞋带穿孔系结居中。',viewCap:'外套筒 → 抽屉托 → 拷贝纸 → 球鞋与备用鞋带包 → 防尘袋配件套，自上而下垂直拆解。',imgAlt:'KILO 潮流鞋盒抽屉式套筒盒分层爆炸图：外套筒、抽屉托、拷贝纸、球鞋与备用鞋带包、防尘袋吊牌感谢卡配件套',parts:[
+          {name:'外套筒',mat:'1200 g 灰板裱哑光黑卡',note:'套住抽屉托成型，曜石黑哑光面，盒体挺括',y:13,x:49,side:'r'},
+          {name:'抽屉托',mat:'宝蓝内衬',note:'正面板宝蓝斜切带，鞋带穿孔系结作拉手，拉开即开盒',y:33,x:49,side:'l'},
+          {name:'拷贝纸',mat:'28 g 拷贝纸',note:'KILO 字纹满印，摊开包覆鞋面，防刮擦、防灰尘',y:52,x:49,side:'r'},
+          {name:'球鞋 · 备用鞋带包',mat:'内容物示意',note:'球鞋居中陈列，备用鞋带独立成小包收纳',y:68,x:49,side:'l'},
+          {name:'防尘袋 · 吊牌 · 感谢卡',mat:'配件成套',note:'防尘袋、吊牌与感谢卡成套放入，开盒信息完整',y:87,x:49,side:'r'}],
+          steps:[['套筒成型','1200 g 灰板裱哑光黑卡，套筒与抽屉托分开成型'],['内衬铺底','拷贝纸铺入抽屉托，预折包覆位'],['鞋入盒','球鞋入托，拷贝纸包覆鞋面，备用鞋带包同置'],['配件合盖','防尘袋、吊牌与感谢卡成套放入，抽屉推回套筒']],
           dieKeys:'锁底结构 / 盒盖折边位'},
         luno:{img:'assets/explode-luno.webp',finished:'assets/media-generation-luno-giftbox-0-7c0fb9ec-e542-49cb-b201-3c26b161ba6e.webp',axis:50,finishedCap:'MASK 20 面膜礼盒 · 闭合状态',finishedSub:'矿物灰绿与象牙白两色系统，独立袋共享同一版式网格。',viewCap:'盒盖 → 独立面膜袋 → 分格纸托 → 盒身，自上而下垂直拆解。',parts:[
           {name:'盒盖',mat:'FSC 特种纸 / 高白卡',note:'矿物灰绿包覆，字标压凹，柔触哑膜',y:19,x:50,side:'r'},
@@ -1173,7 +1174,7 @@ body.hero-ready #consultOpenContact{--control-icon:var(--icon-chat)}
         document.getElementById('xvHeadNote').textContent='左：成品状态；右：沿垂直轴逐层拆解。编号标注、部件图例、刀版线稿与组装顺序在同一屏内互相印证。';
         var fin=document.getElementById('xvFinishedImg');fin.src=view.finished;fin.alt=c.alt||view.finishedCap;
         document.getElementById('xvFinishedCap').innerHTML='';var fcb=document.createElement('b');fcb.textContent=view.finishedCap;document.getElementById('xvFinishedCap').appendChild(fcb);document.getElementById('xvFinishedCap').appendChild(document.createTextNode(view.finishedSub));
-        var img=document.getElementById('xvImg');img.src=view.img;img.alt=view.finishedCap+'垂直拆解爆炸图：'+view.parts.map(function(p){return p.name;}).join('、');
+        var img=document.getElementById('xvImg');img.src=view.img;img.alt=view.imgAlt||(view.finishedCap+'垂直拆解爆炸图：'+view.parts.map(function(p){return p.name;}).join('、'));
         document.getElementById('xvAxis').style.left=view.axis+'%';
         document.getElementById('xvViewCap').innerHTML='';var vcb=document.createElement('b');vcb.textContent='垂直拆解 / EXPLODED VIEW';document.getElementById('xvViewCap').appendChild(vcb);document.getElementById('xvViewCap').appendChild(document.createTextNode(view.viewCap));
         var tags=document.getElementById('xvTags');tags.replaceChildren();
@@ -2097,6 +2098,327 @@ p{text-wrap:pretty}
       closeVT(null);
     }
   },true);
+})();
+</script>
+
+<!-- i18n language switcher + engine (added 2026-10-21; no existing layout CSS touched) -->
+<div id="langSwitcher" data-i18n-skip>
+  <button id="langSwitcherBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">
+    <span class="lang-switcher-code">中文</span>
+    <span class="lang-switcher-caret" aria-hidden="true"></span>
+  </button>
+  <ul id="langSwitcherList" role="listbox" aria-label="Language">
+    <li role="option" data-lang="zh">简体中文</li>
+    <li role="option" data-lang="en">English</li>
+    <li role="option" data-lang="ja">日本語</li>
+    <li role="option" data-lang="ko">한국어</li>
+    <li role="option" data-lang="es">Español</li>
+    <li role="option" data-lang="fr">Français</li>
+    <li role="option" data-lang="de">Deutsch</li>
+    <li role="option" data-lang="pt">Português</li>
+    <li role="option" data-lang="ru">Русский</li>
+    <li role="option" data-lang="ar">العربية</li>
+  </ul>
+</div>
+<style id="i18n-switcher-style">
+#langSwitcher{position:fixed;left:20px;bottom:20px;z-index:3000;font-family:inherit}
+#langSwitcherBtn{display:flex;align-items:center;gap:8px;min-height:44px;min-width:44px;padding:0 16px;background:#0D0D0F;color:#ECEAE4;border:1px solid rgba(198,161,91,.55);border-radius:999px;cursor:pointer;font-size:14px;line-height:1;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+#langSwitcherBtn:hover{border-color:#C6A15B;background:#141416}
+#langSwitcherBtn:focus-visible{outline:2px solid #C6A15B;outline-offset:2px}
+#langSwitcherBtn .lang-switcher-caret{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #C6A15B;flex:none}
+#langSwitcherList{display:none;position:absolute;left:0;bottom:calc(100% + 8px);min-width:180px;margin:0;padding:8px 0;list-style:none;background:#0D0D0F;border:1px solid rgba(198,161,91,.55);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.5);max-height:min(60vh,420px);overflow-y:auto}
+#langSwitcherList.is-open{display:block}
+#langSwitcherList [data-lang]{display:flex;align-items:center;min-height:44px;padding:0 18px;color:#ECEAE4;font-size:14px;cursor:pointer}
+#langSwitcherList [data-lang]:hover{background:#1c1c1f}
+#langSwitcherList [data-lang].is-current{color:#C6A15B;font-weight:700}
+#langSwitcherList [data-lang].is-current::after{content:"\2713";margin-left:auto;color:#C6A15B}
+@media(max-width:820px){#langSwitcher{left:12px;bottom:12px}#langSwitcherBtn{min-height:44px;padding:0 14px;font-size:13px}}
+/* RTL mirrors (Arabic only): fixed chrome + reading containers. Colors, sizes, layout CSS otherwise untouched. */
+html[dir="rtl"] #langSwitcher{left:auto;right:20px}
+html[dir="rtl"] #langSwitcherList{left:auto;right:0}
+html[dir="rtl"] #langSwitcherList [data-lang].is-current::after{margin-left:0;margin-right:auto}
+html[dir="rtl"] .modal-close{right:auto!important;left:max(18px,env(safe-area-inset-left))!important}
+html[dir="rtl"] .pricing-close{right:auto!important;left:22px!important}
+html[dir="rtl"] .faq-modal-close{right:auto!important;left:18px!important}
+html[dir="rtl"] .consult-fab{right:auto!important;left:max(20px,env(safe-area-inset-left))!important}
+html[dir="rtl"] .hero-copy-block,html[dir="rtl"] .section-head,html[dir="rtl"] .case-copy,html[dir="rtl"] .modal-card,html[dir="rtl"] .consult-dialog,html[dir="rtl"] .faq-dialog,html[dir="rtl"] .process-grid,html[dir="rtl"] .about-head,html[dir="rtl"] .work-scene-copy,html[dir="rtl"] .case-section{text-align:right!important}
+@media(max-width:820px){html[dir="rtl"] #langSwitcher{left:auto;right:12px}html[dir="rtl"] .modal-close{left:max(12px,env(safe-area-inset-left))!important}html[dir="rtl"] .pricing-close{left:14px!important}}
+</style>
+<script id="i18n-engine">
+(function(){
+  var SUPPORTED=['zh','en','ja','ko','es','fr','de','pt','ru','ar'];
+  var NAMES={zh:'简体中文',en:'English',ja:'日本語',ko:'한국어',es:'Español',fr:'Français',de:'Deutsch',pt:'Português',ru:'Русский',ar:'العربية'};
+  var SHORT={zh:'中文',en:'EN',ja:'日本語',ko:'한국어',es:'ES',fr:'FR',de:'DE',pt:'PT',ru:'RU',ar:'العربية'};
+  var KEY='zxy-lang';
+  function norm(t){return t.replace(/\s+/g,' ').trim();}
+  function resolve(){
+    try{var saved=localStorage.getItem(KEY);if(saved&&SUPPORTED.indexOf(saved)>=0)return saved;}catch(e){}
+    var langs=navigator.languages||[navigator.language||'en'];
+    for(var i=0;i<langs.length;i++){var l=(langs[i]||'').toLowerCase();if(SUPPORTED.indexOf(l)>=0)return l;var p=l.split('-')[0];if(SUPPORTED.indexOf(p)>=0)return p;}
+    return 'en';
+  }
+  var current=resolve(),dictCache={},loading={};
+  function compactSpec(v){var t=(v||'').split(/[；;]/)[0].trim();return t.length>28?t.slice(0,28)+'…':t;}
+  function buildIndex(dict){
+    var byFirst={},comp={};
+    Object.keys(dict).forEach(function(k){
+      var fk=k.charAt(0);(byFirst[fk]=byFirst[fk]||[]).push(k);
+      var c=compactSpec(k);
+      if(c!==k&&comp[c]===undefined)comp[c]=k;
+    });
+    Object.keys(byFirst).forEach(function(f){byFirst[f].sort(function(a,b){return b.length-a.length;});});
+    return {byFirst:byFirst,comp:comp};
+  }
+  var dictIndex={};
+  function getIndex(lang,dict){if(!dictIndex[lang])dictIndex[lang]=buildIndex(dict);return dictIndex[lang];}
+  function partitionTranslate(text,dict,idx){
+    var pos=0,out='',matched=false;
+    while(pos<text.length){
+      var list=idx.byFirst[text.charAt(pos)]||[];
+      var hit=null;
+      for(var i=0;i<list.length;i++){if(text.indexOf(list[i],pos)===pos){hit=list[i];break;}}
+      if(!hit){
+        var gm=/^[0-9\s·.,:;；：。，、/×+\%\-\(\)（）]*/.exec(text.slice(pos));
+        if(gm&&gm[0].length){
+          out+=gm[0];pos+=gm[0].length;
+          if(pos>=text.length)break;
+          list=idx.byFirst[text.charAt(pos)]||[];
+          for(var j=0;j<list.length;j++){if(text.indexOf(list[j],pos)===pos){hit=list[j];break;}}
+        }
+      }
+      if(!hit)return null;
+      var tr=dict[hit];
+      if(tr!==undefined)out+=tr;
+      matched=true;
+      pos+=hit.length;
+    }
+    return matched?out:null;
+  }
+  function setRoot(lang){
+    document.documentElement.lang=(lang==='zh'?'zh-CN':lang);
+    document.documentElement.dir=(lang==='ar'?'rtl':'ltr');
+  }
+  function skipEl(el){return el&&(el.id==='langSwitcher'||(el.closest&&el.closest('#langSwitcher,[data-i18n-skip]')));}
+  function translateNode(node,dict,idx){
+    var orig=node._i18nOrig;
+    if(orig===undefined){orig=node.nodeValue;node._i18nOrig=orig;}
+    var k=norm(orig);
+    if(!k)return;
+    if(dict[k]!==undefined&&String(dict[k]).trim()!==''){node.nodeValue=dict[k];return;}
+    if(idx){
+      var ck=idx.comp[k];
+      if(ck!==undefined){
+        var tr=dict[ck];
+        if(tr!==undefined&&String(tr).trim()!==''){node.nodeValue=compactSpec(tr);return;}
+      }
+      if(k.length>1){
+        var part=partitionTranslate(k,dict,idx);
+        if(part!==null&&part!==k)node.nodeValue=part;
+      }
+    }
+  }
+  function translateAttrs(el,dict){
+    ['alt','title','placeholder','aria-label'].forEach(function(attr){
+      if(!el.hasAttribute||!el.hasAttribute(attr))return;
+      var dk='_i18nOrig_'+attr,orig=el[dk];
+      if(orig===undefined){orig=el.getAttribute(attr);el[dk]=orig;}
+      var k=norm(orig);
+      if(k&&dict[k]!==undefined&&String(dict[k]).trim()!=='')el.setAttribute(attr,dict[k]);
+    });
+  }
+  function textFilter(n){
+    var p=n.parentElement;if(!p)return NodeFilter.FILTER_REJECT;
+    var tag=p.tagName;if(tag==='SCRIPT'||tag==='STYLE'||tag==='NOSCRIPT')return NodeFilter.FILTER_REJECT;
+    if(p.closest&&p.closest('.case-hero-heading h3'))return NodeFilter.FILTER_REJECT;
+    if(skipEl(p))return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }
+  function heroContainers(){
+    var h1=document.querySelector('h1.hero-title-sweep');
+    if(!h1)return [];
+    var out=[];
+    h1.querySelectorAll('.line').forEach(function(line){
+      line.childNodes.forEach(function(child){
+        if(child.nodeType!==1)return;
+        var chars=child.querySelectorAll('.hero-char');
+        if(!chars.length)return;
+        out.push({el:child,chars:chars});
+      });
+    });
+    return out;
+  }
+  function heroCapture(){
+    heroContainers().forEach(function(f){
+      if(f.el._heroOrig!==undefined)return;
+      var orig=[];
+      f.chars.forEach(function(c){orig.push(c._i18nOrig!==undefined?c._i18nOrig:c.textContent);});
+      f.el._heroOrig=orig.join('');
+      try{f.el._heroProxW=f.chars[0].style.getPropertyValue('--prox-w')||'';}catch(e){f.el._heroProxW='';}
+    });
+  }
+  function heroRebuild(el,origText,chars,proxW){
+    el.innerHTML='';
+    Array.from(origText).forEach(function(ch,i){
+      var s=document.createElement('span');
+      s.className='hero-char';
+      s.style.setProperty('--char-i',i);
+      if(proxW)s.style.setProperty('--prox-w',proxW);
+      s.textContent=ch;
+      el.appendChild(s);
+    });
+  }
+  function heroApply(dict,lang){
+    heroCapture();
+    heroContainers().forEach(function(f){
+      var orig=f.el._heroOrig;if(orig===undefined)return;
+      var tr=dict[orig];if(tr===undefined||String(tr).trim()==='')return;
+      if(lang==='ja'||lang==='ko'){heroRebuild(f.el,tr,null,f.el._heroProxW||'');}
+      else{f.el.textContent=tr;}
+    });
+  }
+  function heroRestore(){
+    heroCapture();
+    heroContainers().forEach(function(f){
+      var orig=f.el._heroOrig;if(orig===undefined)return;
+      heroRebuild(f.el,orig,null,f.el._heroProxW||'');
+    });
+  }
+  function walk(root,dict,lang){
+    var idx=lang?getIndex(lang,dict):null;
+    var tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:textFilter});
+    var nodes=[],n;while((n=tw.nextNode()))nodes.push(n);
+    nodes.forEach(function(tn){translateNode(tn,dict,idx);});
+    var els=root.querySelectorAll?root.querySelectorAll('*'):[];
+    for(var i=0;i<els.length;i++){if(skipEl(els[i]))continue;translateAttrs(els[i],dict);}
+  }
+  function restore(root){
+    var tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:textFilter});
+    var nodes=[],n;while((n=tw.nextNode()))nodes.push(n);
+    nodes.forEach(function(tn){if(tn._i18nOrig!==undefined)tn.nodeValue=tn._i18nOrig;});
+    var els=root.querySelectorAll?root.querySelectorAll('*'):[];
+    for(var i=0;i<els.length;i++){var el=els[i];if(skipEl(el))continue;
+      ['alt','title','placeholder','aria-label'].forEach(function(attr){var dk='_i18nOrig_'+attr;if(el[dk]!==undefined)el.setAttribute(attr,el[dk]);});}
+  }
+  var resizeTimer=0;
+  function afterApply(){clearTimeout(resizeTimer);resizeTimer=setTimeout(function(){try{window.dispatchEvent(new Event('resize'));}catch(e){}},250);}
+  function updateSwitcherLabel(lang){
+    var b=document.getElementById('langSwitcherBtn');
+    if(b){var s=b.querySelector('.lang-switcher-code');if(s)s.textContent=SHORT[lang]||lang.toUpperCase();b.setAttribute('aria-label','Language: '+(NAMES[lang]||lang));}
+    var items=document.querySelectorAll('#langSwitcherList [data-lang]');
+    items.forEach(function(it){var on=it.getAttribute('data-lang')===lang;it.classList.toggle('is-current',on);it.setAttribute('aria-current',on?'true':'false');});
+  }
+  function rebuildTitleChars(h3,text){
+    h3.innerHTML='';
+    Array.from(text).forEach(function(ch,i){
+      var s=document.createElement('span');
+      var sp=(ch===' '||ch==='\u00a0');
+      s.className=sp?'case-title-char space':'case-title-char';
+      s.style.setProperty('transition-delay',(i*55)+'ms');
+      s.textContent=sp?'\u00a0':ch;
+      h3.appendChild(s);
+    });
+  }
+  function splitTitleApply(dict,lang){
+    document.querySelectorAll('.case-hero-heading h3').forEach(function(h3){
+      var spans=h3.querySelectorAll('.case-title-char');
+      if(spans.length){
+        var orig;
+        if(h3._splitOrig!==undefined&&h3._myBuildText!==undefined){
+          orig=h3._splitOrig;
+        } else {
+          orig=Array.from(spans).map(function(s){return s._i18nOrig!==undefined?s._i18nOrig:s.textContent;}).join('');
+          orig=orig.replace(/\u00a0/g,' ');
+          h3._splitOrig=orig;
+        }
+        if(!orig)return;
+        var joined=Array.from(spans).map(function(s){return s.textContent==='\u00a0'?' ':s.textContent;}).join('');
+        if(lang==='zh'){if(joined===orig)return;rebuildTitleChars(h3,orig);h3._myBuildText=orig;return;}
+        var tr=dict[orig];
+        if(tr===undefined||String(tr).trim()==='')return;
+        if(joined===tr)return;
+        if(lang==='ar'){h3.textContent=tr;h3._myBuildText=tr;h3._splitAppliedText=tr;}
+        else{rebuildTitleChars(h3,tr);h3._myBuildText=tr;}
+        return;
+      }
+      if(h3._splitOrig!==undefined&&h3._myBuildText!==undefined){
+        if(lang==='zh'){if(h3.textContent===h3._splitOrig)return;rebuildTitleChars(h3,h3._splitOrig);h3._myBuildText=h3._splitOrig;return;}
+        var tr2=dict[h3._splitOrig];
+        if(tr2!==undefined&&String(tr2).trim()!==''&&h3.textContent!==tr2){h3.textContent=tr2;h3._myBuildText=tr2;h3._splitAppliedText=tr2;}
+      }
+    });
+  }
+  function applyLang(lang){
+    setRoot(lang);updateSwitcherLabel(lang);
+    if(lang==='zh'){restore(document.body);heroRestore();splitTitleApply({},lang);afterApply();return;}
+    if(dictCache[lang]){walk(document.body,dictCache[lang],lang);heroApply(dictCache[lang],lang);splitTitleApply(dictCache[lang],lang);afterApply();return;}
+    if(loading[lang])return;loading[lang]=true;
+    var sc=document.createElement('script');sc.src='assets/i18n-'+lang+'.js';
+    sc.onload=function(){loading[lang]=false;var d=(window.__I18N||{})[lang]||{};dictCache[lang]=d;walk(document.body,d,lang);heroApply(d,lang);splitTitleApply(d,lang);afterApply();};
+    sc.onerror=function(){loading[lang]=false;};
+    document.head.appendChild(sc);
+  }
+  function setLang(lang,save){
+    if(SUPPORTED.indexOf(lang)<0)return;
+    current=lang;
+    if(save){try{localStorage.setItem(KEY,lang);}catch(e){}}
+    applyLang(lang);
+  }
+  window.__setLang=setLang;
+  window.__currentLang=function(){return current;};
+  function init(){
+    var _h1=document.querySelector('h1.hero-title-sweep');if(_h1)_h1.setAttribute('data-i18n-skip','');
+    var btn=document.getElementById('langSwitcherBtn'),list=document.getElementById('langSwitcherList'),wrap=document.getElementById('langSwitcher');
+    if(btn&&list){
+      btn.addEventListener('click',function(e){e.stopPropagation();var open=list.classList.toggle('is-open');btn.setAttribute('aria-expanded',open?'true':'false');});
+      list.addEventListener('click',function(e){var it=e.target.closest?e.target.closest('[data-lang]'):null;if(!it)return;setLang(it.getAttribute('data-lang'),true);list.classList.remove('is-open');btn.setAttribute('aria-expanded','false');});
+      document.addEventListener('click',function(e){if(wrap&&!wrap.contains(e.target)){list.classList.remove('is-open');btn.setAttribute('aria-expanded','false');}});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'){list.classList.remove('is-open');btn.setAttribute('aria-expanded','false');}});
+    }
+    if(window.MutationObserver){
+      var mo=new MutationObserver(function(muts){
+        if(current==='zh')return;var d=dictCache[current];if(!d)return;
+        var idx=getIndex(current,d);
+        muts.forEach(function(m){m.addedNodes.forEach(function(node){
+          var h3=null;
+          if(node.nodeType===1){
+            if(node.classList&&node.classList.contains('case-title-char'))h3=node.closest?node.closest('.case-hero-heading h3'):null;
+            else if(node.querySelector){var sp=node.querySelector('.case-title-char');if(sp)h3=sp.closest('.case-hero-heading h3');}
+          } else if(node.nodeType===3&&node.parentElement){
+            h3=node.parentElement.closest?node.parentElement.closest('.case-hero-heading h3'):null;
+            if(h3&&h3._splitAppliedText!==undefined&&node.nodeValue===h3._splitAppliedText)h3=null;
+          }
+          if(h3){
+            var mine=false;
+            if(h3._myBuildText!==undefined){
+              var sp2=h3.querySelectorAll('.case-title-char');
+              if(sp2.length){
+                var joined=Array.from(sp2).map(function(s){return s.textContent==='\u00a0'?' ':s.textContent;}).join('');
+                if(joined===h3._myBuildText)mine=true;
+              } else if(h3.textContent===h3._myBuildText)mine=true;
+            }
+            if(!mine){delete h3._splitOrig;delete h3._myBuildText;delete h3._splitAppliedText;}
+          }
+        });});
+        muts.forEach(function(m){m.addedNodes.forEach(function(node){
+          if(node.nodeType===3){
+            if(node.parentElement&&node.parentElement.closest&&node.parentElement.closest('.case-hero-heading h3'))return;
+            translateNode(node,d,idx);return;
+          }
+          if(node.nodeType!==1||skipEl(node))return;
+          if(node.closest&&node.closest('.case-hero-heading h3'))return;
+          var tw=document.createTreeWalker(node,NodeFilter.SHOW_TEXT,{acceptNode:textFilter});
+          var t;while((t=tw.nextNode()))translateNode(t,d,idx);
+          translateAttrs(node,d);
+          var els=node.querySelectorAll?node.querySelectorAll('*'):[];
+          for(var i=0;i<els.length;i++){if(skipEl(els[i]))continue;translateAttrs(els[i],d);}
+        });});
+        splitTitleApply(d,current);
+      });
+      mo.observe(document.body,{childList:true,subtree:true});
+    }
+    applyLang(current);
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
 </body>
