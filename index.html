@@ -157,7 +157,7 @@ body.hero-ready #consultOpenContact{--control-icon:var(--icon-chat)}
         <button class="project reveal" data-category="logo graphic" data-case="orbit"><span class="sample-tag">05 · 概念案例 · 多图画廊</span><img decoding="async" loading="lazy" width="1920" height="1280" src="assets/media-generation-orbit-brand-0-a44e6f94-1c41-454f-8577-5faf99223c82.webp" alt="ORBIT 播客空间品牌墙：黑色吸音墙面上的金色立体字标与品牌主张「让每一种声音找到它的空间」" /><span class="project-meta"><span><small>AUDIO BRAND / VI</small><strong>ORBIT 播客空间</strong></span><i></i></span></button>
         <button class="project reveal" data-category="packaging graphic" data-case="moss"><span class="sample-tag">06 · 概念案例 · 应用场景示意</span><span class="concept-art art-moss" aria-hidden="true"><strong class="tea-brand">MOSS 山岚茶事<small>SHANLAN TEA GIFT</small></strong><span class="tea-cover"><i class="tea-callig">山岚茶事</i><b class="tea-cover-name">MOSS<small>SHANLAN TEA</small></b></span><span class="tea-tray"><i class="tea-lid"></i><i class="tea-lid"></i><i class="tea-lid"></i><i class="tea-lid"></i><i class="tea-lid"></i><i class="tea-lid"></i></span><span class="tea-brew"><b>冲泡说明 / BREW GUIDE</b><span>茶叶 5 g · 90°C 热水 250 mL</span><span>浸泡 60–90 秒 · 可续泡 3 次</span><span>阴凉干燥处密封保存</span></span></span><span class="project-meta"><span><small>TEA / PACKAGING SYSTEM</small><strong>MOSS 山岚茶事</strong></span><i></i></span></button>
         <button class="project reveal" data-category="packaging threed" data-case="aera"><span class="sample-tag">07 · 概念案例 · 应用场景示意</span><img decoding="async" loading="lazy" width="1920" height="1280" src="assets/aera-open-render.webp" alt="AERA 香氛礼盒 45 度开箱 3D 渲染：香水、藤条香薰与香薰蜡烛固定在 EVA 植绒内托槽位中" /><span class="project-meta"><span><small>SCENT GIFT / PACKAGING</small><strong>AERA 香氛礼盒</strong></span><i></i></span></button>
-        <button class="project reveal" data-category="packaging threed" data-case="kilo"><span class="sample-tag">08 · 六视图 · 真实结构 3D · 场景示意</span><img decoding="async" loading="lazy" width="1600" height="1100" src="assets/kilo-render-front-true3d.webp" alt="KILO 潮流鞋盒真实结构 3D 渲染，展示瓦楞厚度、折边、接缝、纸张质感与棚拍阴影" /><span class="project-meta"><span><small>PACKAGING / 3D</small><strong>KILO 潮流鞋盒</strong></span><i></i></span></button>
+        <button class="project reveal" data-category="packaging threed" data-case="kilo"><span class="sample-tag">08 · 六视图 · 真实结构 3D · 场景示意</span><img decoding="async" loading="lazy" width="1600" height="1100" src="assets/kilo-render-front-true3d.webp" alt="KILO 潮流鞋盒抽屉式套筒盒闭合正视 3D 渲染，哑光黑正面板、白字标与宝蓝斜切带" /><span class="project-meta"><span><small>PACKAGING / 3D</small><strong>KILO 潮流鞋盒</strong></span><i></i></span></button>
 
         <button class="project reveal" data-category="space campaign graphic" data-case="field"><span class="sample-tag">09 · 真实客户项目 · 实际交付</span><img decoding="async" loading="lazy" width="1800" height="1013" src="assets/shilan-05.webp" alt="厦门士兰集华12英寸高端模拟芯片制造一期工程开工典礼主题门头效果图" /><span class="project-meta"><span><small>OPENING CEREMONY / EVENT</small><strong>士兰集华开工典礼</strong></span><i></i></span></button>
         <button class="project reveal" data-category="campaign graphic space" data-case="arc"><span class="sample-tag">10 · 真实客户项目 · 实际交付</span><img decoding="async" loading="lazy" width="1800" height="1013" src="assets/youth2025-01.webp" alt="2025 青年趣享时光活动策划执行方案封面" /><span class="project-meta"><span><small>YOUTH EVENT / PLANNING</small><strong>2025 青年趣享时光</strong></span><i></i></span></button>
@@ -1541,16 +1541,30 @@ body.hero-ready #consultOpenContact{--control-icon:var(--icon-chat)}
           cgRot+=deg;cgMoved+=Math.abs(dx);
           cgVel=cgVel*0.6+(deg/dt)*0.4;cgLastX=e.clientX;cgLastT=now;cgRender();
         },{passive:true});
+        var cgHandledAt=0,cgHandledCase='',cgLastReleaseAt=0,cgLastReleaseMoved=0;
+        function cgOpenCard(cardEl){
+          var target=document.querySelector('.project[data-case="'+cardEl.dataset.case+'"]');
+          if(target){cgHandledAt=Date.now();cgHandledCase=cardEl.dataset.case;target.click();}
+        }
+        function cgCardFromEvent(e){
+          var el=e.target&&e.target.closest?e.target.closest('.cg-card'):null;
+          if(!el&&typeof e.clientX==='number'&&document.elementFromPoint){
+            var hit=document.elementFromPoint(e.clientX,e.clientY);
+            el=hit&&hit.closest?hit.closest('.cg-card'):null;
+          }
+          return el;
+        }
         function cgRelease(e){
           if(!cgDragging)return;cgDragging=false;
+          cgLastReleaseAt=Date.now();cgLastReleaseMoved=cgMoved;
           if(cgMoved<7){
-            var cardEl=e.target&&e.target.closest?e.target.closest('.cg-card'):null;
+            var cardEl=cgCardFromEvent(e);
             if(cardEl){
               var idx=cgCards.findIndex(function(c){return c.el===cardEl;});
               if(idx>-1){
                 var rel=((cgCards[idx].angle+cgRot)%360+540)%360-180;
                 if(Math.abs(rel)<cgStep*0.6){
-                  var target=document.querySelector('.project[data-case="'+cardEl.dataset.case+'"]');if(target)target.click();
+                  cgOpenCard(cardEl);
                 }else{cgSeek=-cgCards[idx].angle;}
               }
             }
@@ -1560,6 +1574,20 @@ body.hero-ready #consultOpenContact{--control-icon:var(--icon-chat)}
         }
         cgStage.addEventListener('pointerup',cgRelease);
         cgStage.addEventListener('pointercancel',cgRelease);
+        /* Click activation for the ring cards (keyboard Enter/Space fires a native
+           button click; some browsers also deliver the mouse click to the card).
+           Front card opens its case modal; a non-front card keeps the original
+           rotate-to-front behaviour. Guards stop the pointerup path above and a
+           drag release from double-firing the same activation. */
+        cgCards.forEach(function(c){
+          c.el.addEventListener('click',function(e){
+            if(cgHandledCase===c.el.dataset.case&&Date.now()-cgHandledAt<600)return;
+            if(e.detail>0&&Date.now()-cgLastReleaseAt<600&&cgLastReleaseMoved>=7)return;
+            var rel=((c.angle+cgRot)%360+540)%360-180;
+            if(e.detail===0||Math.abs(rel)<cgStep*0.6){cgOpenCard(c.el);}
+            else{cgSeek=-c.angle;cgStart();}
+          });
+        });
         cgStage.addEventListener('pointerenter',function(){cgHover=true;});
         cgStage.addEventListener('pointerleave',function(){cgHover=false;});
         cgRing.addEventListener('focusin',function(e){
