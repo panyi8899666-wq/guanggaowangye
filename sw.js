@@ -1,24 +1,24 @@
 /* 正鑫越文化传播个人工作室 — Service Worker
+   位于站点根目录，作用域覆盖 GitHub Pages 子路径 /guanggaowangye/。
    缓存应用外壳与核心资源，支持离线访问；图片走缓存优先策略。
    改版时递增 VERSION，页面会提示用户刷新到新版本。 */
-var VERSION = 'zxy-pwa-v16';
+var VERSION = 'zxy-pwa-v17';
 var CORE_CACHE = VERSION + '-core';
 var RUNTIME_CACHE = VERSION + '-runtime';
 
-/* 本文件位于 assets/ 下，站点根目录为其上一级 */
-var ROOT = new URL('../', self.location.href).href;
+var ROOT = new URL('./', self.location.href).href;
+var ASSET = new URL('assets/', self.location.href).href;
 
 var CORE_ASSETS = [
   ROOT,
-  ROOT + 'index.html',
-  new URL('manifest.json', self.location.href).href,
-  new URL('icon-192.png', self.location.href).href,
-  new URL('icon-512.png', self.location.href).href,
-  new URL('icon-maskable-512.png', self.location.href).href,
-  new URL('apple-touch-icon.png', self.location.href).href,
-  new URL('p01-sparkling-water-render.webp', self.location.href).href,
-  new URL('assistant-avatar-wave.webp', self.location.href).href,
-  new URL('three.min.js', self.location.href).href
+  new URL('index.html', self.location.href).href,
+  ASSET + 'manifest.json',
+  ASSET + 'icon-192.png',
+  ASSET + 'icon-512.png',
+  ASSET + 'icon-maskable-512.png',
+  ASSET + 'apple-touch-icon.png',
+  ASSET + 'p01-sparkling-water-render-800.webp',
+  ASSET + 'assistant-avatar-wave.webp'
 ];
 
 self.addEventListener('install', function (event) {
@@ -52,6 +52,14 @@ function putInCache(cacheName, request, response) {
   return response;
 }
 
+function isThirdParty(url) {
+  if (url.origin !== self.location.origin) return true;
+  /* 客服 SDK 即使被拷到同源，也不要被外壳缓存改写 */
+  if (url.hostname === 'trtc.io' || /(^|\.)trtc\.io$/i.test(url.hostname)) return true;
+  if (url.pathname.indexOf('knocket-sdk') !== -1) return true;
+  return false;
+}
+
 self.addEventListener('fetch', function (event) {
   var request = event.request;
   if (request.method !== 'GET') return;
@@ -59,13 +67,16 @@ self.addEventListener('fetch', function (event) {
   try { url = new URL(request.url); } catch (e) { return; }
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
+  /* 第三方请求（含 https://trtc.io 客服脚本及其资源）不拦截、不缓存 */
+  if (isThirdParty(url)) return;
+
   /* 页面导航：网络优先，断网时回退到缓存的外壳 */
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request).then(function (response) {
-        return putInCache(CORE_CACHE, ROOT + 'index.html', response);
+        return putInCache(CORE_CACHE, new URL('index.html', self.location.href).href, response);
       }).catch(function () {
-        return caches.match(ROOT + 'index.html', { ignoreSearch: true })
+        return caches.match(new URL('index.html', self.location.href).href, { ignoreSearch: true })
           .then(function (cached) { return cached || caches.match(ROOT, { ignoreSearch: true }); });
       })
     );
@@ -102,5 +113,4 @@ self.addEventListener('fetch', function (event) {
       })
     );
   }
-  /* 跨域请求（如在线客服脚本）不拦截，走浏览器默认网络 */
 });

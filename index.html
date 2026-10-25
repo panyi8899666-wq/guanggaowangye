@@ -189,15 +189,24 @@ html:not([lang^="zh"]) .memory-line{white-space:normal}
 html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
 @media(max-width:820px){html:not([lang^="zh"]) .memory-title-wrap h2{font-size:clamp(26px,8.6vw,40px)!important}}
 </style>
+<style id="perf-20261025">
+/* 首屏 3D 轮播在 head 里锁住高度，卡片用绝对定位插入时不再撑开 .hero-main。数值与原断点一致。 */
+.hero-ribbon{height:clamp(400px,40vw,520px)!important;min-height:clamp(400px,40vw,520px)!important;overflow:hidden!important}
+@media(max-width:820px){.hero-ribbon{height:336px!important;min-height:336px!important}}
+@media(max-width:520px){.hero-ribbon{height:316px!important;min-height:316px!important}}
+@media(prefers-reduced-motion:reduce){
+  .grainient,.grainient:after,.noise,.marquee-divider-track,.ticker-track,.hero-veil{animation:none!important}
+}
+</style>
 </head>
 <body class="hero-ready">
   <div class="grainient" aria-hidden="true"></div>
   <div class="image-trail" id="imageTrail" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
-  <div class="mascot-3d mascot-sprite-2d" id="mascot3d" aria-hidden="true"><img decoding="async" loading="lazy" width="757" height="1599" id="mascotSpriteImage" src="assets/assistant-avatar-wave.webp?v=20261017" alt=""></div>
+  <div class="mascot-3d mascot-sprite-2d" id="mascot3d" aria-hidden="true"><img decoding="async" loading="eager" fetchpriority="high" width="757" height="1599" id="mascotSpriteImage" src="assets/assistant-avatar-wave.webp?v=20261017" alt=""></div>
   <header class="topline" id="siteNav">
     <div class="nav-inner">
-      <a class="nav-brand" href="#" aria-label="正鑫越文化传播个人工作室 · 回到顶部">正鑫越文化<small lang="en">ZHENGXINYUE</small></a>
+      <a class="nav-brand" href="#" aria-label="正鑫越文化 ZHENGXINYUE">正鑫越文化<small lang="en">ZHENGXINYUE</small></a>
       <nav class="nav-links" id="navLinks" aria-label="主导航">
         <a href="#work">作品</a>
         <a href="#services">服务</a>
@@ -268,7 +277,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       <span class="vertical-index" aria-hidden="true">精选案例 · 作品索引</span>
       <div class="work-scene-banner">
         <div class="work-scene-media" aria-hidden="true">
-          <figure><img decoding="async" loading="lazy" width="1352" height="1792" src="assets/p01-sparkling-water-render.webp" alt="" /></figure>
+          <figure><img decoding="async" loading="lazy" width="800" height="1060" src="assets/p01-sparkling-water-render-800.webp" alt="" /></figure>
           <figure><img decoding="async" loading="lazy" width="1920" height="1280" src="assets/luma.webp" alt="" /></figure>
           <figure><img decoding="async" loading="lazy" width="1920" height="1280" src="assets/maiyu-bakery-storefront-night.webp" alt="" /></figure>
           <figure><img decoding="async" loading="lazy" width="1920" height="1280" src="assets/beauty-mask-award-system.webp" alt="" /></figure>
@@ -472,7 +481,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
             <h2>开始合作</h2>
             <p class="contact-subline">MAKE YOUR NEXT VISUAL MOVE</p>
             <p><span class="sentence">先说目标，不必先写一份完美需求。</span><span class="sentence">带上项目类型、使用场景与期望时间，我会帮你把问题整理清楚。</span></p>
-            <div class="contact-actions"><button class="cta" type="button" id="consultOpenContact"><span>免费咨询</span><small>CONSULT</small></button><a class="cta" id="downloadBrief" href="assets/%E6%AD%A3%E9%91%AB%E8%B6%8A%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD-%E5%8D%95%E9%A1%B5%E9%A1%B9%E7%9B%AE%E7%AE%80%E6%8A%A5%E6%A8%A1%E6%9D%BF.txt" download="正鑫越文化传播-单页项目简报模板.txt"><span>下载项目简报模板</span><small>DOWNLOAD PROJECT BRIEF</small></a></div>
+            <div class="contact-actions"><button class="cta" type="button" id="consultOpenContact"><span>免费咨询</span><small>CONSULT</small></button><a class="cta" id="downloadBrief" href="#contact"><span>下载项目简报模板</span><small>DOWNLOAD PROJECT BRIEF</small></a></div>
           </div>
           <figure class="contact-visual">
             <svg class="contact-collab-art" viewBox="0 0 720 560" role="img" aria-labelledby="contactArtTitle contactArtDesc" preserveAspectRatio="xMidYMid slice">
@@ -854,7 +863,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
         luma:{title:'LUMA 夜跑',image:'assets/luma-render-front.webp',alt:'LUMA 城市夜跑计划发光灯箱正视 3D 渲染：金属箱体、双立柱支撑、背光光晕与完整标题层级',text:'以城市脉冲为视觉母题，完成一套可进入真实夜间媒介的夜跑传播系统。完整平面稿保留活动名称、10 KM 路线、夜间安全提示、补给与存包信息区，并将日期、地点和报名方式明确标记为待主办方确认；两张灯箱 3D 渲染分别检查正视阅读与 45° 箱体厚度，两张城市实景检查远距识别、环境光和行人尺度。',role:'战役主题 / 活动信息设计 / 户外 3D 渲染',strategy:'城市脉冲 × 三秒阅读 × 夜间媒介校色',deliverables:'完整活动平面稿、正视灯箱渲染、45° 灯箱渲染、路线大牌实景、候车亭实景、灯箱结构特写'},
         nova:{title:'NOVA 咖啡包装系统',image:'assets/nova-render-front.webp',alt:'NOVA 咖啡陨星深焙与暖橙中焙纸基复合自立袋正视 3D 渲染，含排气阀、拉链、规格与批次信息',text:'以 NOVA 星标建立纸基复合自立袋系统，双口味一次讲清：陨星深焙（黑巧 · 烟熏 · 焦糖）、暖橙中焙（甜橙 · 蜂蜜 · 榛果），净含量 200 g。平面稿完整标出正面、背面、底插、拉链、热封区、排气阀与生产字段；两张 3D 渲染检查袋体站立、侧面厚度和阀体位置，两张实景检查货架系列识别与烘焙工作台使用状态。',role:'包装策略 / 信息设计 / 包装 3D 渲染',strategy:'双口味命名 × 可制袋结构 × 生产字段完整标注',deliverables:'完整袋体平面稿、正视袋体渲染、45° 袋体渲染、零售货架实景、烘焙工作台实景、拉链排气阀特写'},
 
-        sway:{title:'新阳街道安全环保主题宣传方案',image:'assets/xinyang-01.webp',alt:'2024年新阳街道安全环保主题宣传方案封面',actual:true,text:'围绕食品安全、消防安全与生态环保三条主题线，完成活动策划、主背景视觉、主舞台效果、互动区与宣传展板的系统方案。设计单位：厦门市湖里区正鑫越文化传播工作室；精选页来自2024年8月29日实际交付文件，保留方案结构与效果呈现。',role:'活动策划 / 主题视觉 / 场景布置',strategy:'三大公共安全主题 × 互动传播 × 现场视觉统一',deliverables:'方案封面、内容目录、现场位置摆放、主舞台效果、互动拍照区、宣传展板'},
+        sway:{title:'新阳街道安全环保主题宣传方案',image:'assets/xinyang-01.webp',alt:'2024年新阳街道安全环保主题宣传方案封面',actual:true,text:'围绕食品安全、消防安全与生态环保三条主题线，完成活动策划、主背景视觉、主舞台效果、互动区与宣传展板的系统方案。设计单位：正鑫越文化传播个人工作室；精选页来自2024年8月29日实际交付文件，保留方案结构与效果呈现。',role:'活动策划 / 主题视觉 / 场景布置',strategy:'三大公共安全主题 × 互动传播 × 现场视觉统一',deliverables:'方案封面、内容目录、现场位置摆放、主舞台效果、互动拍照区、宣传展板'},
         orbit:{title:'ORBIT 播客空间',image:'assets/media-generation-orbit-brand-0-a44e6f94-1c41-454f-8577-5faf99223c82.webp',alt:'ORBIT 播客空间品牌墙：黑色吸音墙面上的金色立体字标与品牌主张「让每一种声音找到它的空间」',text:'为一间播客空间建立从品牌墙到录制现场的整套视觉：品牌墙先立识别——黑色吸音墙面上金色立体字标居中，品牌主张「让每一种声音找到它的空间」压在字标下方，成为进门第一阅读信息；录音间以发光字标与「播客工作室」木牌定调，三支话筒与话题手记把录制状态摆上桌面；设备特写把话筒与调音台推到近景，ORBIT STUDIO 面板字标保持同一套识别；访谈场景里两位中国主播对谈录制，霓虹字标、录音间门牌与中文手记同框。四个画面从品牌、空间、设备到真实使用，始终是同一个 ORBIT。本案为实际项目，画面来自实际交付内容。',role:'品牌视觉 / 空间应用 / 播客场景视觉',strategy:'品牌墙立识别 × 同一字标贯穿空间与设备',deliverables:'品牌墙、录音间、设备特写、访谈场景'},
         moss:{title:'MOSS 山岚茶事',text:'把 MOSS 山岚茶事重做为宋式茶礼：深墨绿磁吸书型盒以竖排书法「山岚茶事」为视觉锤、衬线 MOSS 居中放大，盒面青绿山水胶印配局部烫哑金；打开是 EVA 植绒内托与 6 个横置槽位（2 排 × 3 列），六枚铝制小罐侧躺入槽并排，罐盖印青绿山水配烫金云纹，罐身环绕小字，盖顶即第二视觉面。冲泡说明沿用茶叶 5 g、90°C 热水 250 mL、浸泡 60–90 秒，可续泡三次。',role:'茶品品牌 / 礼盒包装 / 信息设计',strategy:'青绿山水 × 竖排书法 × 深底烫金',deliverables:'磁吸书型礼盒、青绿山水小罐、横置槽位内托、组合陈列、冲泡说明'},
         aera:{title:'AERA 香氛礼盒',image:'assets/aera-open-render.webp',alt:'AERA 香氛礼盒 45 度开箱 3D 渲染：香水、藤条香薰与香薰蜡烛固定在 EVA 植绒内托槽位中',text:'将错层构想落实为真实矩形礼盒：闭合外盒使用 1200 g 灰板裱特种纸、柔触哑膜与压凹字标；开箱后，香水瓶、藤条香薰与香薰蜡烛分别固定在 EVA 植绒内托的独立槽位中，并补充单品特写以检查标签、瓶盖与产品比例。',role:'礼盒结构 / 产品包装 / 3D 场景呈现',strategy:'错层开箱 × 三件香氛 × 独立内托固定',deliverables:'完整包装平面稿、闭合礼盒渲染、开箱礼盒渲染、梳妆台开箱陈列、产品与内托陈列、材质结构特写'},
@@ -962,7 +971,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
         pulse:{ideaName:'一枚气泡，四种风味',idea:'把 P 的字形与上升气泡合成 P·01 圆形字标，再用同一套几何线稿绘制青柠、西柚、白桃与柚子。品牌、品类、口味、净含量四级信息固定，风味色与果实图形负责变化。',brief:'为气泡水完成可直接评审的品牌标识、四款正面标签、背标信息区与瓶身应用。',challenge:'结构必须匹配常规供应链，正面三到五米先读品牌与口味，近看再读品类和净含量；系列还要保持统一而不重复。',rejects:['只有色块的瓶贴','每味一套版式','透明满版贴'],rejectReason:'只有色块没有品牌资产，逐味重做会破坏家族识别，透明满版贴在冷凝水环境下可读性不稳；最终采用 P·01 字标、固定母版和几何果实系统。',grid:'以建议环标 210 × 90 mm 为参考：正面主视觉约占展开宽度 42%，品牌字标固定左上，中文口味位于左下，几何果实置于中右；背面信息区约占 36%，其余留给条码、搭接与安全边。',type:'P·01 字标采用 Noto Sans SC 600 的几何化改造；中文口味 500 为第一层，品类 500 与 DM Mono 规格信息依次降低字号。',colors:['#8CAE55','#DF6747','#E2AD52','#5F9EA8'],colorSystem:'青柠绿、西柚珊瑚、白桃金黄与柚子水青分别承担风味识别，米白标签底与深绿灰文字在所有 SKU 中保持统一。',variation:'不同口味只替换风味色、中文/英文名称与果实线稿；P·01 字标、标签网格、品类、净含量和背标顺序全部不变。',stressName:'货架、冷凝<br>与灌装测试',stress:'四瓶并排先读成 P·01 系列，再快速区分口味；用供应商瓶样完成试贴，检查搭接、冷凝水、色差、条码扫描与灌装线适配。投产前按适用版本校审相关食品标签与食品接触材料标准。',target:'项目目标：做一套有明确品牌识别、有完整正面视觉，并可进入打样、法规校审与灌装测试的气泡水包装。'},
         luma:{ideaName:'城市脉冲',idea:'把夜跑路线上连续发生的脚步与灯光，压缩成一条可被品牌拥有的脉冲轨迹。',brief:'为城市夜跑活动建立报名期、路线期和完赛期可连续使用的传播系统。',challenge:'夜间环境复杂，人物速度感不能牺牲日期、路线和安全提示的可读性。',rejects:['霓虹人像','速度斜体','城市剪影'],rejectReason:'人像方案过度依赖摄影，斜体与剪影缺少资产性；脉冲轨迹能跨照片与地图持续工作。',grid:'路线以 12 列网格穿越版面，主标题锁定左上 4 列，安全信息固定在底部基线区。',type:'Noto Sans SC 500 保持夜间清晰；DM Mono 用于里程、配速与时间标签。',colors:['#101827','#D77A32','#E9E4D8'],colorSystem:'深蓝黑作为夜色基底，琥珀橙只标记路线和行动节点，暖白保证信息读取。',variation:'不同城区只改变脉冲路径，不改线宽、转角半径与信息基线。',stressName:'夜间远距测试',stress:'在 15–40 米道路视距和混合灯光下，标题与路线仍需保持对比；安全信息不得进入运动模糊层。',target:'项目目标：让活动在海报、路线图与报名页之间保持同一识别线索。'},
         nova:{ideaName:'一枚星标，两种烘焙',idea:'以 NOVA 星标作为固定识别，双口味用正式品名一次讲清：陨星深焙（黑巧 · 烟熏 · 焦糖）与暖橙中焙（甜橙 · 蜂蜜 · 榛果）；几何星芒随烘焙度收放，品名、风味注脚与批次信息固定在同一版心。',brief:'为精品咖啡建立纸基复合袋、季节豆与货架陈列的可量产包装系统。',challenge:'纸质外观必须兼顾阻氧、阻湿、热封与排气阀，并为预包装食品信息保留清晰版面。',rejects:['口味只靠色块','纯纸直接接触','无热封边结构'],rejectReason:'只靠色块区分口味，货架上读不出风味差异；纯纸袋无法满足咖啡阻隔需求，无热封边也不可量产；最终以正式品名加风味注脚区分双口味，并采用纸基复合袋。',grid:'正背面各 140 × 220 mm，底插深 75 mm；周边热封 10 mm，顶部封口 15 mm，正文安全边不小于 5 mm。',type:'Noto Sans SC 500 建立风味层级；Noto Sans SC 400 负责法规、冲煮与追溯信息。',colors:['#234A8A','#B74832','#E6DED0'],colorSystem:'深蓝对应陨星深焙，陶红对应暖橙中焙，纸白留给产地、批次与法规信息。',variation:'限定豆允许星芒变形与局部换色，但双口味品名、刀版结构和信息顺序不变。',stressName:'制袋与法规测试',stress:'按制袋厂最终刀版完成 1:1 白样，验证拉链、排气阀、热封与条码；按投产日期校审 GB 7718、GB 28050 与食品接触材料标准。',target:'项目目标：建立一套双口味命名清楚、可制袋打样、可完成食品标签校审的包装系统。'},
-        sway:{ideaName:'三大主题，一套现场语言',idea:'将食品安全、消防安全与生态环保并行组织，在同一活动框架下用主背景、舞台、拍照区和展板形成连续体验。',brief:'2024年新阳街道安全环保主题宣传方案，设计单位：厦门市湖里区正鑫越文化传播工作室。',challenge:'三个公共传播主题需要同时成立，并在活动流程、互动内容与现场视觉之间保持清楚分区。',rejects:['主题割裂','信息堆叠','单点装饰'],rejectReason:'实际方案以主题分区和统一现场结构取代零散物料，保证参与路径与传播内容连续。',grid:'以主舞台为中心，联动帐篷互动区、拍照区和宣传展板区；不同主题保持独立内容入口。',type:'中文主题承担主要阅读，编号与章节用于方案导航。',colors:['#176C55','#EF8B2C','#E7D45B'],colorSystem:'绿色承接环保，暖色强调参与感，不同主题通过图形与标题区分。',variation:'主背景、舞台、拍照装置和展板按媒介比例分别适配。',stressName:'现场动线与信息复核',stress:'检查观众从入场、互动到兑奖的路径，以及食品、消防、环保内容的主办方终审。',target:'实际交付：活动策划执行方案与现场视觉效果展示。'},
+        sway:{ideaName:'三大主题，一套现场语言',idea:'将食品安全、消防安全与生态环保并行组织，在同一活动框架下用主背景、舞台、拍照区和展板形成连续体验。',brief:'2024年新阳街道安全环保主题宣传方案，设计单位：正鑫越文化传播个人工作室。',challenge:'三个公共传播主题需要同时成立，并在活动流程、互动内容与现场视觉之间保持清楚分区。',rejects:['主题割裂','信息堆叠','单点装饰'],rejectReason:'实际方案以主题分区和统一现场结构取代零散物料，保证参与路径与传播内容连续。',grid:'以主舞台为中心，联动帐篷互动区、拍照区和宣传展板区；不同主题保持独立内容入口。',type:'中文主题承担主要阅读，编号与章节用于方案导航。',colors:['#176C55','#EF8B2C','#E7D45B'],colorSystem:'绿色承接环保，暖色强调参与感，不同主题通过图形与标题区分。',variation:'主背景、舞台、拍照装置和展板按媒介比例分别适配。',stressName:'现场动线与信息复核',stress:'检查观众从入场、互动到兑奖的路径，以及食品、消防、环保内容的主办方终审。',target:'实际交付：活动策划执行方案与现场视觉效果展示。'},
         orbit:{ideaName:'先说清楚声音服务',idea:'品牌主张成为品牌墙的第一阅读层：金色立体字标与「让每一种声音找到它的空间」占据录音间主墙，录音间、设备与访谈场景沿用同一套黑金识别，把服务讲清楚。',brief:'为播客空间建立品牌主张、品牌墙、录音间视觉、设备识别与访谈场景的整套空间品牌视觉。',challenge:'既要保留声音行业的专业感，又不能让客户只看到抽象符号而不知道工作室具体提供什么。',rejects:['大黑圈主视觉','荧光实验海报','无说明几何系统'],rejectReason:'抽象几何单独出现会让业务含义消失；新方向先说清品牌主张、四项服务与使用场景，再让几何系统提供识别。',grid:'品牌墙以字标为中心、主张居其下；录音间、设备特写与访谈场景沿用同一字标与黑金色盘。',type:'Noto Sans SC 700 建立中文主张；DM Mono 500 只承担英文品牌名、服务索引与场景标签。',colors:['#111214','#C6A15B','#ECEAE4'],colorSystem:'墨黑承载专业录音环境，象牙白保证信息可读，香槟金只标记声音节点与服务索引。',variation:'播客、广告与空间音频模板可替换内容图，但品牌主张、服务网格与波形基线保持不变。',stressName:'三秒业务理解测试',stress:'离品牌墙三米先读 ORBIT 字标与品牌主张；走进录音间，桌面话题手记与设备字标延续同一套识别。',target:'项目目标：让访客先理解这是一个能录、能谈、能播的播客空间，再记住它的声音视觉语言。'},
         moss:{ideaName:'青绿入礼',idea:'把青绿山水的层峦收进一枚罐盖：蓝绿山峦与金色云纹成为系列的视觉锤，盒面只留竖排书法与衬线 MOSS，深色底加烫金把高级感做得克制。',brief:'为山岚焙茶建立磁吸书型礼盒、六枚小罐、横置槽位内托与陈列的系列包装。',challenge:'传统题材容易做成旅游纪念品；书法、山水与英文品牌要同框而不互相抢夺，还要保留法规、净含量与冲泡信息。',rejects:['条纹密度编码','满版茶叶照片','大面积亮金'],rejectReason:'条纹编码偏冷感与工具化，照片缺少品牌资产，大面积亮金显廉价；最终以青绿山水和竖排书法立宋式文人气质，金只落在云纹、字与罐沿。',grid:'盒面竖排书法约占高 55%，衬线 MOSS 居中落底；罐盖山水占盖面约 78%，罐沿环绕小字一圈，罐身只保留品名与规格两行。',type:'盒面书法体竖排为第一层；MOSS 以高对比衬线居中放大；中文小字作注脚，冲泡与法规信息用 Noto Sans SC 400。',colors:['#17453A','#2F7E6E','#C6A15B'],colorSystem:'深墨绿为盒体底色，青绿只出现在罐盖山水，香槟金负责云纹、书法与罐沿小字，EVA 植绒内托托起整排小罐。',variation:'不同茶品更换罐盖山水的段落与一方小印，盒面书法、内托槽位与罐身版式不变。',stressName:'开盒与成排测试',stress:'六罐并排先读成一幅连绵山水，拿起单罐后盖顶山水与罐沿小字在近看层清晰；开盒的磁吸、槽位与取放间隙逐项验证。',target:'项目目标：用一幅青绿山水管理礼盒、单罐与陈列三种尺度。'},
         aera:{ideaName:'开盒如呼吸',idea:'把香气由浓到淡的扩散过程转译为三层错落结构，让开盒动作本身成为品牌体验。',brief:'为节日香氛礼盒建立瓶贴、外盒、手提袋与电商主视觉。',challenge:'礼盒要有层次但不能增加过多运输体积，金色工艺也必须克制使用。',rejects:['花瓣轮廓','香雾渐变','拱门盒型'],rejectReason:'花瓣与香雾缺乏结构依据，拱门增加模切成本；错层结构能同时服务叙事与开盒。',grid:'三层盒面按 1:1.25:1.6 比例递进，品牌字标始终落在开合后的共同中心轴。',type:'Noto Serif SC 500 负责系列名；DM Mono 300 标注香调与容量。',colors:['#6E234A','#D99AA4','#E5DDD6'],colorSystem:'酒红为品牌基底，粉色指向香调，灰米色承担留白；金色仅用于开盒引导线。',variation:'不同香型只调整内层色阶和纹理，盒型比例与开盒路径保持一致。',stressName:'运输体积测试',stress:'三层结构闭合后必须回到标准矩形；内托固定瓶体，并通过跌落与摩擦打样验证。',target:'项目目标：把结构、触感与香调信息统一为一次有记忆点的开盒体验。'},
@@ -1504,7 +1513,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       pricingOpen.addEventListener('click',openPricing);pricingClose.addEventListener('click',closePricing);pricingModal.addEventListener('click',function(event){if(event.target===pricingModal)closePricing();});document.addEventListener('keydown',function(event){if(event.key==='Escape'&&pricingModal.classList.contains('open'))closePricing();});
 
       var brief='正鑫越文化传播个人工作室｜单页项目简报模板\n\n项目名称：\n填写日期：\n\n一、项目背景\n现状、缘起与需要解决的问题：\n\n二、项目目标\n希望受众看见、理解或采取什么行动：\n\n三、目标受众\n主要人群与使用场景：\n\n四、交付物\n需要完成的项目与数量：\n\n五、尺寸规格\n每项物料的尺寸、格式、出血与制作要求：\n\n六、时间节点\n初稿时间：\n反馈时间：\n最终交付时间：\n\n七、预算范围\n设计预算：\n如需制作，请注明材质、工艺与数量：\n\n八、参考资料\n品牌规范、已有素材、竞品或风格参考：\n\n九、联系方式\n联系人：\n电话 / 微信：\n邮箱：\n反馈与确认人：\n';
-      document.getElementById('downloadBrief').addEventListener('click',function(){showToast('项目简报模板开始下载');});
+      document.getElementById('downloadBrief').addEventListener('click',function(e){e.preventDefault();var blob=new Blob([brief],{type:'text/plain;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='正鑫越文化传播-单页项目简报模板.txt';document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(url);},1500);showToast('项目简报模板开始下载');});
       function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
       function fallbackCopy(value){var area=document.createElement('textarea');area.value=value;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();var copied=false;try{copied=document.execCommand('copy');}catch(error){copied=false;}area.remove();return copied;}
       document.querySelectorAll('.copy-email').forEach(function(button){button.addEventListener('click',function(){var value=button.dataset.copy,done=function(){button.textContent='已复制';showToast('邮箱已复制');setTimeout(function(){button.textContent='复制';},1800);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(value).then(done).catch(function(){if(fallbackCopy(value))done();else showToast('复制失败，请长按邮箱复制');});}else if(fallbackCopy(value)){done();}else{showToast('复制失败，请长按邮箱复制');}});});
@@ -1523,7 +1532,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       function consultAvatar(){var avatar=document.createElement('div'),img=document.createElement('img');avatar.className='consult-avatar';img.src='assets/assistant-avatar-wave.webp?v=20261017';img.alt='';avatar.appendChild(img);return avatar;}
       function makeConsultTurn(role,text){var turn=document.createElement('div'),wrap=document.createElement('div'),roleLabel=document.createElement('span'),bubble=document.createElement('div');turn.className='consult-turn '+role;roleLabel.className='consult-role';roleLabel.textContent=role==='user'?'你':'正鑫越需求助手';bubble.className='consult-bubble';bubble.textContent=text;if(role!=='user'){turn.appendChild(consultAvatar());wrap.className='consult-message-wrap';wrap.appendChild(roleLabel);wrap.appendChild(bubble);turn.appendChild(wrap);}else{turn.appendChild(bubble);}return turn;}
       function consultScroll(){requestAnimationFrame(function(){consultBody.scrollTop=consultBody.scrollHeight;});}
-      function consultOpen(){consultLastFocus=document.activeElement;consultPreviousOverflow=document.body.style.overflow;consultShell.classList.remove('minimized');if(consultMinimize){consultMinimize.textContent='—';consultMinimize.setAttribute('aria-label','最小化咨询窗口');}consultShell.classList.add('open');consultShell.setAttribute('aria-hidden','false');consultFab.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';renderConsult();setTimeout(function(){consultDialog.focus();},30);}
+      function consultOpen(){loadLiveChatScript();consultLastFocus=document.activeElement;consultPreviousOverflow=document.body.style.overflow;consultShell.classList.remove('minimized');if(consultMinimize){consultMinimize.textContent='—';consultMinimize.setAttribute('aria-label','最小化咨询窗口');}consultShell.classList.add('open');consultShell.setAttribute('aria-hidden','false');consultFab.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';renderConsult();setTimeout(function(){consultDialog.focus();},30);}
       function consultClosePanel(){consultShell.classList.remove('open');consultShell.setAttribute('aria-hidden','true');consultFab.setAttribute('aria-expanded','false');document.body.style.overflow=consultPreviousOverflow;if(consultLastFocus&&consultLastFocus.focus)consultLastFocus.focus();}
       function consultToggleMinimize(){var minimized=consultShell.classList.toggle('minimized');consultMinimize.textContent=minimized?'+':'—';consultMinimize.setAttribute('aria-label',minimized?'展开咨询窗口':'最小化咨询窗口');}
       consultMinimize.addEventListener('click',function(e){e.stopPropagation();consultToggleMinimize();});
@@ -1535,59 +1544,44 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       function renderConsult(){consultOptions.replaceChildren();consultValidation.textContent='';consultComposer.hidden=false;consultThread.replaceChildren();consultThread.appendChild(makeConsultTurn('assistant','你好呀，我是正鑫越工作室的小助手👋 想做什么设计？跟我说说~'));for(var i=0;i<Math.min(consultStep,consultSteps.length);i++){var prior=consultSteps[i];consultThread.appendChild(makeConsultTurn('assistant',prior.question));consultThread.appendChild(makeConsultTurn('user',consultAnswers[prior.key]||'待确认'));}if(consultStep>=consultSteps.length){renderConsultSummary();return;}var step=consultSteps[consultStep];consultStepLabel.textContent='第 '+(consultStep+1)+' / 7 步';consultStepName.textContent=step.label;consultProgressBar.style.width=(((consultStep+1)/7)*100)+'%';consultThread.appendChild(makeConsultTurn('assistant',step.question));consultInputRow.hidden=step.type==='options';consultField.value=consultAnswers[step.key]||'';consultField.placeholder=step.placeholder||'';consultField.rows=step.type==='textarea'?3:1;consultField.style.height=step.type==='textarea'?'76px':'43px';if(step.type==='options'){step.options.forEach(function(label){var button=document.createElement('button');button.type='button';button.className='consult-option';var span=document.createElement('span');span.textContent=label;button.appendChild(span);button.addEventListener('click',function(){consultAnswers[step.key]=label;consultStep+=1;renderConsult();});consultOptions.appendChild(button);});}else{setTimeout(function(){consultField.focus();},30);}consultScroll();}
       function submitConsultField(){if(consultStep>=consultSteps.length)return;var step=consultSteps[consultStep],value=consultField.value.trim();if(!value){consultValidation.textContent='请填写后再发送；不确定时可以填写“待确认”。';consultField.focus();return;}consultAnswers[step.key]=value;consultStep+=1;renderConsult();}
       consultSend.addEventListener('click',submitConsultField);consultField.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitConsultField();}});consultFab.addEventListener('click',consultOpen);if(footerConsult)footerConsult.addEventListener('click',consultOpen);var consultOpenContact=document.getElementById('consultOpenContact');if(consultOpenContact)consultOpenContact.addEventListener('click',consultOpen);
-      /* Tawk.to live chat: the 转人工 button hands the visitor to a human agent. If the widget is still loading, wait for its onLoad before maximizing; the default Tawk bubble stays hidden so this button is the only entry. */
-      window.Tawk_API=window.Tawk_API||{};
-      var tawkReady=false,tawkPendingOpen=false,tawkWaitStarted=0;
-      window.Tawk_API.onLoad=function(){tawkReady=true;if(typeof window.Tawk_API.hideWidget==='function')window.Tawk_API.hideWidget();if(tawkPendingOpen){tawkPendingOpen=false;openTawkChat();}};
-      /* Visitor-side unread pill control: the Tawk bubble (and its unread-count pill) must never surface on its own. The widget stays fully hidden until the visitor explicitly opens live chat, and is hidden again the moment they minimize or end the chat — so no stale "new messages" pill lingers for visitors who never wrote, and nothing of the studio's own unread counts can ever be shown to a visitor. */
-      window.Tawk_API.onChatMinimized=function(){if(typeof window.Tawk_API.hideWidget==='function')window.Tawk_API.hideWidget();};
-      window.Tawk_API.onChatEnded=function(){if(typeof window.Tawk_API.hideWidget==='function')window.Tawk_API.hideWidget();};
-      /* Forward every visitor chat message to the studio webhook so each message (not just chat start/end) is picked up promptly. Reporting only — the widget's open/hide behaviour and styling are untouched. Primary path: Tawk_API chat-message callbacks; fallback: watch the page DOM for new visitor message bubbles. */
-      var tawkWebhookUrl='https://zxy-reg-api.zxy-reg-api.workers.dev/api/chat-webhook';
-      var tawkReported={};
-      function reportTawkVisitorMessage(text){
-        text=(text==null?'':String(text)).replace(/\s+/g,' ').trim();
-        if(!text)return;
-        var key=text+'|'+Math.floor(Date.now()/3000);
-        if(tawkReported[key])return;tawkReported[key]=true;
-        try{fetch(tawkWebhookUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:{text:text},visitor:{name:'网站访客'},chatId:'webchat'})}).catch(function(){});}catch(e){}
+      /* 转人工：交给 Knocket contactWidget.showChat。组件发出 ready 之前只排队，不调用加载期的空实现。 */
+      /* 懒加载 Knocket：首屏不请求 trtc.io，访客打开咨询窗（consultOpen）或点“转人工”（openLiveChat）时才注入脚本。
+         脚本 URL 与 PR 原样一致，不改 identifier 与 v 参数；加载失败时允许下次点击重试，15 秒超时提示逻辑不变。 */
+      var liveChatScriptLoading=false,liveChatScriptLoaded=false;
+      function loadLiveChatScript(){
+        if(liveChatScriptLoaded||liveChatScriptLoading)return;
+        liveChatScriptLoading=true;
+        var s=document.createElement('script');
+        s.src='https://trtc.io/knocket-sdk/sdk.js?identifier=41e0eb7d59a35c6d21&v=1792940602842';
+        s.async=true;
+        s.onload=function(){liveChatScriptLoaded=true;hookLiveChat();};
+        s.onerror=function(){liveChatScriptLoading=false;};
+        document.head.appendChild(s);
       }
-      function handleTawkChatMessage(message){
-        var text='';
-        if(typeof message==='string')text=message;
-        else if(message&&typeof message==='object')text=message.message||message.text||message.content||'';
-        reportTawkVisitorMessage(text);
+      var liveChatReady=false,liveChatPending=false,liveChatWaitStarted=0,liveChatHooked=false;
+      function openLiveChatNow(){
+        if(!liveChatReady)return false;
+        var api=window.contactWidget;
+        if(api&&typeof api.showChat==='function'){api.showChat();if(typeof consultClosePanel==='function')consultClosePanel();return true;}
+        return false;
       }
-      window.Tawk_API.onChatMessage=handleTawkChatMessage;
-      window.Tawk_API.onChatMessageVisitor=handleTawkChatMessage;
-      if(window.MutationObserver&&document.body){
-        var tawkDomSeen={};
-        var tawkObserver=new MutationObserver(function(mutations){
-          mutations.forEach(function(mutation){
-            Array.prototype.slice.call(mutation.addedNodes||[]).forEach(function(node){
-              if(node.nodeType!==1)return;
-              var bubbles=[];
-              if(node.matches&&node.matches('[class*="tawk"] [class*="message"],[id*="tawk"] [class*="message"]'))bubbles.push(node);
-              if(node.querySelectorAll)bubbles=bubbles.concat(Array.prototype.slice.call(node.querySelectorAll('[class*="tawk"] [class*="message"],[id*="tawk"] [class*="message"]')));
-              bubbles.forEach(function(bubble){
-                var text=(bubble.textContent||'').replace(/\s+/g,' ').trim();
-                if(!text||text.length>2000)return;
-                var seenKey=text+'|'+bubble.className;
-                if(tawkDomSeen[seenKey])return;tawkDomSeen[seenKey]=true;
-                reportTawkVisitorMessage(text);
-              });
-            });
-          });
-        });
-        tawkObserver.observe(document.body,{childList:true,subtree:true});
+      function markLiveChatReady(){liveChatReady=true;if(liveChatPending){liveChatPending=false;openLiveChatNow();}}
+      window.ContactWidgetOnReady=markLiveChatReady;
+      function hookLiveChat(){
+        if(liveChatHooked||!window.contactWidget||typeof window.contactWidget.on!=='function')return;
+        liveChatHooked=true;
+        window.contactWidget.on('ready',markLiveChatReady);
+        window.contactWidget.on('chatReady',markLiveChatReady);
       }
-      function openTawkChat(){if(window.Tawk_API&&typeof window.Tawk_API.maximize==='function'){window.Tawk_API.maximize();consultClosePanel();}}
       function openLiveChat(){
-        if(tawkReady){openTawkChat();return;}
-        if(!tawkPendingOpen){tawkPendingOpen=true;showToast('正在为你转接人工客服…');}
-        if(!tawkWaitStarted){tawkWaitStarted=Date.now();var tawkPoll=setInterval(function(){
-          if(tawkReady){clearInterval(tawkPoll);return;}
-          if(Date.now()-tawkWaitStarted>15000){clearInterval(tawkPoll);tawkWaitStarted=0;if(tawkPendingOpen){tawkPendingOpen=false;showToast('人工客服连接较慢，请稍后再试一次');}}
+        loadLiveChatScript();
+        hookLiveChat();
+        if(openLiveChatNow())return;
+        if(!liveChatPending){liveChatPending=true;showToast('正在为你转接人工客服…');}
+        if(!liveChatWaitStarted){liveChatWaitStarted=Date.now();var livePoll=setInterval(function(){
+          hookLiveChat();
+          if(openLiveChatNow()){clearInterval(livePoll);liveChatPending=false;return;}
+          if(Date.now()-liveChatWaitStarted>15000){clearInterval(livePoll);liveChatWaitStarted=0;if(liveChatPending){liveChatPending=false;showToast('人工客服连接较慢，请稍后再试一次');}}
         },300);}
       }
       var consultHuman=document.getElementById('consultHuman');
@@ -1602,11 +1596,13 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       document.querySelectorAll('.hero-copy .sentence').forEach(function(node,index){node.style.setProperty('--hero-i',index);});
 
       /* Dark Veil: slow champagne-silk field with pointer-led sheen and a restrained grain layer. */
-      var veil=document.getElementById('heroVeil'),veilCtx=veil.getContext('2d'),veilHero=document.querySelector('.hero'),veilMouse={x:.68,y:.36,tx:.68,ty:.36},veilSize={w:1,h:1,dpr:1},veilFrame=0;
+      var veil=document.getElementById('heroVeil'),veilCtx=veil.getContext('2d'),veilHero=document.querySelector('.hero'),veilMouse={x:.68,y:.36,tx:.68,ty:.36},veilSize={w:1,h:1,dpr:1},veilFrame=0,veilOnscreen=true;
       function sizeVeil(){var r=veilHero.getBoundingClientRect();veilSize.dpr=Math.min(window.devicePixelRatio||1,1.5);veilSize.w=Math.max(1,Math.round(window.innerWidth));veilSize.h=Math.max(1,Math.round(r.height));veil.width=Math.round(veilSize.w*veilSize.dpr);veil.height=Math.round(veilSize.h*veilSize.dpr);veil.style.width=veilSize.w+'px';veil.style.height=veilSize.h+'px';veilCtx.setTransform(veilSize.dpr,0,0,veilSize.dpr,0,0);drawVeil(performance.now());}
-      function drawVeil(now){var w=veilSize.w,h=veilSize.h,t=now*.00016;veilMouse.x+=(veilMouse.tx-veilMouse.x)*.05;veilMouse.y+=(veilMouse.ty-veilMouse.y)*.05;veilCtx.clearRect(0,0,w,h);var base=veilCtx.createLinearGradient(0,0,w,h);base.addColorStop(0,'#0d0d0f');base.addColorStop(.46,'#15130f');base.addColorStop(1,'#09090a');veilCtx.fillStyle=base;veilCtx.fillRect(0,0,w,h);for(var i=0;i<6;i++){var px=w*(.12+i*.18+Math.sin(t*1.2+i)*.035),py=h*(.22+Math.cos(t*.8+i*.7)*.09),g=veilCtx.createRadialGradient(px,py,0,px,py,w*.34);g.addColorStop(0,'rgba(122,95,34,'+(0.075+i*.008)+')');g.addColorStop(.44,'rgba(80,59,20,.035)');g.addColorStop(1,'rgba(13,13,15,0)');veilCtx.fillStyle=g;veilCtx.fillRect(0,0,w,h);}var sx=veilMouse.x*w,sy=veilMouse.y*h,sheen=veilCtx.createRadialGradient(sx,sy,0,sx,sy,Math.min(w,h)*.46);sheen.addColorStop(0,'rgba(247,232,195,.12)');sheen.addColorStop(.28,'rgba(198,161,91,.07)');sheen.addColorStop(1,'rgba(198,161,91,0)');veilCtx.fillStyle=sheen;veilCtx.fillRect(0,0,w,h);if(!reduceMotion){veilFrame=requestAnimationFrame(drawVeil);}}
+      function drawVeil(now){var w=veilSize.w,h=veilSize.h,t=now*.00016;veilMouse.x+=(veilMouse.tx-veilMouse.x)*.05;veilMouse.y+=(veilMouse.ty-veilMouse.y)*.05;veilCtx.clearRect(0,0,w,h);var base=veilCtx.createLinearGradient(0,0,w,h);base.addColorStop(0,'#0d0d0f');base.addColorStop(.46,'#15130f');base.addColorStop(1,'#09090a');veilCtx.fillStyle=base;veilCtx.fillRect(0,0,w,h);for(var i=0;i<6;i++){var px=w*(.12+i*.18+Math.sin(t*1.2+i)*.035),py=h*(.22+Math.cos(t*.8+i*.7)*.09),g=veilCtx.createRadialGradient(px,py,0,px,py,w*.34);g.addColorStop(0,'rgba(122,95,34,'+(0.075+i*.008)+')');g.addColorStop(.44,'rgba(80,59,20,.035)');g.addColorStop(1,'rgba(13,13,15,0)');veilCtx.fillStyle=g;veilCtx.fillRect(0,0,w,h);}var sx=veilMouse.x*w,sy=veilMouse.y*h,sheen=veilCtx.createRadialGradient(sx,sy,0,sx,sy,Math.min(w,h)*.46);sheen.addColorStop(0,'rgba(247,232,195,.12)');sheen.addColorStop(.28,'rgba(198,161,91,.07)');sheen.addColorStop(1,'rgba(198,161,91,0)');veilCtx.fillStyle=sheen;veilCtx.fillRect(0,0,w,h);if(!reduceMotion&&veilOnscreen&&!document.hidden){veilFrame=requestAnimationFrame(drawVeil);}else veilFrame=0;}
       if(window.matchMedia('(pointer:fine)').matches&&!reduceMotion){veilHero.addEventListener('pointermove',function(e){var r=veilHero.getBoundingClientRect();veilMouse.tx=(e.clientX-r.left)/r.width;veilMouse.ty=(e.clientY-r.top)/r.height;},{passive:true});}
       window.addEventListener('resize',sizeVeil,{passive:true});sizeVeil();
+      if('IntersectionObserver' in window){new IntersectionObserver(function(entries){veilOnscreen=!!entries[0].isIntersecting;if(veilOnscreen&&!reduceMotion&&!document.hidden&&!veilFrame)veilFrame=requestAnimationFrame(drawVeil);},{threshold:0}).observe(veilHero);}
+      document.addEventListener('visibilitychange',function(){if(!document.hidden&&veilOnscreen&&!reduceMotion&&!veilFrame)veilFrame=requestAnimationFrame(drawVeil);});
 
       /* A restrained chapter parallax keeps the work collage spatial without competing with the copy. */
       var workScene=document.querySelector('.work-scene-banner'),workSceneTick=false;
@@ -1653,13 +1649,16 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       /* Image Trail for the four ledger rows, with 0.12 lag and velocity rotation. */
       var trail=document.getElementById('imageTrail'),trailX=-500,trailY=-500,trailTX=-500,trailTY=-500,trailRot=0,trailTargetRot=0,trailLastX=0,trailLastTime=performance.now();
       function renderTrail(card){var source=card.querySelector('img,.concept-art');if(!source)return;var clone=source.cloneNode(true);trail.style.opacity='0';setTimeout(function(){trail.replaceChildren(clone);trail.classList.add('is-visible');trail.style.opacity='';},80);}
-      if(finePointer&&!reduceMotion){ledger.querySelectorAll('.project').forEach(function(card){card.addEventListener('mouseenter',function(e){renderTrail(card);trailTX=e.clientX+28;trailTY=e.clientY-90;trailX=trailTX;trailY=trailTY;});card.addEventListener('mousemove',function(e){var now=performance.now(),speed=(e.clientX-trailLastX)/Math.max(16,now-trailLastTime)*16;trailLastX=e.clientX;trailLastTime=now;trailTX=Math.min(window.innerWidth-trail.offsetWidth-18,e.clientX+30);trailTY=Math.max(18,Math.min(window.innerHeight-trail.offsetHeight-18,e.clientY-trail.offsetHeight*.5));trailTargetRot=Math.max(-12,Math.min(12,speed*.7));});card.addEventListener('mouseleave',function(){trail.classList.remove('is-visible');trailTargetRot=0;});});function trailFrame(){trailX+=(trailTX-trailX)*.12;trailY+=(trailTY-trailY)*.12;trailRot+=(trailTargetRot-trailRot)*.18;trail.style.transform='translate3d('+trailX+'px,'+trailY+'px,0) rotate('+trailRot+'deg)';trailTargetRot*=.92;requestAnimationFrame(trailFrame);}trailFrame();}
+      if(finePointer&&!reduceMotion){ledger.querySelectorAll('.project').forEach(function(card){card.addEventListener('mouseenter',function(e){renderTrail(card);trailTX=e.clientX+28;trailTY=e.clientY-90;trailX=trailTX;trailY=trailTY;trailStart();});card.addEventListener('mousemove',function(e){var now=performance.now(),speed=(e.clientX-trailLastX)/Math.max(16,now-trailLastTime)*16;trailLastX=e.clientX;trailLastTime=now;trailTX=Math.min(window.innerWidth-trail.offsetWidth-18,e.clientX+30);trailTY=Math.max(18,Math.min(window.innerHeight-trail.offsetHeight-18,e.clientY-trail.offsetHeight*.5));trailTargetRot=Math.max(-12,Math.min(12,speed*.7));});card.addEventListener('mouseleave',function(){trail.classList.remove('is-visible');trailTargetRot=0;});});var trailRaf=0;function trailFrame(){trailRaf=0;var dx=trailTX-trailX,dy=trailTY-trailY,dr=trailTargetRot-trailRot;trailX+=dx*.12;trailY+=dy*.12;trailRot+=dr*.18;trail.style.transform='translate3d('+trailX+'px,'+trailY+'px,0) rotate('+trailRot+'deg)';trailTargetRot*=.92;if(trail.classList.contains('is-visible')||Math.abs(dx)>0.4||Math.abs(dy)>0.4||Math.abs(trailTargetRot)>0.15)trailRaf=requestAnimationFrame(trailFrame);}function trailStart(){if(!trailRaf)trailRaf=requestAnimationFrame(trailFrame);}}
 
       /* Scroll-velocity marquees: base drift plus a damped velocity impulse and ±12° skew. */
       var velocityTracks=Array.prototype.slice.call(document.querySelectorAll('.ticker-track,.marquee-divider-track')),scrollVelocity=0,lastScrollY=window.scrollY,lastScrollT=performance.now(),trackOffsets=velocityTracks.map(function(){return 0;});
       window.addEventListener('scroll',function(){var now=performance.now(),dy=window.scrollY-lastScrollY,dt=Math.max(16,now-lastScrollT);scrollVelocity+=(dy/dt*16-scrollVelocity)*.55;lastScrollY=window.scrollY;lastScrollT=now;},{passive:true});
-      function marqueeFrame(){scrollVelocity*=.91;velocityTracks.forEach(function(track,index){var reverse=track.style.animationDirection==='reverse'?-1:1,width=Math.max(1,track.scrollWidth/2),speed=reverse*(.34+scrollVelocity*.055);trackOffsets[index]=(trackOffsets[index]+speed)%width;var skew=Math.max(-12,Math.min(12,scrollVelocity*.24));track.style.transform='translate3d('+(-trackOffsets[index])+'px,0,0) skewX('+skew+'deg)';});if(!reduceMotion)requestAnimationFrame(marqueeFrame);}
-      if(!reduceMotion)requestAnimationFrame(marqueeFrame);
+      var marqueeVisible=0,marqueeRaf=0;
+      function marqueeFrame(){marqueeRaf=0;if(marqueeVisible<=0||document.hidden||reduceMotion)return;scrollVelocity*=.91;velocityTracks.forEach(function(track,index){var reverse=track.style.animationDirection==='reverse'?-1:1,width=Math.max(1,track.scrollWidth/2),speed=reverse*(.34+scrollVelocity*.055);trackOffsets[index]=(trackOffsets[index]+speed)%width;var skew=Math.max(-12,Math.min(12,scrollVelocity*.24));track.style.transform='translate3d('+(-trackOffsets[index])+'px,0,0) skewX('+skew+'deg)';});marqueeRaf=requestAnimationFrame(marqueeFrame);}
+      function marqueeStart(){if(!marqueeRaf&&marqueeVisible>0&&!document.hidden&&!reduceMotion)marqueeRaf=requestAnimationFrame(marqueeFrame);}
+      if(!reduceMotion&&velocityTracks.length&&'IntersectionObserver' in window){var marqueeIO=new IntersectionObserver(function(entries){entries.forEach(function(entry){var was=entry.target._mqVis?1:0,now=entry.isIntersecting?1:0;if(was!==now){entry.target._mqVis=now;marqueeVisible+=now-was;}});if(marqueeVisible>0)marqueeStart();},{rootMargin:'120px'});velocityTracks.forEach(function(track){marqueeIO.observe(track);});}else if(!reduceMotion){marqueeVisible=velocityTracks.length;marqueeStart();}
+      document.addEventListener('visibilitychange',marqueeStart);
 
       /* Restrained specular buttons and pointer-stirred ember background. */
       document.querySelectorAll('.cta,.production-quote a,.scroll-mark').forEach(function(node){node.classList.add('specular');node.addEventListener('pointermove',function(e){var r=node.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;node.style.setProperty('--spec-angle',(Math.atan2(y,x)*180/Math.PI+90)+'deg');node.style.setProperty('--spec-x',(x*12)+'px');node.style.setProperty('--spec-y',(y*10)+'px');});});
@@ -1697,7 +1696,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
         cgHost.dataset.cgCount=String(cgN);
         var cgCards=cgData.map(function(item,index){
           var card=document.createElement('button');card.type='button';card.className='cg-card';card.dataset.case=item.key;
-          card.style.setProperty('--a',(index*cgStep)+'deg');card.setAttribute('aria-label','打开案例：'+item.title);
+          card.style.setProperty('--a',(index*cgStep)+'deg');card.setAttribute('aria-label',item.title+' '+item.cat);
           var ph=document.createElement('span');ph.className='cg-ph';var phT=document.createElement('b');phT.textContent=item.title;var phC=document.createElement('small');phC.textContent=item.cat;ph.appendChild(phT);ph.appendChild(phC);card.appendChild(ph);
           var img=document.createElement('img');img.alt=item.title;img.decoding='async';img.draggable=false;img.dataset.cgSrc=item.thumb;
           img.addEventListener('load',function(){if(img.naturalWidth>0)card.classList.add('cg-loaded');});
@@ -1927,10 +1926,17 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
           window.location.reload();
         });
         window.addEventListener('load', function () {
-          /* sw.js 位于 assets/ 下：先尝试让它接管站点根作用域（需服务端允许），
-             不允许时退回默认作用域，保证注册本身不失败 */
-          var registerSW = navigator.serviceWorker.register('assets/sw.js', { scope: './' })
-            .catch(function () { return navigator.serviceWorker.register('assets/sw.js'); });
+          /* sw.js 在站点根目录。作用域 ./ 覆盖当前目录。顺手卸掉旧的 assets 目录注册。 */
+          if (navigator.serviceWorker.getRegistrations) {
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              regs.forEach(function (reg) {
+                var worker = reg.active || reg.installing || reg.waiting;
+                var script = (worker && worker.scriptURL) || '';
+                if (script.indexOf('/assets/sw.js') !== -1) reg.unregister();
+              });
+            }).catch(function () {});
+          }
+          var registerSW = navigator.serviceWorker.register('sw.js', { scope: './' });
           registerSW.then(function (reg) {
             function watch(worker) {
               if (!worker) return;
@@ -2017,19 +2023,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
   document.addEventListener('DOMContentLoaded',sweep);
 })();
 </script>
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6ad3962860600534cc67910a/1k558559m';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+<!-- Knocket 客服脚本改为懒加载：首屏不加载，访客打开咨询窗或点“转人工”时才注入，见 loadLiveChatScript -->
 <style>
 /* ===== 设计理论落实 · 2026-10-19 虎课学习应用 =====
    1) 黄金分割 1:0.618：首屏标题区/人物区 = 61.8% : 38.2%；案例卡图面 1.618:1；案例图文栏 1 : 1.618；关于栏 1 : 1.618
