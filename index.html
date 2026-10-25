@@ -1518,7 +1518,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       function consultAvatar(){var avatar=document.createElement('div'),img=document.createElement('img');avatar.className='consult-avatar';img.src='assets/assistant-avatar-wave.webp?v=20261017';img.alt='';avatar.appendChild(img);return avatar;}
       function makeConsultTurn(role,text){var turn=document.createElement('div'),wrap=document.createElement('div'),roleLabel=document.createElement('span'),bubble=document.createElement('div');turn.className='consult-turn '+role;roleLabel.className='consult-role';roleLabel.textContent=role==='user'?'你':'正鑫越需求助手';bubble.className='consult-bubble';bubble.textContent=text;if(role!=='user'){turn.appendChild(consultAvatar());wrap.className='consult-message-wrap';wrap.appendChild(roleLabel);wrap.appendChild(bubble);turn.appendChild(wrap);}else{turn.appendChild(bubble);}return turn;}
       function consultScroll(){requestAnimationFrame(function(){consultBody.scrollTop=consultBody.scrollHeight;});}
-      function consultOpen(){consultLastFocus=document.activeElement;consultPreviousOverflow=document.body.style.overflow;consultShell.classList.remove('minimized');if(consultMinimize){consultMinimize.textContent='—';consultMinimize.setAttribute('aria-label','最小化咨询窗口');}consultShell.classList.add('open');consultShell.setAttribute('aria-hidden','false');consultFab.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';renderConsult();setTimeout(function(){consultDialog.focus();},30);}
+      function consultOpen(){loadLiveChatScript();consultLastFocus=document.activeElement;consultPreviousOverflow=document.body.style.overflow;consultShell.classList.remove('minimized');if(consultMinimize){consultMinimize.textContent='—';consultMinimize.setAttribute('aria-label','最小化咨询窗口');}consultShell.classList.add('open');consultShell.setAttribute('aria-hidden','false');consultFab.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';renderConsult();setTimeout(function(){consultDialog.focus();},30);}
       function consultClosePanel(){consultShell.classList.remove('open');consultShell.setAttribute('aria-hidden','true');consultFab.setAttribute('aria-expanded','false');document.body.style.overflow=consultPreviousOverflow;if(consultLastFocus&&consultLastFocus.focus)consultLastFocus.focus();}
       function consultToggleMinimize(){var minimized=consultShell.classList.toggle('minimized');consultMinimize.textContent=minimized?'+':'—';consultMinimize.setAttribute('aria-label',minimized?'展开咨询窗口':'最小化咨询窗口');}
       consultMinimize.addEventListener('click',function(e){e.stopPropagation();consultToggleMinimize();});
@@ -1531,6 +1531,19 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       function submitConsultField(){if(consultStep>=consultSteps.length)return;var step=consultSteps[consultStep],value=consultField.value.trim();if(!value){consultValidation.textContent='请填写后再发送；不确定时可以填写“待确认”。';consultField.focus();return;}consultAnswers[step.key]=value;consultStep+=1;renderConsult();}
       consultSend.addEventListener('click',submitConsultField);consultField.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitConsultField();}});consultFab.addEventListener('click',consultOpen);if(footerConsult)footerConsult.addEventListener('click',consultOpen);var consultOpenContact=document.getElementById('consultOpenContact');if(consultOpenContact)consultOpenContact.addEventListener('click',consultOpen);
       /* 转人工：交给 Knocket contactWidget.showChat。组件发出 ready 之前只排队，不调用加载期的空实现。 */
+      /* 懒加载 Knocket：首屏不请求 trtc.io，访客打开咨询窗（consultOpen）或点“转人工”（openLiveChat）时才注入脚本。
+         脚本 URL 与 PR 原样一致，不改 identifier 与 v 参数；加载失败时允许下次点击重试，15 秒超时提示逻辑不变。 */
+      var liveChatScriptLoading=false,liveChatScriptLoaded=false;
+      function loadLiveChatScript(){
+        if(liveChatScriptLoaded||liveChatScriptLoading)return;
+        liveChatScriptLoading=true;
+        var s=document.createElement('script');
+        s.src='https://trtc.io/knocket-sdk/sdk.js?identifier=41e0eb7d59a35c6d21&v=1792940602842';
+        s.async=true;
+        s.onload=function(){liveChatScriptLoaded=true;hookLiveChat();};
+        s.onerror=function(){liveChatScriptLoading=false;};
+        document.head.appendChild(s);
+      }
       var liveChatReady=false,liveChatPending=false,liveChatWaitStarted=0,liveChatHooked=false;
       function openLiveChatNow(){
         if(!liveChatReady)return false;
@@ -1547,6 +1560,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
         window.contactWidget.on('chatReady',markLiveChatReady);
       }
       function openLiveChat(){
+        loadLiveChatScript();
         hookLiveChat();
         if(openLiveChatNow())return;
         if(!liveChatPending){liveChatPending=true;showToast('正在为你转接人工客服…');}
@@ -1995,7 +2009,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
   document.addEventListener('DOMContentLoaded',sweep);
 })();
 </script>
-<script src="https://trtc.io/knocket-sdk/sdk.js?identifier=41e0eb7d59a35c6d21&v=1792940602842" async></script>
+<!-- Knocket 客服脚本改为懒加载：首屏不加载，访客打开咨询窗或点“转人工”时才注入，见 loadLiveChatScript -->
 <style>
 /* ===== 设计理论落实 · 2026-10-19 虎课学习应用 =====
    1) 黄金分割 1:0.618：首屏标题区/人物区 = 61.8% : 38.2%；案例卡图面 1.618:1；案例图文栏 1 : 1.618；关于栏 1 : 1.618
