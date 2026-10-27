@@ -1823,7 +1823,7 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       /* Seasonal 3D mascot system: the twelve supplied poses rotate gradually while
          the character wanders only along the viewport rails, away from core copy. */
       var mascotSource='assets/assistant-avatar-wave.webp?v=20261027';
-      document.querySelectorAll('.mascot').forEach(function(button){var img=button.querySelector('img'),bubbleTimer=0;img.src=mascotSource;button.addEventListener('click',function(e){e.stopPropagation();document.querySelectorAll('.mascot.is-speaking').forEach(function(other){if(other!==button)other.classList.remove('is-speaking');});button.classList.toggle('is-speaking');clearTimeout(bubbleTimer);if(button.classList.contains('is-speaking'))bubbleTimer=setTimeout(function(){button.classList.remove('is-speaking');},3400);});});
+      document.querySelectorAll('.mascot').forEach(function(button){var img=button.querySelector('img'),bubbleTimer=0;img.src=button.dataset.mascotAction==='thumbsup'?'assets/assistant-avatar-thumbsup.webp?v=20261027':mascotSource;button.addEventListener('click',function(e){e.stopPropagation();document.querySelectorAll('.mascot.is-speaking').forEach(function(other){if(other!==button)other.classList.remove('is-speaking');});button.classList.toggle('is-speaking');clearTimeout(bubbleTimer);if(button.classList.contains('is-speaking'))bubbleTimer=setTimeout(function(){button.classList.remove('is-speaking');},3400);});});
       var portraitMascot=document.querySelector('.about-portrait>img');if(portraitMascot)portraitMascot.src=mascotSource;
       /* The mascot stands at one fixed spot (bottom-right of the viewport, above
          the consult button): no roaming, hopping or waving. It only hides while
