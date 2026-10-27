@@ -245,7 +245,11 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       <canvas class="hero-veil" id="heroVeil" aria-hidden="true"></canvas>
       <div class="hero-main">
         <span class="hero-eyebrow">ADVERTISING DESIGN × VISUAL STRATEGY</span>
-        <h1 class="hero-title-sweep"><span class="line"><span class="hero-title-sans">让品牌</span> <em class="hero-title-serif">被看见</em></span><span class="line"><em class="hero-title-serif">让价值</em> <span class="hero-title-sans">被理解</span></span></h1>
+        <h1 class="hero-title-sweep"><span class="line"><span class="hero-title-sans">让品牌</span> <em class="hero-title-serif">被看见</em></span><span class="line"><em class="hero-title-serif">让价值</em> <span class="hero-title-sans">被理解</span></span></h1><script>var heroTitle=document.querySelector('.hero h1'),charIndex=0;
+      Array.prototype.slice.call(heroTitle.querySelectorAll('.line')).forEach(function(line){
+        function splitNode(node){Array.prototype.slice.call(node.childNodes).forEach(function(child){if(child.nodeType===3){var frag=document.createDocumentFragment();Array.from(child.nodeValue).forEach(function(char){var span=document.createElement('span');span.className='hero-char'+(char===' '?' space':'');span.style.setProperty('--char-i',charIndex++);span.textContent=char===' '?String.fromCharCode(160):char;frag.appendChild(span);});child.replaceWith(frag);}else if(child.nodeType===1){splitNode(child);}});}
+        splitNode(line);
+      });</script>
         <p class="hero-copy"><span class="sentence">从品牌视觉、广告主画面到包装与空间应用，</span><span class="sentence">把复杂需求做成清楚、统一、能落地的设计系统，让选择更简单。</span></p>
         <p class="hero-english" lang="en">Make brands visible · Make value understood · Make choices simple</p>
         <div class="hero-actions"><a href="#contact"><span>免费咨询</span><small>CONSULT</small></a><a href="#work"><span>查看作品</span><small>VIEW WORK</small></a></div>
@@ -1589,11 +1593,6 @@ html:not([lang^="zh"]) .memory-swoosh{width:calc(100% + .54em)}
       if(consultHuman)consultHuman.addEventListener('click',function(e){e.stopPropagation();openLiveChat();});consultClose.addEventListener('click',consultClosePanel);consultShell.addEventListener('click',function(e){if(e.target===consultShell)consultClosePanel();});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&consultShell.classList.contains('open'))consultClosePanel();if(e.key==='Tab'&&consultShell.classList.contains('open')){var focusables=Array.prototype.slice.call(consultDialog.querySelectorAll('button,a[href],textarea')).filter(function(node){return !node.disabled&&node.offsetParent!==null;});if(!focusables.length)return;var first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 
       /* Award-portfolio interaction layer: restrained movement, no blocking loading gate. */
-      var heroTitle=document.querySelector('.hero h1'),charIndex=0;
-      Array.prototype.slice.call(heroTitle.querySelectorAll('.line')).forEach(function(line){
-        function splitNode(node){Array.prototype.slice.call(node.childNodes).forEach(function(child){if(child.nodeType===3){var frag=document.createDocumentFragment();Array.from(child.nodeValue).forEach(function(char){var span=document.createElement('span');span.className='hero-char'+(char===' '?' space':'');span.style.setProperty('--char-i',charIndex++);span.textContent=char===' '?String.fromCharCode(160):char;frag.appendChild(span);});child.replaceWith(frag);}else if(child.nodeType===1){splitNode(child);}});}
-        splitNode(line);
-      });
       document.querySelectorAll('.hero-copy .sentence').forEach(function(node,index){node.style.setProperty('--hero-i',index);});
 
       /* Dark Veil: slow champagne-silk field with pointer-led sheen and a restrained grain layer. */
