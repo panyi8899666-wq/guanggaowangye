@@ -50,8 +50,8 @@
 window.__afterLoad=function(f){function go(){setTimeout(function(){'requestIdleCallback'in window?requestIdleCallback(f,{timeout:1500}):f()},600)}document.readyState==='complete'?go():addEventListener('load',go)};
 (function(){var S=['zh','en','ja','ko','es','fr','de','pt','ru','ar'],l=null,d=document.documentElement;try{l=localStorage.getItem('zxy-lang')}catch(e){}if(!l||S.indexOf(l)<0){l='en';var a=navigator.languages||[navigator.language||'en'];for(var i=0;i<a.length;i++){var x=(a[i]||'').toLowerCase(),p=x.split('-')[0];if(S.indexOf(x)>=0){l=x;break}if(S.indexOf(p)>=0){l=p;break}}}
 if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='script';k.href='assets/i18n-'+l+'.js';document.head.appendChild(k);d.classList.add('i18n-wait');window.__i18nDone=function(){d.classList.remove('i18n-wait')};setTimeout(window.__i18nDone,2500)})();</script>
-<link rel="stylesheet" href="assets/css/site.07003e82.css" />
-<script defer src="assets/js/app.e58dbfb7.js"></script>
+<link rel="stylesheet" href="assets/css/site.bd50e7a2.css" />
+<script defer src="assets/js/app.5082587a.js"></script>
 <script type="text/javascript">
 /* Image fallback: a failed image never renders as a broken icon or a pure-black card — it is hidden and its frame keeps a lifted charcoal placeholder tone instead. */
 (function(){
@@ -393,8 +393,8 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
         <div class="contact-details diagnostic-email-only">
           <div class="contact-detail"><span>商务合作</span><div class="copy-row"><strong><a href="mailto:784005231@qq.com">784005231@qq.com</a></strong><button class="copy-email" type="button" data-copy="784005231@qq.com" aria-label="复制商务合作邮箱">复制</button></div></div>
           <div class="contact-detail"><span>日常联系</span><div class="copy-row"><strong><a href="mailto:panyi8899666@gmail.com">panyi8899666@gmail.com</a></strong><button class="copy-email" type="button" data-copy="panyi8899666@gmail.com" aria-label="复制日常联系邮箱">复制</button></div></div>
-          <div class="contact-detail"><span>海外下单</span><div class="copy-row"><strong><a href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener">Fiverr · zxy_studio</a></strong></div></div>
-          <div class="contact-detail contact-wechat"><span>微信 / 手机</span><div class="copy-row wechat-row"><picture><source srcset="assets/wechat-qr.webp" type="image/webp"><img class="wechat-qr" src="assets/wechat-qr.png" alt="微信二维码：扫码添加 17306983179" width="132" height="132" loading="lazy" decoding="async"></picture><div class="wechat-info"><small>微信扫码咨询 · 微信号同手机号</small><strong><a href="tel:+8617306983179">173 0698 3179</a></strong><button class="copy-email" type="button" data-copy="17306983179" aria-label="复制微信号/手机号">复制</button></div></div></div>
+          <div class="contact-detail contact-fiverr"><span>海外下单</span><div class="copy-row"><strong><a href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener">Fiverr · zxy_studio</a></strong><a class="copy-email contact-go" href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener" aria-label="前往 Fiverr 店铺（新窗口）">前往 ↗</a></div></div>
+          <div class="contact-detail contact-wechat"><span>微信 / 手机</span><div class="copy-row"><div class="wechat-value"><picture><source srcset="assets/wechat-qr.webp" type="image/webp"><img class="wechat-qr" src="assets/wechat-qr.png" alt="微信二维码：扫码添加 17306983179" width="92" height="92" loading="lazy" decoding="async"></picture><div class="wechat-info"><strong><a href="tel:+8617306983179">173 0698 3179</a></strong><small>微信扫码咨询</small><small>微信号同手机号</small></div></div><button class="copy-email" type="button" data-copy="17306983179" data-toast="微信号已复制" aria-label="复制微信号/手机号">复制</button></div></div>
         </div>
       </div>
       <div class="pwa-install show" id="pwaInstall">
