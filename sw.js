@@ -2,7 +2,7 @@
    位于站点根目录，作用域覆盖 GitHub Pages 子路径 /guanggaowangye/。
    缓存应用外壳与核心资源，支持离线访问；图片走缓存优先策略。
    改版时递增 VERSION，页面会提示用户刷新到新版本。 */
-var VERSION = 'zxy-pwa-v17';
+var VERSION = 'zxy-pwa-v18';
 var CORE_CACHE = VERSION + '-core';
 var RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -18,7 +18,10 @@ var CORE_ASSETS = [
   ASSET + 'icon-maskable-512.png',
   ASSET + 'apple-touch-icon.png',
   ASSET + 'p01-sparkling-water-render-800.webp',
-  ASSET + 'assistant-avatar-wave.webp'
+  ASSET + 'assistant-avatar-wave.webp',
+  ASSET + 'r/assistant-avatar-wave-w220.webp',
+  new URL('assets/css/site.54cedf3d.css', self.location.href).href,
+  new URL('assets/js/app.e58dbfb7.js', self.location.href).href
 ];
 
 self.addEventListener('install', function (event) {
