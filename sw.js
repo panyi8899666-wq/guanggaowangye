@@ -20,7 +20,7 @@ var CORE_ASSETS = [
   ASSET + 'p01-sparkling-water-render-800.webp',
   ASSET + 'assistant-avatar-wave.webp',
   ASSET + 'r/assistant-avatar-wave-w220.webp',
-  new URL('assets/css/site.54cedf3d.css', self.location.href).href,
+  new URL('assets/css/site.07003e82.css', self.location.href).href,
   new URL('assets/js/app.e58dbfb7.js', self.location.href).href
 ];
 
