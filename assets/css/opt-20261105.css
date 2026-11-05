@@ -1,0 +1,120 @@
+/* ==========================================================================
+   C-OPT-CSS@1 · opt-20261105.css
+   --------------------------------------------------------------------------
+   加载契约：由 T3 在 assets/css/site.bd50e7a2.css 之后、</head> 之前插入
+     <link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261105" />
+   约束：
+     · 不引用任何外部样式导入、字体声明或远程 http 资源
+     · 颜色仅使用既有令牌 var(--accent) var(--ink) var(--muted) var(--bg)
+       var(--line) var(--ease-out) var(--ease-io)，以及既有色值 #0d0d0f
+       #111 #c6a15b #eceae4
+     · !important 仅在覆盖基线同属性 !important 声明时使用，并逐条注释
+       「覆盖：<原选择器>」
+   职责：F2 CTA hover 对比度 / F3 coarse 44px 触控目标 /
+        F4 ≤520px PWA 提示与咨询 FAB 防重叠 / F5 ≤520px 小字可读性
+   注：F1（品牌占位名改色）已按独立验证结论撤销——基线品牌名由
+       .partners-slots .partner-logo strong 的 var(--ink) 保证 16.14:1，
+       改色属无必要的视觉变更，本文件已不再触碰品牌占位区域。
+   ========================================================================== */
+
+/* ---------- F2 CTA hover 对比度 ----------
+   基线：#111 on #c6a15b8c（同上半透明合成）= 3.05:1
+   覆盖后：#111 on #c6a15b = 7.78:1
+   !important 依据：基线对下列元素的 hover 已有 !important 的
+   color / background / border-color 声明（见每条上方注释） */
+
+/* 覆盖：:is(.cta,.hero-actions>a,.topline .consult-pill,.copy-email,.production-quote a,.case-end button):hover
+   基线同名规则（background:#c6a15b8c）无 !important，但同属性另有
+   .hero-ready :is(...):hover 等 !important 规则，故此处必须带 !important */
+body.hero-ready :is(.cta,.hero-actions>a,.topline .consult-pill,.copy-email,.production-quote a,.case-end button):hover {
+  background: var(--accent)!important;
+  border-color: var(--accent)!important;
+  color: #111!important;
+}
+
+/* 覆盖：.hero-actions>a:first-child:hover,.consult-send:hover（基线 background:#c6a15b8c!important） */
+body.hero-ready .hero-actions>a:first-child:hover,
+body.hero-ready .consult-send:hover {
+  background: var(--accent)!important;
+  border-color: var(--accent)!important;
+  color: #111!important;
+}
+
+/* 覆盖：.topline .consult-pill:hover（基线 background:#c6a15b8c，并已被
+   body.hero-ready :is(...):hover 的 !important 深色皮肤覆盖） */
+body.hero-ready .topline .consult-pill:hover {
+  background: var(--accent)!important;
+  border-color: var(--accent)!important;
+  color: #111!important;
+}
+
+/* F2 特异性补齐（必要）：基线仍存在特异性更高的 !important hover 皮肤——
+   .hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,
+   .pricing-open,.consult-send,.copy-email,.case-end button,
+   .contact-actions .cta.primary):hover            → (0,5,0)
+   body.hero-ready :is(.cta.cta.cta.cta,…,.consult-pill.consult-pill.consult-pill,
+   …):hover                                        → (0,6,1)
+   上面三条主规则为 (0,4,1)/(0,4,2)/(0,4,1)，会被其覆盖；此处沿用基线自身
+   「重复类名」写法把特异性提到 (0,6,1)，保证 #111 on #c6a15b 真正生效。 */
+/* 覆盖：.hero-ready :is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.pricing-open,.consult-send,.copy-email,.case-end button,.contact-actions .cta.primary):hover
+   覆盖：body.hero-ready :is(.cta.cta.cta.cta,.contact-actions .cta.cta.cta,.footer-consult.footer-consult.footer-consult,.pricing-open.pricing-open.pricing-open,.consult-pill.consult-pill.consult-pill,.hero-actions>a,.production-quote a,.case-end button):hover
+   覆盖：.hero-ready :is(.topline .consult-pill,.hero-actions>a:first-child,.contact-actions .cta.primary,.consult-fab,.consult-send):hover */
+body.hero-ready :is(
+  .cta,
+  .hero-actions>a,
+  .topline .consult-pill.consult-pill.consult-pill,
+  .copy-email,
+  .production-quote a,
+  .case-end button,
+  .consult-send
+):hover {
+  background: var(--accent)!important;
+  border-color: var(--accent)!important;
+  color: #111!important;
+}
+
+/* 覆盖：:is(.topline .consult-pill,.hero-actions>a,.contact-actions .cta,.consult-fab,.footer-consult,.pricing-open)>small
+   （基线 color:#eceae494!important）——F2 把 hover 底色改为实心 #c6a15b 后，
+   浅色副标题在金色上仅 1.52:1，故同色降为 #111（7.78:1） */
+body.hero-ready :is(.cta,.hero-actions>a,.topline .consult-pill,.copy-email,.production-quote a,.case-end button,.consult-send):hover>small {
+  color: #111!important;
+}
+
+/* ---------- F3 coarse 指针触控目标 ≥44×44 ----------
+   基线尺寸：.pwa-install-close 32、.consult-close 38、.consult-minimize 38、
+   .mini-modal-close 40、.faq-modal-close 42、.pricing-close 44；
+   .pwa-install-btn min-height 38、.topline .consult-pill min-height 36
+   （后者在 body.hero-ready 下已是 50px!important，仍 ≥44）。
+   min-width/min-height 可突破固定 width/height（used size = max(width,min-width)） */
+@media (pointer: coarse) {
+  .consult-close, .consult-minimize, .mini-modal-close, .faq-modal-close,
+  .pwa-install-close, .pricing-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .pwa-install-btn, .topline .consult-pill {
+    min-height: 44px;
+  }
+}
+
+/* ---------- F4 ≤520px：PWA 更新提示与咨询 FAB 防重叠 ----------
+   ≤620px 时 .consult-fab bottom:max(12px,env(safe-area-inset-bottom))；
+   Chrome 390px 实测 FAB 底 12px、高 60.9px（top=771.1），
+   提示条 bottom 抬到 84px（下沿 760）后与 FAB 顶留 11.1px 间隙，无重叠 */
+@media (max-width: 520px) {
+  .pwa-update {
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* ---------- F5 ≤520px 8px 小字可读性 ---------- */
+@media (max-width: 520px) {
+  /* 覆盖：.project-meta small（基线 font-size:8px!important，≤520px 再设 7px!important，(0,1,1)）
+     覆盖：.featured-ledger .project-meta small（基线 font:400 8px/1.45 …!important，(0,2,1)）
+     —— .featured-ledger 由 app.js 运行时创建，并把 51 个 .project 卡移入其中，故该规则真实匹配；
+     本规则用 body.hero-ready 前缀把特异性提到 (0,2,2) 以压制它，同级 important 时后加载胜。 */
+  body.hero-ready .project-meta small { font-size: 10px!important; }
+  /* 基线 .bottle-series figcaption span{font:400 8.5px/1.45 …}，无 !important */
+  .bottle-series figcaption span { font-size: 10px; }
+}

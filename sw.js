@@ -2,7 +2,7 @@
    位于站点根目录，作用域覆盖 GitHub Pages 子路径 /guanggaowangye/。
    缓存应用外壳与核心资源，支持离线访问；图片走缓存优先策略。
    改版时递增 VERSION，页面会提示用户刷新到新版本。 */
-var VERSION = 'zxy-pwa-v19';
+var VERSION = 'zxy-pwa-v21';
 var CORE_CACHE = VERSION + '-core';
 var RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -21,7 +21,9 @@ var CORE_ASSETS = [
   ASSET + 'assistant-avatar-wave.webp',
   ASSET + 'r/assistant-avatar-wave-w220.webp',
   new URL('assets/css/site.bd50e7a2.css', self.location.href).href,
-  new URL('assets/js/app.5082587a.js', self.location.href).href
+  new URL('assets/js/app.5082587a.js', self.location.href).href,
+  new URL('assets/css/opt-20261105.css?v=20261106', self.location.href).href,
+  new URL('assets/js/opt-20261105.js?v=20261106', self.location.href).href
 ];
 
 self.addEventListener('install', function (event) {
@@ -53,6 +55,23 @@ function putInCache(cacheName, request, response) {
   var copy = response.clone();
   caches.open(cacheName).then(function (cache) { cache.put(request, copy); });
   return response;
+}
+
+/* 运行时缓存上限保护：条目超限时删除最旧的条目（按写入顺序的前部）。
+   仅作用于 RUNTIME_CACHE；CORE_CACHE 为固定清单，不裁剪。
+   任何异常都吞掉，绝不影响本次响应返回。 */
+function trimRuntimeCache(limit) {
+  try {
+    caches.open(RUNTIME_CACHE).then(function (cache) {
+      return cache.keys().then(function (keys) {
+        var excess = keys.length - limit;
+        if (excess <= 0) return;
+        return Promise.all(keys.slice(0, excess).map(function (key) {
+          return cache.delete(key);
+        }));
+      });
+    }).catch(function () { /* 裁剪失败忽略 */ });
+  } catch (e) { /* 环境中不可用 caches 时忽略 */ }
 }
 
 function isThirdParty(url) {
@@ -95,7 +114,8 @@ self.addEventListener('fetch', function (event) {
         if (cached) return cached;
         return fetch(request).then(function (response) {
           if (response && (response.status === 200 || response.type === 'opaque')) {
-            return putInCache(RUNTIME_CACHE, request, response);
+            putInCache(RUNTIME_CACHE, request, response);
+            trimRuntimeCache(200);
           }
           return response;
         });
@@ -109,7 +129,10 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       caches.match(request, { ignoreSearch: true }).then(function (cached) {
         var network = fetch(request).then(function (response) {
-          if (response && response.status === 200) return putInCache(RUNTIME_CACHE, request, response);
+          if (response && response.status === 200) {
+            putInCache(RUNTIME_CACHE, request, response);
+            trimRuntimeCache(200);
+          }
           return response;
         }).catch(function () { return cached; });
         return cached || network;
