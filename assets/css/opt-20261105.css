@@ -22,11 +22,14 @@
         M1–M4 首屏宽屏两栏适配与右侧压缩 UI（任务 id=27）
 N1–N4 合作品牌区 4 列 / 联系区三行对齐 / 插图不裁（任务 id=28）
         O1–O3 FAQ 六列密排 / 卡高 ≤56 / 图标 28 / 箭头 16（任务 id=30）
+        Q1–Q6 合作页按钮 / 联系区四卡三行与按钮 / 二维码间距 / 62ch
+        R1 合作品牌菱形 6-5-4-3-4 列展示（任务 id=35）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
    注：F1（品牌占位名改色）已按独立验证结论撤销——基线品牌名由
-        .partners-slots .partner-logo strong 的 var(--ink) 保证 16.14:1，
-        改色属无必要的视觉变更，本文件已不再触碰品牌占位区域。
+        .partners-slots .partner-logo strong 的 var(--ink) 保证 16.14:1。
+        R1（任务 id=35）已把品牌卡改为菱形展示：文字仍取 var(--ink)、
+        保持水平不旋转，不改变对比度。
    ========================================================================== */
 
 /* ---------- F2 CTA hover 对比度 ----------
@@ -1655,20 +1658,24 @@ html.js #process .process-grid .step:not(.is-open) {
   color: color-mix(in srgb, var(--ink) 62%, transparent);
 }
 
-/* ---------- I3 右栏：标签与「立即开始设计」CTA 间距 ----------
-   基线 .career-layout{align-items:start}，右栏只有 320px 高，左栏拼贴约 570px，
-   底部会留大片空白。改为 stretch + 两段式 flex（导语 / 操作区），
-   让操作区贴齐左栏底边；标签与 CTA 之间固定 28px（≥24px 要求）。
-   覆盖基线 .career-copy{display:block!important} 与 .about-statement 的
-   margin-bottom:max(38px,min(5vw,62px))。 */
+/* ---------- I3 右栏：自然成组 + 标签/CTA 间距（任务 id=34 重定）----------
+   原实现用 align-items:stretch + justify-content:space-between 把 CTA 贴到
+   左拼贴底边，导致 .about-statement 底 → .about-tags 顶被撑到 285px 空白。
+   现改为 align-items:start + align-self:start + justify-content:flex-start：
+   导语与操作区按 gap 28px 自然成组（要求 24–32px），左拼贴可高于右栏，
+   不再为对齐制造空白；标签 → CTA 仍固定 28px。
+   正文色 #eceae4 对页面底色 #0d0d0f = 17.46:1（≥4.5:1，计算见报告）；
+   max-width min(62ch,100%) 限制行宽；<em> 独立成行，金色强调不再与
+   白字混排成一大段。 */
 .about-layout.career-layout {
-  align-items: stretch!important;
+  align-items: start!important;
 }
 .about-copy.career-copy {
   display: flex!important;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
+  justify-content: flex-start;
+  align-self: start;
+  gap: 28px;
   padding: 0!important;
 }
 .about-copy-lead {
@@ -1680,6 +1687,12 @@ html.js #process .process-grid .step:not(.is-open) {
 }
 .career-copy .about-statement {
   margin: 0!important;
+  max-width: min(62ch, 100%);
+  color: var(--ink);
+}
+.career-copy .about-statement em {
+  display: block;
+  margin-top: .16em;
 }
 .about-actions {
   display: flex;
@@ -1689,6 +1702,20 @@ html.js #process .process-grid .step:not(.is-open) {
 }
 .career-copy .about-tags {
   margin-top: 0!important;
+  align-items: center;
+}
+/* 品牌标签前置 14px 金色短横线（var(--accent)=#c6a15b） */
+.career-copy .about-tags::before {
+  content: "";
+  flex: 0 0 14px;
+  width: 14px;
+  height: 1px;
+  margin-right: 2px;
+  background: var(--accent);
+}
+/* 标签字号 12px（≥11px 要求；基线同值，这里显式锁定） */
+.career-copy .about-tags span {
+  font-size: 12px!important;
 }
 .about-cta {
   display: inline-flex;
@@ -1738,7 +1765,7 @@ html.js #process .process-grid .step:not(.is-open) {
 }
 @media (max-width: 1023px) {
   .about-copy.career-copy {
-    gap: 18px;
+    gap: 28px;
   }
   .career-copy .about-statement {
     margin: 0!important;
@@ -2308,4 +2335,107 @@ html.js #process .process-grid .step:not(.is-open) {
 .cooperation-entry .coop-intro .cooperation-note,
 html body .cooperation-entry .coop-intro p.cooperation-note {
   max-width: 62ch!important;
+}
+/* ---------- R1 合作品牌菱形展示（任务 id=35） ----------
+   48 张卡不变、顺序不变。每格用 ::before 绝对定位的旋转 45° 菱形
+   （border 1px var(--line) + background var(--glass)）作为视觉主体，
+   文字 <strong> 保持水平（不旋转）并由 z-index:1 压在菱形之上。
+   格子保持正方形 aspect-ratio:1/1、宽度随列宽自适应；菱形取格子 64%
+   的盒子居中（inset:18%），旋转后外接盒 64%×√2≈90.5% < 100%，配合
+   gap 9px（≤620 收到 8px，让 390 的 4 列格子从 74.25px 提升到 84.5px），
+   菱形不越出格子、相邻格子 rect 交叠面积为 0。
+   列数：≥1360 6 / 1100–1359 5 / 901–1099 4 / 621–900 3 / ≤620 4。
+   文字允许 2–3 行、12px，不裁字、不省略；hover 菱形边框转金色并放大
+   1.03（transform 仍保留 rotate(45deg)）。 */
+.partners-slots {
+  display: grid!important;
+  grid-template-columns: repeat(4, minmax(0, 1fr))!important;
+  gap: 9px!important;
+  align-items: start;
+}
+@media (max-width: 620px) {
+  .partners-slots {
+    gap: 8px!important;
+  }
+}
+@media (min-width: 621px) {
+  .partners-slots { grid-template-columns: repeat(3, minmax(0, 1fr))!important; }
+}
+@media (min-width: 901px) {
+  .partners-slots { grid-template-columns: repeat(4, minmax(0, 1fr))!important; }
+}
+@media (min-width: 1100px) {
+  .partners-slots { grid-template-columns: repeat(5, minmax(0, 1fr))!important; }
+}
+@media (min-width: 1360px) {
+  .partners-slots { grid-template-columns: repeat(6, minmax(0, 1fr))!important; }
+}
+/* 覆盖基线 .partners-slot-item（width:120px/height:60px/border/圆角/字距）
+   与 G4 .partners-slots .partner-logo（padding/min-height/height） */
+.partners-slots .partners-slot-item {
+  position: relative;
+  isolation: isolate;
+  display: flex!important;
+  flex-direction: column!important;
+  align-items: center!important;
+  justify-content: center!important;
+  gap: 0!important;
+  width: 100%!important;
+  max-width: none!important;
+  height: auto!important;
+  min-height: 0!important;
+  aspect-ratio: 1 / 1;
+  padding: 0!important;
+  border: 0!important;
+  border-radius: 0!important;
+  background: transparent!important;
+  letter-spacing: 0!important;
+  text-indent: 0!important;
+}
+.partners-slots .partners-slot-item::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  z-index: 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--glass);
+  transform: rotate(45deg);
+  transition: transform .24s var(--ease-out),
+              border-color .24s var(--ease-out),
+              background-color .24s var(--ease-out);
+}
+/* 覆盖 G4 .partners-slots .partner-logo strong（nowrap/12px/1.2/.03em）
+   与基线 15px/1.35：保持水平、允许换行、不裁字 */
+.partners-slots .partners-slot-item strong {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  max-width: 92%;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: .02em;
+  color: var(--ink);
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.partners-slots .partners-slot-item:hover::before,
+.partners-slots .partners-slot-item:focus-visible::before,
+.partners-slots .partners-slot-item:focus-within::before {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 9%, var(--glass));
+  transform: rotate(45deg) scale(1.03);
+}
+@media (prefers-reduced-motion: reduce) {
+  .partners-slots .partners-slot-item::before {
+    transition: none;
+  }
+  .partners-slots .partners-slot-item:hover::before,
+  .partners-slots .partners-slot-item:focus-visible::before,
+  .partners-slots .partners-slot-item:focus-within::before {
+    transform: rotate(45deg);
+  }
 }
