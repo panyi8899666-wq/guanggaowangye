@@ -52,9 +52,9 @@ window.__afterLoad=function(f){function go(){setTimeout(function(){'requestIdleC
 (function(){var S=['zh','en','ja','ko','es','fr','de','pt','ru','ar'],l=null,d=document.documentElement;try{l=localStorage.getItem('zxy-lang')}catch(e){}if(!l||S.indexOf(l)<0){l='en';var a=navigator.languages||[navigator.language||'en'];for(var i=0;i<a.length;i++){var x=(a[i]||'').toLowerCase(),p=x.split('-')[0];if(S.indexOf(x)>=0){l=x;break}if(S.indexOf(p)>=0){l=p;break}}}
 if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='script';k.href='assets/i18n-'+l+'.js';document.head.appendChild(k);d.classList.add('i18n-wait');window.__i18nDone=function(){d.classList.remove('i18n-wait')};setTimeout(window.__i18nDone,1200)})();</script>
 <link rel="stylesheet" href="assets/css/site.bd50e7a2.css" />
-<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261106" />
+<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261120" />
 <script defer src="assets/js/app.5082587a.js?v=20261104"></script>
-<script defer src="assets/js/opt-20261105.js?v=20261106"></script>
+<script defer src="assets/js/opt-20261105.js?v=20261120"></script>
 <script type="text/javascript">
 /* Image fallback: a failed image never renders as a broken icon or a pure-black card — it is hidden and its frame keeps a lifted charcoal placeholder tone instead. */
 (function(){
@@ -125,6 +125,20 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
         <p class="hero-copy"><span class="sentence">从品牌视觉、广告主画面到包装与空间应用，</span><span class="sentence">把复杂需求做成清楚、统一、能落地的设计系统，让选择更简单。</span></p>
         <p class="hero-english" lang="en">Make brands visible · Make value understood · Make choices simple</p>
         <div class="hero-actions"><a href="#contact"><span>免费咨询</span><small>CONSULT</small></a><a href="#work"><span>查看作品</span><small>VIEW WORK</small></a></div>
+        <!-- ≥1080px 右侧压缩 UI：服务标签 / 案例缩略 / 事实指标（≤1079px 由 opt CSS 隐藏，Hero 单列） -->
+        <aside class="hero-side-panel" aria-label="服务范围与精选案例">
+          <span class="hero-side-eyebrow">SERVICE COVERAGE / 服务范围</span>
+          <p class="hero-side-title">从品牌视觉到空间落地，一套逻辑贯穿到底</p>
+          <ul class="hero-side-tags" aria-label="核心能力">
+            <li>品牌视觉</li><li>广告画面</li><li>包装设计</li><li>空间导视</li><li>门头招牌</li><li>3D 渲染</li>
+          </ul>
+          <div class="hero-side-cases">
+            <a class="hero-side-case" href="#work"><img src="assets/r/huajianji-01-w480.webp" alt="花间集门头招牌案例缩略图" width="480" height="367" loading="lazy" decoding="async" /><span>花间集 · 门头招牌</span></a>
+            <a class="hero-side-case" href="#work"><img src="assets/r/neomatrix-01-w480.webp" alt="霓光矩阵空间导视案例缩略图" width="480" height="480" loading="lazy" decoding="async" /><span>霓光矩阵 · 空间导视</span></a>
+            <a class="hero-side-case" href="#work"><img src="assets/r/luma-w480.webp" alt="LUMA 夜跑广告视觉案例缩略图" width="480" height="320" loading="lazy" decoding="async" /><span>LUMA · 广告视觉</span></a>
+          </div>
+          <p class="hero-side-metrics"><span><strong>10+</strong> 年经验</span><span><strong>17+</strong> 案例</span><span><strong>1</strong> 位负责人全程跟进</span></p>
+        </aside>
         <div class="hero-ribbon" aria-label="案例曲面网格自动轮播，左右滑动浏览，点击打开详情"><div class="hero-ribbon-track"></div></div>
         <div class="hero-afterword">
           <div class="memory-composition">
@@ -161,7 +175,7 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
         </div>
         <span class="work-scene-number" aria-hidden="true">01</span>
         <div class="work-scene-inner">
-          <div class="section-head work-scene-copy reveal"><span class="num">01 / 精选案例 · SELECTED WORKS</span><div><h2>从一张海报 到一个空间</h2><p class="work-scene-summary"><span>覆盖品牌视觉、广告画面、包装与空间应用</span><span>从设计判断、系统延展到真实交付完整呈现</span><span>全部为实际项目，按真实交付内容呈现</span></p><p class="trademark-note">NAMING NOTE / 页面名称为本案实际使用的项目名称，不构成商标注册或可用性结论。</p></div></div>
+          <div class="section-head work-scene-copy reveal"><span class="num">01 / 精选案例 · SELECTED WORKS</span><div><h2 class="headline-split"><span class="title-line">从一张<span class="nowrap">海报</span></span><span class="title-line">到一个空间</span></h2><p class="work-scene-summary"><span>覆盖品牌视觉、广告画面、包装与空间应用</span><span>从设计判断、系统延展到真实交付完整呈现</span><span>全部为实际项目，按真实交付内容呈现</span></p><p class="trademark-note">NAMING NOTE / 页面名称为本案实际使用的项目名称，不构成商标注册或可用性结论。</p></div></div>
         </div>
       </div>
       <div class="proof-metrics reveal" aria-label="作品方法"><div class="proof-metric"><strong>先理解</strong><span>需求与场景<small>先确认目标，再决定形式</small></span></div><div class="proof-metric"><strong>再统一</strong><span>视觉与触点<small>让不同画面保持同一套逻辑</small></span></div><div class="proof-metric"><strong>能落地</strong><span>尺寸与工艺<small>交付文件对接真实制作</small></span></div></div>
@@ -232,7 +246,7 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
     <section id="services" class="services">
       <div class="capabilities-backdrop" aria-hidden="true"><figure class="backdrop-sketch" data-stage="01 / CONCEPT"><img srcset="assets/r/portfolio-robot-ip-blender-w480.webp 480w, assets/r/portfolio-robot-ip-blender-w960.webp 960w, assets/portfolio-robot-ip-blender.webp 1920w" sizes="(max-width: 767px) 80vw, (max-width: 1023px) 80vw, 51vw" decoding="async" loading="lazy" width="1920" height="1040" src="assets/portfolio-robot-ip-blender.webp" alt="" /></figure><figure class="backdrop-layout" data-stage="02 / DEVELOPMENT"><img srcset="assets/r/portfolio-mall-booth-blender-w480.webp 480w, assets/r/portfolio-mall-booth-blender-w960.webp 960w, assets/portfolio-mall-booth-blender.webp 1920w" sizes="(max-width: 767px) 60vw, (max-width: 1023px) 60vw, 43vw" decoding="async" loading="lazy" width="1920" height="1040" src="assets/portfolio-mall-booth-blender.webp" alt="" /></figure><figure class="backdrop-finish" data-stage="03 / DELIVERY"><img srcset="assets/r/fold-render-front-w480.webp 480w, assets/r/fold-render-front-w960.webp 960w, assets/fold-render-front.webp 1600w" sizes="(max-width: 767px) 100vw, (max-width: 1023px) 100vw, 100vw" decoding="async" loading="lazy" width="1600" height="1000" src="assets/fold-render-front.webp" alt="" /></figure></div>
       <div class="wrap">
-        <div class="section-head capabilities-head reveal"><div class="capabilities-main"><span class="num">02 / 服务能力</span><h2><span class="title-line">从项目策划到落地</span><span class="title-line">持续补齐</span><span class="title-line">您公司的设计执行力</span></h2><p><span class="sentence">长期合作不是零散接单，而是一套稳定运行的设计支持。</span><span class="sentence">每月先排优先级，再把关键画面、日常延展与交付管理连成一体。</span></p></div><aside class="capabilities-note" lang="en"><span>CAPABILITIES</span><p><span class="title-line">From project planning to implementation</span><span class="title-line">Continuously supplementing your company’s</span><span class="title-line">Design execution capability</span></p><ol class="capability-steps"><li><b>01 / THINK</b><strong>策略思考</strong><p>先想清楚再动手——品牌定位、受众、核心信息，策略先行。</p></li><li><b>02 / SHAPE</b><strong>视觉成型</strong><p>把策略翻译成看得见的设计——主视觉、版式、延展规范。</p></li><li><b>03 / DELIVER</b><strong>落地交付</strong><p>生产文件、交付管理、持续跟进——每一稿都能用、都能印、都能发。</p></li></ol></aside></div>
+        <div class="section-head capabilities-head reveal"><div class="capabilities-main"><span class="num">02 / 服务能力</span><h2 class="services-headline"><span class="title-line">从项目策划</span><span class="title-line">到落地持续补齐</span><span class="title-line">您公司的设计执行力</span></h2><p><span class="sentence">长期合作不是零散接单，而是一套稳定运行的设计支持。</span><span class="sentence">每月先排优先级，再把关键画面、日常延展与交付管理连成一体。</span></p></div><aside class="capabilities-note" lang="en"><span>CAPABILITIES</span><p><span class="title-line">From project planning to implementation</span><span class="title-line">Continuously supplementing your company’s</span><span class="title-line">Design execution capability</span></p><ol class="capability-steps"><li><b>01 / THINK</b><strong>策略思考</strong><p>先想清楚再动手——品牌定位、受众、核心信息，策略先行。</p></li><li><b>02 / SHAPE</b><strong>视觉成型</strong><p>把策略翻译成看得见的设计——主视觉、版式、延展规范。</p></li><li><b>03 / DELIVER</b><strong>落地交付</strong><p>生产文件、交付管理、持续跟进——每一稿都能用、都能印、都能发。</p></li></ol></aside></div>
         <div class="service-list service-flow reveal" aria-label="设计支持内容">
           <article class="service-row">
             <div class="service-copy"><h3>核心视觉持续推进</h3><p>围绕当月最重要的活动或品牌任务，完成主画面、传播概念与关键版式，让沟通从一开始就有清晰方向。</p><b>主任务始终优先</b></div>
@@ -257,35 +271,45 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
 
     <section class="wrap outline-manifesto manifesto-refined" aria-label="设计主张">
       <figure class="manifesto-blueprint" aria-hidden="true"><img srcset="assets/r/fold-render-front-w480.webp 480w, assets/r/fold-render-front-w960.webp 960w, assets/fold-render-front.webp 1600w" sizes="(max-width: 767px) 100vw, (max-width: 1023px) 100vw, 100vw" decoding="async" loading="lazy" width="1600" height="1000" src="assets/fold-render-front.webp" alt="" /></figure>
-      <div class="manifesto-left"><span class="manifesto-index">DESIGN PRINCIPLE / 设计主张</span><strong>字有层级 设计有目的</strong></div>
+      <div class="manifesto-left"><span class="manifesto-index">DESIGN PRINCIPLE / 设计主张</span><strong class="manifesto-headline"><span class="title-line">字有层级</span><span class="title-line">设计有目的</span></strong></div>
       <div class="manifesto-right"><p class="manifesto-copy"><span class="manifesto-line">大字建立记忆，微字组织秩序。</span><span class="manifesto-line"><em>每一次视觉选择，</em></span><span class="manifesto-line">都服务于真实媒介与商业目标。</span></p><p class="manifesto-en" lang="en">Typography builds hierarchy. Every visual choice serves its medium, its message and its commercial purpose.</p></div>
     </section>
 
     <div class="clip-divider reveal" aria-hidden="true"><span>关于</span></div>
     <section id="about" class="wrap about-section" aria-labelledby="aboutTitle">
       <span class="vertical-index" aria-hidden="true">关于 · 方法与经验</span>
-      <div class="section-head about-head reveal"><div class="about-head-main"><span class="num">03 / 关于 · ABOUT</span><h2 id="aboutTitle">十余年，从一线设计走到经营管理</h2></div><p class="about-head-intro"><span class="sentence">潘熠，拥有 10+ 年广告标识、发光字、商业视觉及制造行业经验。</span><span class="sentence">如今把贯穿设计、产品、生产与经营管理的经验，沉淀为工作室的广告设计服务。</span></p></div>
+      <div class="section-head about-head reveal"><div class="about-head-main"><span class="num">03 / 关于 · ABOUT</span><h2 id="aboutTitle" class="headline-split"><span class="title-line">十余年，从一线设计</span><span class="title-line">走到经营管理</span></h2></div><p class="about-head-intro"><span class="sentence">潘熠，拥有 10+ 年广告标识、发光字、商业视觉及制造行业经验。</span><span class="sentence">如今把贯穿设计、产品、生产与经营管理的经验，沉淀为工作室的广告设计服务。</span></p></div>
       <div class="about-layout career-layout">
         <figure class="about-portrait design-archive reveal" aria-labelledby="portraitCaption">
           <div class="archive-grid">
-            <figure class="archive-sheet archive-sheet-main"><img width="239" height="166" src="assets/portfolio-tianma-stage.webp" alt="天马微电子奠基仪式舞台主视觉设计稿" loading="lazy" decoding="async" /><figcaption>舞台主视觉 / EVENT VISUAL</figcaption></figure>
-            <figure class="archive-sheet"><img srcset="assets/r/portfolio-mall-booth-blender-w480.webp 480w, assets/r/portfolio-mall-booth-blender-w960.webp 960w, assets/portfolio-mall-booth-blender.webp 1920w" sizes="(max-width: 767px) 60vw, (max-width: 1023px) 60vw, 43vw" width="1920" height="1040" src="assets/portfolio-mall-booth-blender.webp" alt="商城展台三维设计工作稿" loading="lazy" decoding="async" /><figcaption>空间推演 / 3D DEVELOPMENT</figcaption></figure>
-            <figure class="archive-sheet"><img srcset="assets/r/portfolio-signage-series-w480.webp 480w, assets/r/portfolio-signage-series-w960.webp 960w, assets/portfolio-signage-series.webp 1302w" sizes="(max-width: 767px) 46vw, (max-width: 1023px) 38vw, 13vw" width="1302" height="539" src="assets/portfolio-signage-series.webp" alt="发光字与门头标识项目稿件合集" loading="lazy" decoding="async" /><figcaption>生产落地 / SIGNAGE DELIVERY</figcaption></figure>
+            <figure class="archive-sheet archive-sheet-portrait"><img srcset="assets/r/p01-bottle-yuzu-w480.webp 480w, assets/r/p01-bottle-yuzu-w960.webp 960w, assets/p01-bottle-yuzu.webp 1376w" sizes="(max-width: 620px) 42vw, (max-width: 1023px) 38vw, 160px" width="1376" height="1824" src="assets/p01-bottle-yuzu.webp" alt="清屿饮品 柚子气泡水 · 竖版产品包装" loading="lazy" decoding="async" /><figcaption>包装 / PACKAGING</figcaption></figure>
+            <figure class="archive-sheet archive-sheet-square"><img srcset="assets/r/neomatrix-01-w480.webp 480w, assets/r/neomatrix-01-w960.webp 960w, assets/cases-20261103/neomatrix-01.jpg 1024w" sizes="(max-width: 620px) 56vw, (max-width: 1023px) 51vw, 213px" width="1024" height="1024" src="assets/cases-20261103/neomatrix-01.jpg" alt="霓光矩阵 空间导视" loading="lazy" decoding="async" /><figcaption>导视 / SPATIAL</figcaption></figure>
+            <figure class="archive-sheet archive-sheet-wide"><img sizes="(max-width: 1023px) 90vw, 383px" src="assets/cases-20261103/songyin-02.jpg" width="1376" height="768" alt="松隐茶境 茶室门头 · 横向场景" loading="lazy" decoding="async" /><figcaption>门头 / STOREFRONT</figcaption></figure>
+            <figure class="archive-sheet archive-sheet-banner"><img srcset="assets/r/huajianji-01-w480.webp 480w, assets/r/huajianji-01-w960.webp 960w, assets/cases-20261103/huajianji-01.jpg 1920w" sizes="(max-width: 620px) 42vw, (max-width: 1023px) 38vw, 160px" width="1920" height="1469" src="assets/cases-20261103/huajianji-01.jpg" alt="花间集 门头招牌 · 白天" loading="lazy" decoding="async" /><figcaption>招牌 / SIGNAGE</figcaption></figure>
+            <div class="archive-note-card" role="note" aria-label="案例档案：2026 年 17 个项目，涵盖门店、空间与包装">
+              <span class="archive-note-eyebrow">案例档案 / ARCHIVE</span>
+              <strong class="archive-note-count">17<small>个项目</small></strong>
+              <span class="archive-note-meta">2026 · 门店 / 空间 / 包装</span>
+            </div>
           </div>
           <figcaption id="portraitCaption"><span>SELECTED WORKING ARCHIVE</span><span>从画面、空间到生产交付</span></figcaption>
         </figure>
         <div class="about-copy career-copy reveal">
-          <p class="about-note">ZHENGXINYUE CULTURE STUDIO</p>
-          <p class="about-statement">从一线设计走到经营管理，<em>每一步都在补全设计落地的能力。</em></p>
-          
-          <div class="about-tags" aria-label="核心能力"><span>广告标识</span><span>发光字与工艺</span><span>商业视觉</span><span>生产落地</span><span>供应链协同</span><span>项目经营管理</span></div>
+          <div class="about-copy-lead">
+            <p class="about-note">ZHENGXINYUE CULTURE STUDIO</p>
+            <p class="about-statement">从一线设计走到经营管理，<em>每一步都在补全设计落地的能力。</em></p>
+          </div>
+          <div class="about-actions">
+            <div class="about-tags" aria-label="核心能力"><span>广告标识</span><span>发光字与工艺</span><span>商业视觉</span><span>生产落地</span><span>供应链协同</span><span>项目经营管理</span></div>
+            <a class="about-cta" href="#contact"><span>立即开始设计</span><small>START A PROJECT</small></a>
+          </div>
         </div>
       </div>
       <ol class="career-timeline career-strip reveal" aria-label="职业经历时间轴">
-            <li><time datetime="2006">2006</time><div><h3>厦门正越广告</h3><strong>广告设计 · 从一线做起</strong><p>从广告设计、品牌物料与户外媒体进入行业，在真实尺寸、制作要求和现场反馈中建立设计基本功。</p></div></li>
-            <li><time datetime="2019">2019—2023</time><div><h3>厦门新元素广告</h3><strong>设计总监</strong><p>负责创意方向、团队协作与项目交付，让设计判断从单张画面延伸到完整项目推进。</p></div></li>
-            <li><time datetime="2023">2023—2025</time><div><h3>太龙集团</h3><strong>产品经理兼发光字生产部负责人</strong><p>把设计延伸到产品结构、工艺优化与品质管理，持续解决从设计文件到稳定量产之间的问题。</p></div></li>
-            <li><time datetime="2025">2025—2026</time><div><h3>慕美网络科技</h3><strong>副总经理</strong><p>统筹产品、生产、供应链与商务协作，从经营视角理解项目优先级、交付效率与长期合作。</p></div></li>
+            <li tabindex="0"><time datetime="2006">2006</time><span class="career-timeline-node" aria-hidden="true"></span><div><h3>厦门正越广告</h3><strong>广告设计 · 从一线做起</strong><p>从广告设计、品牌物料与户外媒体进入行业，在真实尺寸、制作要求和现场反馈中建立设计基本功。</p></div></li>
+            <li tabindex="0"><time datetime="2019">2019—2023</time><span class="career-timeline-node" aria-hidden="true"></span><div><h3>厦门新元素广告</h3><strong>设计总监</strong><p>负责创意方向、团队协作与项目交付，让设计判断从单张画面延伸到完整项目推进。</p></div></li>
+            <li tabindex="0"><time datetime="2023">2023—2025</time><span class="career-timeline-node" aria-hidden="true"></span><div><h3>太龙集团</h3><strong>产品经理兼发光字生产部负责人</strong><p>把设计延伸到产品结构、工艺优化与品质管理，持续解决从设计文件到稳定量产之间的问题。</p></div></li>
+            <li tabindex="0"><time datetime="2025">2025—2026</time><span class="career-timeline-node" aria-hidden="true"></span><div><h3>慕美网络科技</h3><strong>副总经理</strong><p>统筹产品、生产、供应链与商务协作，从经营视角理解项目优先级、交付效率与长期合作。</p></div></li>
           </ol>
       <div class="about-principles reveal" aria-label="合作原则">
         <div class="about-principle"><b>01 / CLARITY</b><strong>先把问题说清楚</strong><p>目标、受众、媒介与限制越明确，设计判断越准确。</p></div>
@@ -297,7 +321,7 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
     <div class="clip-divider reveal" aria-hidden="true"><span>方法</span></div>
     <section id="process" class="wrap process-section">
       <div class="process-layout">
-        <div class="section-head reveal"><span class="num">流程 / PROCESS</span><div><h2>少一点来回 多一点共识</h2><p><span class="sentence">先回答为什么，再讨论好不好看。</span><span class="sentence">清晰节点，让小团队也能专业协作。</span></p></div></div>
+        <div class="section-head reveal"><span class="num">流程 / PROCESS</span><div><h2 class="headline-split"><span class="title-line">少一点来回</span><span class="title-line">多一点共识</span></h2><p><span class="sentence">先回答为什么，再讨论好不好看。</span><span class="sentence">清晰节点，让小团队也能专业协作。</span></p></div></div>
         <div class="process-interactive reveal">
           <nav class="process-progress-nav" aria-label="合作流程步骤">
             <button class="process-jump" type="button" data-step-target="process-step-1" aria-expanded="false" aria-controls="process-step-1"><b>01</b><span>理解需求</span></button>
@@ -306,7 +330,7 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
             <button class="process-jump" type="button" data-step-target="process-step-4" aria-expanded="false" aria-controls="process-step-4"><b>04</b><span>交付落地</span></button>
           </nav>
           <div class="process-grid" aria-live="polite">
-            <article class="step" id="process-step-1" aria-hidden="true">
+            <article class="step" id="process-step-1" aria-hidden="false">
               <div class="step-content"><span class="step-num">01 / DISCOVERY</span><h3>理解需求</h3><p class="step-lead">先把背景、目标、受众、使用场景与时间节点说清楚，把零散想法整理成可以执行的任务。</p>
               <dl class="step-details"><div><dt>客户提供</dt><dd>需求原话、品牌与产品资料、内容清单、使用尺寸、期望时间，以及预算或制作限制。</dd></div><div><dt>工作室做什么</dt><dd>梳理目标与受众，判断信息优先级，标出资料缺口、潜在风险和合理排期。</dd></div><div><dt>何时确认</dt><dd>项目启动前，书面确认简报、工作边界、双方负责人、反馈方式与关键节点。</dd></div><div><dt>本步交付</dt><dd>结构化项目简报、任务优先级、待补资料清单与阶段时间表。</dd></div></dl><div class="step-time">BRIEF / ALIGNMENT</div></div>
             </article>
@@ -376,10 +400,10 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
             <h2>开始合作</h2>
             <p class="contact-subline">MAKE YOUR NEXT VISUAL MOVE</p>
             <p><span class="sentence">先说目标，不必先写一份完美需求。</span><span class="sentence">带上项目类型、使用场景与期望时间，我会帮你把问题整理清楚。</span></p>
-            <div class="contact-actions"><button class="cta" type="button" id="consultOpenContact"><span>免费咨询</span><small>CONSULT</small></button><a class="cta" id="downloadBrief" href="#contact"><span>下载项目简报模板</span><small>DOWNLOAD PROJECT BRIEF</small></a></div>
+            <div class="contact-actions"><button class="cta" type="button" id="consultOpenContact"><span class="cta-copy"><span>免费咨询</span><small>CONSULT</small></span></button><a class="cta" id="downloadBrief" href="#contact"><span class="cta-copy"><span>下载项目简报模板</span><small>DOWNLOAD PROJECT BRIEF</small></span></a></div>
           </div>
           <figure class="contact-visual">
-            <svg class="contact-collab-art" viewBox="0 0 720 560" role="img" aria-labelledby="contactArtTitle contactArtDesc" preserveAspectRatio="xMidYMid slice">
+            <svg class="contact-collab-art" viewBox="0 0 720 560" role="img" aria-labelledby="contactArtTitle contactArtDesc" preserveAspectRatio="xMidYMid meet">
               <title id="contactArtTitle">从需求到共同方向的设计协作图</title>
               <desc id="contactArtDesc">两份设计方案从左右汇聚到中央金色节点，象征双方从沟通开始形成共识并推进交付。</desc>
               <defs>
@@ -413,7 +437,7 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
         <div class="contact-details diagnostic-email-only">
           <div class="contact-detail"><span>商务合作</span><div class="copy-row"><strong><a href="mailto:784005231@qq.com">784005231@qq.com</a></strong><button class="copy-email" type="button" data-copy="784005231@qq.com" aria-label="复制商务合作邮箱">复制</button></div></div>
           <div class="contact-detail"><span>日常联系</span><div class="copy-row"><strong><a href="mailto:panyi8899666@gmail.com">panyi8899666@gmail.com</a></strong><button class="copy-email" type="button" data-copy="panyi8899666@gmail.com" aria-label="复制日常联系邮箱">复制</button></div></div>
-          <div class="contact-detail contact-fiverr"><span>海外下单</span><div class="copy-row"><strong><a href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener">Fiverr · zxy_studio</a></strong><a class="copy-email contact-go" href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener" aria-label="前往 Fiverr 店铺（新窗口）">前往 ↗</a></div></div>
+          <div class="contact-detail contact-fiverr"><span>海外下单</span><div class="copy-row"><strong><a href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener">Fiverr · zxy_studio</a></strong><small class="contact-note">Fiverr 国际服务平台 · 英文沟通</small><a class="copy-email contact-go" href="https://www.fiverr.com/zxy_studio" target="_blank" rel="noopener" aria-label="前往 Fiverr 店铺（新窗口）">前往 ↗</a></div></div>
           <div class="contact-detail contact-wechat"><span>微信 / 手机</span><div class="copy-row"><div class="wechat-value"><picture><source srcset="assets/wechat-qr.webp" type="image/webp"><img class="wechat-qr" src="assets/wechat-qr.png" alt="微信二维码：扫码添加 17306983179" width="92" height="92" loading="lazy" decoding="async"></picture><div class="wechat-info"><strong><a href="tel:+8617306983179">173 0698 3179</a></strong><small>微信扫码咨询</small><small>微信号同手机号</small></div></div><button class="copy-email" type="button" data-copy="17306983179" data-toast="微信号已复制" aria-label="复制微信号/手机号">复制</button></div></div>
         </div>
       </div>
@@ -439,36 +463,54 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
           <a class="partners-cta" href="mailto:784005231@qq.com">咨询合作</a>
         </div>
         <div class="partners-slots" aria-label="合作品牌：与本站案例一一对应的品牌与项目，排名不分先后">
-          <div class="partners-slot-item partner-logo"><strong>柚子气泡水</strong><small>气泡水包装系统 · 产品级 CGI</small></div>
-          <div class="partners-slot-item partner-logo"><strong>LUMA 夜跑</strong><small>城市夜跑活动视觉 · 灯箱系统</small></div>
-          <div class="partners-slot-item partner-logo"><strong>NOVA</strong><small>咖啡包装系统</small></div>
-          <div class="partners-slot-item partner-logo"><strong>新阳街道</strong><small>安全环保主题宣传 · 全套方案</small></div>
-          <div class="partners-slot-item partner-logo"><strong>ORBIT 播客空间</strong><small>品牌视觉 · 空间应用</small></div>
-          <div class="partners-slot-item partner-logo"><strong>MOSS 山岚茶事</strong><small>茶礼盒包装系统</small></div>
-          <div class="partners-slot-item partner-logo"><strong>AERA</strong><small>香氛礼盒包装</small></div>
-          <div class="partners-slot-item partner-logo"><strong>KILO</strong><small>潮流鞋盒包装</small></div>
-          <div class="partners-slot-item partner-logo"><strong>厦门士兰集华微电子</strong><small>开工典礼 · 策划执行方案</small></div>
-          <div class="partners-slot-item partner-logo"><strong>青年趣享时光</strong><small>2025 青年活动 · 策划执行</small></div>
-          <div class="partners-slot-item partner-logo"><strong>麦屿烘焙 MAIYU</strong><small>门头招牌 · 3D 呈现</small></div>
-          <div class="partners-slot-item partner-logo"><strong>MUGU 木谷烘焙</strong><small>门店空间视觉</small></div>
-          <div class="partners-slot-item partner-logo"><strong>TIDE 夏日企划</strong><small>活动视觉 · 全套物料</small></div>
-          <div class="partners-slot-item partner-logo"><strong>MONO 家居</strong><small>大促视觉 · 电商与卖场</small></div>
-          <div class="partners-slot-item partner-logo"><strong>PINK DUST</strong><small>社媒视觉系统</small></div>
-          <div class="partners-slot-item partner-logo"><strong>厦门市孝贤技工学校</strong><small>校园文化提升</small></div>
-          <div class="partners-slot-item partner-logo"><strong>LENS 影像节</strong><small>影像节视觉识别</small></div>
-          <div class="partners-slot-item partner-logo"><strong>FOLD 家居</strong><small>家居手册 · 编辑设计</small></div>
-          <div class="partners-slot-item partner-logo"><strong>NEXA</strong><small>智能充电宝 · 产品视觉</small></div>
-          <div class="partners-slot-item partner-logo"><strong>LUNO</strong><small>面膜礼盒系统</small></div>
-          <div class="partners-slot-item partner-logo"><strong>跑动的小车</strong><small>3D 动画 · 个人作品</small></div>
-          <div class="partners-slot-item partner-logo"><strong>机器人 IP</strong><small>IP 角色设计 · 个人作品</small></div>
-          <div class="partners-slot-item partner-logo"><strong>投币盒子</strong><small>3D 建模渲染 · 个人作品</small></div>
-          <div class="partners-slot-item partner-logo"><strong>春日樱花</strong><small>3D 主题视觉 · 个人作品</small></div>
-          <div class="partners-slot-item partner-logo"><strong>商城展台</strong><small>展台设计 · 三套主题</small></div>
-          <div class="partners-slot-item partner-logo"><strong>户外标识 · 精神堡垒</strong><small>导视标识 · 两套方案</small></div>
-          <div class="partners-slot-item partner-logo"><strong>天马微电子</strong><small>2022 年奠基仪式 · 舞台主视觉</small></div>
-          <div class="partners-slot-item partner-logo"><strong>闪亮柚 · 哪吒汽车 · 良初肉业</strong><small>发光字系列 · 门头招牌交付</small></div>
-          <div class="partners-slot-item partner-logo"><strong>慕思 DeRUCCI</strong><small>饰界大战 · 整套促销物料</small></div>
-          <div class="partners-slot-item partner-logo"><strong>厦门市孝贤技工学校</strong><small>党建室提升</small></div>
+          <div class="partners-slot-item partner-logo"><strong>柚子气泡水</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>LUMA 夜跑</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>NOVA</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>新阳街道</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>ORBIT 播客空间</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>MOSS 山岚茶事</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>AERA</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>KILO</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>厦门士兰集华微电子</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>青年趣享时光</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>麦屿烘焙 MAIYU</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>MUGU 木谷烘焙</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>TIDE 夏日企划</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>MONO 家居</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>PINK DUST</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>厦门市孝贤技工学校</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>LENS 影像节</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>FOLD 家居</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>NEXA</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>LUNO</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>跑动的小车</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>机器人 IP</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>投币盒子</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>春日樱花</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>商城展台</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>海丝智谷产业园</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>天马微电子</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>闪亮柚</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>哪吒汽车</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>良初肉业</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>慕思 DeRUCCI</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>花间集 HUAJIANJI</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>松隐茶境</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>栖石研磨</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>留声暮色</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>棱镜无界</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>灯下小馆</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>霓光矩阵</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>光影食序</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>素物陶社</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>晚风书店</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>甘棠记</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>野径集</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>黑曜镜像</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>望舒小厨</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>寻木记</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>落日切片</strong></div>
+          <div class="partners-slot-item partner-logo"><strong>素因实验</strong></div>
         </div>
       </div>
       <footer class="footer-meta">
