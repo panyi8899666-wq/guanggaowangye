@@ -26,8 +26,25 @@ N1–N4 合作品牌区 4 列 / 联系区三行对齐 / 插图不裁（任务 id
         R1 合作品牌菱形 6-5-4-3-4 列展示（任务 id=35）
         S1–S4 服务区右侧重排：.backdrop-finish 虚影案例背景 +
               aside 玻璃底 316.8px + 步骤列表三层字号（任务 id=36）
+        T1 关于区列比 .85/1.15 + 右栏居中 + 间距收紧 / 联系页
+           正文→CTA 28 / CTA→卡片 32 / 卡片→panel 底 28 /
+           合作品牌「编号索引墙」5-4-3-2 列（任务 id=38）
+        U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可见）
+        U2 不支持 backdrop-filter 的机型改用不透明底（任务 id=39）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
+   C-TOKENS 例外登记（任务 id=39）：
+     · U1/U2 不新增尺寸与色值：U2 的 rgba(13,13,15,.94/.96) 为既有
+        --bg/#0d0d0f 的 alpha 形式，仅作用于 #services .capabilities-note、
+        .consult-dialog、.modal 三个使用 backdrop-filter 的前景容器。
+     · U1 的 !important 仅用于压过基线动画填充值（CSS 动画声明优先于普通
+        作者声明），不改基线的 .reveal / in-view 规则。
+   C-TOKENS 例外登记（任务 id=38）：
+     · T1 索引墙尺寸：序号列 22px、格内 padding 9px 0、序号线 10–11px、
+       名称 13px、网格 gap 4px 24px、关于区 CTA 48×auto、联系区 panel
+       底部 28px。均为本文件 T/B 段局部数值，不进入 :root、不新增主题色；
+       颜色仍取 var(--accent) / var(--ink) / var(--line)，hover 名称 #fff
+       仅作交互高亮（基线 hero-ready hover 已使用同值）。
    C-TOKENS 例外登记（任务 id=36）：
      · --radius-card 在本文件 S2 段内局部声明为 var(--radius-media)（20px），
        仅作用于 #services .capabilities-note，不进入 :root、不新增数值。
@@ -848,6 +865,8 @@ html body .cooperation-entry p.coop-fit {
   width: 100%;
   max-width: 100%;
   margin-inline: 0;
+  /* 任务 id=38 B1：CTA→卡片 32px（覆盖基线 margin-top:24/28） */
+  margin-top: 32px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-auto-rows: 1fr;
   gap: 12px;
@@ -863,6 +882,9 @@ html body .cooperation-entry p.coop-fit {
 @media (min-width: 821px) {
   section#contact .contact-panel { padding-inline: clamp(24px, 3vw, 44px)!important; }
 }
+/* 任务 id=38 B2：卡片区与 panel 底部 ≤32（覆盖基线 padding-block-end
+   max(54px,min(8vw,110px)) 与 .contact-panel{padding:…!important}） */
+section#contact .contact-panel { padding-bottom: 28px!important; }
 section#contact {
   padding-top: clamp(56px, 6vw, 96px)!important;
   padding-bottom: clamp(56px, 6vw, 96px)!important;
@@ -1689,7 +1711,7 @@ html.js #process .process-grid .step:not(.is-open) {
   display: flex!important;
   flex-direction: column;
   justify-content: flex-start;
-  align-self: start;
+  align-self: center; /* 任务 id=38：在左拼贴行高内垂直居中，上下留白均分 */
   gap: 0;
   padding: 0!important;
 }
@@ -1717,7 +1739,7 @@ html.js #process .process-grid .step:not(.is-open) {
 }
 /* 宣言：clamp(26px,2.4vw,34px)，两行；金色 em 独立成行 */
 .career-copy .about-statement {
-  margin: 24px 0 0!important;
+  margin: 20px 0 0!important;
   max-width: 52ch;
   font-size: clamp(26px, 2.4vw, 34px)!important;
   line-height: 1.32!important;
@@ -1732,7 +1754,7 @@ html.js #process .process-grid .step:not(.is-open) {
 }
 /* 正文：14px/1.75，行宽 ≤52ch */
 .career-copy .about-intro {
-  margin: 24px 0 0;
+  margin: 20px 0 0;
   max-width: 52ch;
   font-size: 14px;
   line-height: 1.75;
@@ -1746,7 +1768,7 @@ html.js #process .process-grid .step:not(.is-open) {
   min-width: 0;
 }
 .career-copy .about-tags {
-  margin-top: 28px!important;
+  margin-top: 22px!important;
   align-items: center;
 }
 /* 品牌标签前置 14px 金色短横线（var(--accent)=#c6a15b） */
@@ -1769,7 +1791,7 @@ html.js #process .process-grid .step:not(.is-open) {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   width: 100%;
-  margin: 28px 0 0;
+  margin: 22px 0 0;
   padding: 0;
   border-top: 1px solid var(--line);
   border-left: 0;
@@ -1808,7 +1830,7 @@ html.js #process .process-grid .step:not(.is-open) {
   gap: 10px;
   align-self: flex-start;
   width: auto;
-  margin-top: 24px; /* 数据条底边 → CTA 顶边 = 24px */
+  margin-top: 20px; /* 数据条底边 → CTA 顶边 = 20px（任务 id=38） */
   min-height: 48px;
   padding: 0 20px;
   border-radius: var(--radius-control);
@@ -1841,10 +1863,17 @@ html.js #process .process-grid .step:not(.is-open) {
   }
 }
 
-/* 1440 档：收窄左拼贴（.68fr）让位于右栏信息密度，左右高度差 ≤80px */
-@media (min-width: 1360px) {
+/* 任务 id=38 A1：左/右列比 .85fr / 1.15fr（≈0.74），左右视觉接近；
+   ≥1200 统一（含 1280 档，原基线 1:1.618 偏右）；1024–1199 仍用 .9/1.1。 */
+@media (min-width: 1200px) {
   .about-layout.career-layout {
-    grid-template-columns: minmax(0, .68fr) minmax(0, 1.32fr)!important;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr)!important;
+  }
+  /* 左拼贴基线有 margin-inline:40px，使 .about-portrait 的实测宽只有列宽的
+     84%（1440 438.5 / 518.5）。去掉后左右视觉列宽比 518.5/701.5 = 0.74，
+     落在任务 id=38 要求的 0.7–0.9 内。 */
+  .about-portrait.design-archive {
+    margin-inline: 0!important;
   }
 }
 
@@ -1858,7 +1887,7 @@ html.js #process .process-grid .step:not(.is-open) {
 }
 @media (max-width: 1023px) {
   .career-copy .about-statement {
-    margin: 24px 0 0!important;
+    margin: 20px 0 0!important;
   }
 }
 /* ---------- I5 1024–1199：两列保住左档案墙，把 40px 内距收到 16px ----------
@@ -2248,6 +2277,38 @@ html.js #process .process-grid .step:not(.is-open) {
    .cooperation-note；不使用 transform:scale、不新增色值、不改文案、链接与 aria。
    ========================================================================== */
 
+/* ---------- B3 联系页垂直收紧（任务 id=38 B）----------
+   桌面 ≥821：视觉图不再撑高 .contact-main（基线 SVG 宽高比 720/560，
+   1440 视觉列 480px → 高 373.6px，比左栏内容 320.8px 高 52.8px；
+   .contact-copy 居中后 CTA 距卡片 58.4px）。这里把 .contact-visual 的
+   自动高度贡献置 0、min-height 交给行高，让行高由左栏内容决定：
+   1440 mainH 320.84、CTA→卡片 32、正文行盒→CTA 28。
+   视觉图仍完整显示（SVG preserveAspectRatio=meet，等比缩放不裁切）。
+   单列 ≤820：视觉图改到文案上方（grid-row:1），避免 CTA 与卡片之间
+   隔着 568px 高的插图；文案与按钮仍完整，仅调整视觉顺序。 */
+@media (min-width: 821px) {
+  #contact .contact-visual:not(#opt-boost) {
+    height: 0;
+    min-height: 100%;
+  }
+  #contact .contact-visual .contact-collab-art:not(#opt-boost) {
+    height: 100%;
+    min-height: 0;
+  }
+}
+@media (max-width: 820px) {
+  #contact .contact-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #contact .contact-visual { grid-row: 1; }
+  #contact .contact-copy { grid-row: 2; }
+}
+/* 正文段落下外边距 17px + actions margin-top 28px 会变成 45px；
+   归零段落外边距，正文行盒底 → CTA 顶边 = 28px。 */
+#contact .contact-copy > p:not(.contact-subline) {
+  margin-bottom: 0!important;
+}
+
 /* ---------- Q1 合作页主区双按钮：内容自适应宽度 / 同高 48 / 图标垂直居中 / 中英 14:9.5 ----------
    用户原话：「不要把按钮强行拉长拉大拉空白」。上一版用 grid 1fr 1fr 把两按钮
    拉满整行（1440 各 327.61px，合计占容器 98.23%），内部因此出现大量空白。
@@ -2265,6 +2326,8 @@ html.js #process .process-grid .step:not(.is-open) {
   align-items: center;
   gap: 15px;
   width: 100%;
+  /* 任务 id=38 B1：正文→CTA 28px（覆盖基线 margin-top:24/20） */
+  margin-top: 28px;
 }
 #contact .contact-actions .cta:not(#opt-boost) {
   /* 覆盖：.cta{display:inline-flex;width:100%;min-height:46px/50px/48px…;
@@ -2431,110 +2494,118 @@ html.js #process .process-grid .step:not(.is-open) {
 html body .cooperation-entry .coop-intro p.cooperation-note {
   max-width: 62ch!important;
 }
-/* ---------- R2 合作品牌六边形展示（任务 id=37，替换 R1 菱形） ----------
-   用户原话：「换成六边形」。48 张卡不变、顺序不变、列数不变
-   （≥1360 6 / 1100–1359 5 / 901–1099 4 / 621–900 3 / ≤620 4）。
-   每格 ::before 为尖顶正六边形（clip-path 六顶点），尺寸取格子 68%
-   （inset:16%），背景 var(--glass)，1px 描边改用 inset box-shadow
-   （clip-path 会裁掉真实 border，inset 阴影仍在裁剪区内可见）。
-   文字 <strong> 保持水平、无 transform，z-index:1 压在六边形上；12px、
-   允许换行、不裁字。hover/focus 描边转金色 + scale(1.03)，不再恢复 45° 旋转。
-   六边形不改变布局盒子，格子仍 aspect-ratio:1/1，相邻 rect 交叠为 0。 */
+/* ---------- T 合作品牌「编号索引墙」（任务 id=38 C，自主重设计）----------
+   用户原话：「合作品牌的样式你自己设计一个」。
+   去掉 R2 的六边形 ::before（clip-path / rotate / 底色 / 描边胶囊全部移除），
+   改为极简编辑式索引墙：每格「两位序号 + 品牌名 + 1px 底线」，
+   无背景色块、无圆角边框、无缩放；hover/focus 只把底线提亮为金色、名称转白。
+   序号由 index.html 的 <span class="partner-index">01–48</span> 提供（脚本生成、
+   连续无缺号），aria-hidden 不进入朗读顺序；品牌名顺序与文案不变。
+   列数：≥1360 5 / 1024–1359 4 / 821–1023 3 / ≤820 2；
+   gap 4px 24px（垂直 4、水平 24）。
+   （任务 id=39 复测口径：1024 档取 4 列，4 列断点由 1100 改为 1024，
+     1440/1024/390 实测为 5/4/2。）
+   数值依据：1440 内容宽约 1274 → 5 列每列 (1274-4×24)/5 ≈ 235.6px，
+   序号 22 + gap 10 + 名称 13px×9 字 ≈ 117px，单行可容；长名允许 2 行，
+   不裁字、不省略号。 */
 .partners-slots {
   display: grid!important;
-  grid-template-columns: repeat(4, minmax(0, 1fr))!important;
-  gap: 9px!important;
+  grid-template-columns: repeat(2, minmax(0, 1fr))!important;
+  gap: 4px 24px!important;
   align-items: start;
 }
-@media (max-width: 620px) {
-  .partners-slots {
-    gap: 8px!important;
-  }
-}
-@media (min-width: 621px) {
+@media (min-width: 821px) {
   .partners-slots { grid-template-columns: repeat(3, minmax(0, 1fr))!important; }
 }
-@media (min-width: 901px) {
+@media (min-width: 1024px) {
   .partners-slots { grid-template-columns: repeat(4, minmax(0, 1fr))!important; }
 }
-@media (min-width: 1100px) {
+@media (min-width: 1360px) {
   .partners-slots { grid-template-columns: repeat(5, minmax(0, 1fr))!important; }
 }
-@media (min-width: 1360px) {
-  .partners-slots { grid-template-columns: repeat(6, minmax(0, 1fr))!important; }
-}
-/* 覆盖基线 .partners-slot-item（width:120px/height:60px/border/圆角/字距）
-   与 G4 .partners-slots .partner-logo（padding/min-height/height） */
+/* 覆盖基线 .partners-slot-item（120×60、border、圆角、字距）与 G4/R2 的
+   卡片 padding / aspect-ratio / ::before 六边形 */
 .partners-slots .partners-slot-item {
   position: relative;
-  isolation: isolate;
+  isolation: auto;
   display: flex!important;
-  flex-direction: column!important;
-  align-items: center!important;
-  justify-content: center!important;
-  gap: 0!important;
+  flex-direction: row!important;
+  align-items: baseline!important;
+  justify-content: flex-start!important;
+  gap: 10px!important;
   width: 100%!important;
   max-width: none!important;
   height: auto!important;
   min-height: 0!important;
-  aspect-ratio: 1 / 1;
-  padding: 0!important;
+  aspect-ratio: auto!important;
+  padding: 9px 0!important;
   border: 0!important;
+  border-bottom: 1px solid var(--line)!important;
   border-radius: 0!important;
   background: transparent!important;
   letter-spacing: 0!important;
   text-indent: 0!important;
+  text-align: left!important;
 }
+/* 彻底移除 R2 六边形伪元素（content:none → 不生成盒子，无 clip-path/transform） */
 .partners-slots .partners-slot-item::before {
-  content: "";
-  position: absolute;
-  inset: 14%;
-  z-index: 0;
-  border: 0;
-  border-radius: 0;
-  background: var(--glass);
-  /* clip-path 会裁掉真实 border，故描边用 inset box-shadow（落在裁剪区内） */
-  box-shadow: inset 0 0 0 1px var(--line);
-  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-  transform: none;
-  transition: transform .24s var(--ease-out),
-              box-shadow .24s var(--ease-out),
-              background-color .24s var(--ease-out);
+  content: none!important;
+  display: none!important;
+  clip-path: none!important;
+  transform: none!important;
+  background: none!important;
+  border: 0!important;
+  box-shadow: none!important;
 }
-/* 覆盖 G4 .partners-slots .partner-logo strong（nowrap/12px/1.2/.03em）
-   与基线 15px/1.35：保持水平、允许换行、不裁字 */
+.partners-slots .partners-slot-item::after {
+  content: none!important;
+  display: none!important;
+}
+/* 序号：10px 等宽、字距 .12em、金色、固定 22px 列宽 */
+.partners-slots .partners-slot-item .partner-index {
+  flex: 0 0 22px;
+  width: 22px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: .12em;
+  color: var(--accent);
+  transition: font-size .2s var(--ease-out);
+}
+/* 名称：13px、常态 var(--ink)，允许 2 行、不裁字 */
 .partners-slots .partners-slot-item strong {
-  position: relative;
-  z-index: 1;
   display: block;
-  width: 100%;
-  max-width: 92%;
-  font-size: 12px;
-  line-height: 15px;
+  min-width: 0;
+  width: auto;
+  max-width: none;
+  font-size: 13px;
+  line-height: 1.5;
   letter-spacing: .02em;
   color: var(--ink);
-  text-align: center;
+  text-align: left;
   white-space: normal;
+  overflow: visible;
   overflow-wrap: anywhere;
   word-break: normal;
   transform: none;
+  transition: color .2s var(--ease-out);
 }
-.partners-slots .partners-slot-item:hover::before,
-.partners-slots .partners-slot-item:focus-visible::before,
-.partners-slots .partners-slot-item:focus-within::before {
-  box-shadow: inset 0 0 0 1px var(--accent);
-  background: color-mix(in srgb, var(--accent) 9%, var(--glass));
-  transform: scale(1.03);
+.partners-slots .partners-slot-item:hover,
+.partners-slots .partners-slot-item:focus-visible,
+.partners-slots .partners-slot-item:focus-within {
+  border-bottom-color: var(--accent)!important;
+}
+.partners-slots .partners-slot-item:hover strong,
+.partners-slots .partners-slot-item:focus-visible strong,
+.partners-slots .partners-slot-item:focus-within strong {
+  color: #fff;
+}
+.partners-slots .partners-slot-item:hover .partner-index,
+.partners-slots .partners-slot-item:focus-visible .partner-index,
+.partners-slots .partners-slot-item:focus-within .partner-index {
+  font-size: 11px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .partners-slots .partners-slot-item::before {
-    transition: none;
-  }
-  .partners-slots .partners-slot-item:hover::before,
-  .partners-slots .partners-slot-item:focus-visible::before,
-  .partners-slots .partners-slot-item:focus-within::before {
-    transform: none;
-  }
+  .partners-slots .partners-slot-item .partner-index,
+  .partners-slots .partners-slot-item strong { transition: none; }
 }
 /* ==========================================================================
    S 段 · 服务区右侧重排（任务 id=36）
@@ -2724,4 +2795,42 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
    相邻 section（视觉裁切，基线 overflow:hidden 的强化）。 */
 #services {
   overflow-x: clip;
+}
+/* ==========================================================================
+   U 段 · 移动端可见性兜底（任务 id=39）
+   --------------------------------------------------------------------------
+   现象：真机（微信内置浏览器 / 旧 iOS）页面主体整块不可见，只剩顶栏、
+   右下咨询 FAB 与左下语言切换。基线 .reveal 依赖 IntersectionObserver
+   加 in-view，并在 @supports (animation-timeline:view()) 下用视图时间线
+   从 opacity:0 起播；IO 未触发或时间线不推进时元素停在 opacity:0，
+   75 个 .reveal 覆盖的整块内容即呈空白。
+   本段只做「确实仍隐藏就强制可见」，不改基线动画、不删除基线 in-view 类。
+   ========================================================================== */
+
+/* ---------- U1 .reveal 兜底 ----------
+   opt-20261105.js 在两种情况下给元素加 .opt-reveal-fallback：
+   (a) 浏览器没有 IntersectionObserver；(b) 加载后 2s 任取 .reveal 的
+   计算 opacity < 0.5。!important 依据：基线的 @supports(animation-timeline)
+   段让 .reveal 以 revealOnce 动画 0% 的 opacity:0 填充，动画声明在层叠中
+   优先于普通作者声明，只有 !important 能压过它；transform/visibility 同理。 */
+.opt-reveal-fallback {
+  opacity: 1!important;
+  transform: none!important;
+  visibility: visible!important;
+}
+
+/* ---------- U2 不支持 backdrop-filter 的机型回退 ----------
+   只列实际使用 backdrop-filter 的前景容器，改成接近不透明的既有底色，
+   保证文字对比度不因滤镜缺失而下降：
+     · #services .capabilities-note：S2 的 blur(10px) + rgba(13,13,15,.45)
+     · .consult-dialog：基线 var(--glass) + blur(18px)!important
+     · .modal：基线 blur(12px)
+   颜色仍取既有 #0d0d0f（=var(--bg)）的 alpha 形式，不引入新色值。
+   覆盖：.topline,.consult-dialog,.faq-dialog,.pricing-modal>.wrap,.modal-close
+        {background:var(--glass)!important}（(0,1,0)+!important）
+       与 .modal{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)} */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  #services .capabilities-note { background: rgba(13, 13, 15, .94); }
+  .consult-dialog,
+  .modal { background-color: rgba(13, 13, 15, .96)!important; }
 }

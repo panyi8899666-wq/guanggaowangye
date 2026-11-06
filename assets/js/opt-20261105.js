@@ -185,6 +185,45 @@
       extObserver.observe(document.body, { childList: true, subtree: true });
     } catch (e) { extObserver = null; }
   }
+  /* U1 移动端 reveal 兜底（任务 id=39）：真机 IO 不触发时基线 .reveal
+     停在 opacity:0；2s 时视口内仍有隐藏即整块强制可见，滚动补扫视口内。 */
+  var revealCls = 'opt-reveal-fallback',
+      revealMarked = window.WeakSet ? new WeakSet() : null,
+      revealList = [],
+      revealArmed = false,
+      revealTick = 0;
+  function markReveal(el) {
+    if (revealMarked ? revealMarked.has(el) : revealList.indexOf(el) >= 0) return;
+    if (revealMarked) revealMarked.add(el); else revealList.push(el);
+    try { el.classList.add(revealCls); } catch (e) {}
+  }
+  function revealScan(hiddenOnly, spread) {
+    var els = document.querySelectorAll('.reveal'), hit = [], i, op, b, vh = innerHeight;
+    for (i = 0; i < els.length; i++) {
+      if (!hiddenOnly) { hit.push(els[i]); continue; }
+      try { op = parseFloat(getComputedStyle(els[i]).opacity); } catch (e) { op = 1; }
+      if (op !== op) op = 1;
+      if (op > .4) continue;
+      b = els[i].getBoundingClientRect();
+      if (b.bottom >= -200 && b.top <= vh + 200) hit.push(els[i]);
+    }
+    if (!hit.length) return;
+    var list = spread ? els : hit;
+    for (i = 0; i < list.length; i++) markReveal(list[i]);
+  }
+  function initReveal() {
+    if (revealArmed) return;
+    revealArmed = true;
+    if (!('IntersectionObserver' in window)) { revealScan(false, true); return; }
+    setTimeout(function () { safe(function () { revealScan(true, true); }); }, 2000);
+    window.addEventListener('scroll', function () {
+      if (revealTick) return;
+      revealTick = setTimeout(function () {
+        revealTick = 0;
+        safe(function () { revealScan(true, false); });
+      }, 600);
+    }, { passive: true });
+  }
   function refresh() {
     safe(startTrk);
     safe(bindPricingLinks);
@@ -192,6 +231,7 @@
     safe(function () { for (var i = 0; i < states.length; i++) syncDialog(states[i]); });
     safe(function () { ensureExternalLinks(document); });
     safe(startExtObserver);
+    safe(initReveal);
   }
   function init() {
     safe(startTrk);
@@ -200,6 +240,7 @@
     safe(function () { for (var i = 0; i < states.length; i++) syncDialog(states[i]); });
     safe(function () { ensureExternalLinks(document); });
     safe(startExtObserver);
+    safe(initReveal);
     safe(function () {
       if (typeof window.__zxyOpt === 'undefined') window.__zxyOpt = { version: '1.0.0', refresh: refresh };
     });
