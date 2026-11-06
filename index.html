@@ -52,9 +52,9 @@ window.__afterLoad=function(f){function go(){setTimeout(function(){'requestIdleC
 (function(){var S=['zh','en','ja','ko','es','fr','de','pt','ru','ar'],l=null,d=document.documentElement;try{l=localStorage.getItem('zxy-lang')}catch(e){}if(!l||S.indexOf(l)<0){l='en';var a=navigator.languages||[navigator.language||'en'];for(var i=0;i<a.length;i++){var x=(a[i]||'').toLowerCase(),p=x.split('-')[0];if(S.indexOf(x)>=0){l=x;break}if(S.indexOf(p)>=0){l=p;break}}}
 if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='script';k.href='assets/i18n-'+l+'.js';document.head.appendChild(k);d.classList.add('i18n-wait');window.__i18nDone=function(){d.classList.remove('i18n-wait')};setTimeout(window.__i18nDone,1200)})();</script>
 <link rel="stylesheet" href="assets/css/site.bd50e7a2.css" />
-<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261122" />
+<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261124" />
 <script defer src="assets/js/app.5082587a.js?v=20261104"></script>
-<script defer src="assets/js/opt-20261105.js?v=20261122"></script>
+<script defer src="assets/js/opt-20261105.js?v=20261124"></script>
 <script type="text/javascript">
 /* Image fallback: a failed image never renders as a broken icon or a pure-black card — it is hidden and its frame keeps a lifted charcoal placeholder tone instead. */
 (function(){
@@ -315,8 +315,14 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
             <p class="about-note">ZHENGXINYUE CULTURE STUDIO</p>
             <p class="about-statement">从一线设计走到经营管理，<em>每一步都在补全设计落地的能力。</em></p>
           </div>
+          <p class="about-intro">潘熠，拥有 10+ 年广告标识、发光字、商业视觉及制造行业经验。如今把贯穿设计、产品、生产与经营管理的经验，沉淀为工作室的广告设计服务。</p>
           <div class="about-actions">
             <div class="about-tags" aria-label="核心能力"><span>广告标识</span><span>发光字与工艺</span><span>商业视觉</span><span>生产落地</span><span>供应链协同</span><span>项目经营管理</span></div>
+            <dl class="about-stats" aria-label="经验数据">
+              <div class="about-stat"><dt>10+</dt><dd>年行业经验</dd></div>
+              <div class="about-stat"><dt>17</dt><dd>个项目案例</dd></div>
+              <div class="about-stat"><dt>6</dt><dd>项服务能力</dd></div>
+            </dl>
             <a class="about-cta" href="#contact"><span>立即开始设计</span><small>START A PROJECT</small></a>
           </div>
         </div>
