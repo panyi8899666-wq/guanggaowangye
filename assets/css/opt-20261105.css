@@ -46,8 +46,25 @@ U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可
          W4 合作品牌「logo + 名称」两层：删除 48 个序号节点，徽标放大为
             44/40/34px logo 位、名称 15px（每组首牌 16px）、
             格高 88/80/72、品牌格无横线无底色块（任务 id=44）
+         Y1–Y9 首页轮转 hover 上浮/金边/图片缓放/入场错峰/shimmer/分页流动 +
+            H1 金色渐变描边、指标与序号等宽渐变、英文标签字距金线（任务 id=46）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
+   C-TOKENS 例外登记（任务 id=47）：
+     · 轮转图片缓放改用独立 scale 属性（1.04 / 420ms）——img 上命中
+       transform:none!important，transform:scale() 被压回单位矩阵；scale 与
+       transform 是独立分量，互不覆盖，reduced 下置 none。
+     · 数字与英文标签等宽栈：ui-monospace、"SF Mono"、SFMono-Regular、Menlo、
+       Consolas、"Liberation Mono"、monospace（基线 --mono 实为微软雅黑），
+       配 font-variant-numeric:tabular-nums；未引入 @font-face 与远程字体，
+       不新增色值。
+   C-TOKENS 例外登记（任务 id=46）：
+     · 轮转：hover 上浮 6px、hover 阴影 0 18px 40px -12px rgba(0,0,0,.65)
+       （=--bg 的 alpha 形式）、金边 1px rgba(198,161,91,.55)（=--accent 的
+       alpha 形式）、图片缓放 scale 1.04 / 420ms、meta 上移 2px、go 位移 4px、
+       入场位移 12px、错峰 40ms×17 档、shimmer 9s（hover 2.4s）/ 背景尺寸
+       220% 100%、分页流动 6s、金线 14px、首字 1.18em、英文标签字距
+       .2em（≤820 .16em）。均不进入 :root、不新增主题色。
    C-TOKENS 例外登记（任务 id=44）：
      · 合作品牌格：徽标 44px（1024 40px、≤899 34px）、徽标字 16/15/13px、
        名称 15px（每组首牌 16px，全断点一致）、格高 88/80/72px、
@@ -3379,4 +3396,608 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
 @media (prefers-reduced-motion: reduce) {
   .partners-slots .partners-slot-item .partner-badge,
   .partners-slots .partners-slot-item strong { transition: none; }
+}
+
+/* ==========================================================================
+   X 系列 · 2026-11-08 审核遗留修复（任务 id=45）
+   --------------------------------------------------------------------------
+   覆盖范围（只改本覆盖层，不改基线 site.bd50e7a2.css / app.js）：
+     X1 设计主张：中文两行语义断句 + 英文下移左对齐 + memory 区 11px 溢出
+     X2 关于区右栏增高（段间距 28/28/32/32/28、正文 15px、数据条内距）
+     X3 联系卡四段纵向（标题/账号/说明/按钮）+ 卡内空隙收敛
+     X4 品牌墙独立为 #partners section（.partners-slot 外壳保留，选择器零改动）
+   均为纯 CSS 覆盖；颜色只用既有 var(--muted)/var(--ink)/var(--accent)。
+   ========================================================================== */
+
+/* ---------- X1 设计主张：中文两行 / 英文下移左对齐 / memory 溢出 ----------
+   实测（1440）：.manifesto-copy 43px/1.48 下被拆成 3 行（19 / 8 / 15 字），
+   .manifesto-en 在右栏最右（x=986.8、text-align:right）。
+   ① 中文：删掉第二、三行之间的空 span（不改字词，em 内联保留），
+      字号改为 clamp(14px, 2.1vw, 30px)，使第二行 22 字在
+      1440(680px)/1024(519px)/390(314px) 均单行不换行 → 恰好 2 行；
+      ≤1440 的 22 字行宽实测 653.7/468.5/305 < 容器宽，故 zh 下 nowrap 安全。
+   ② 英文：改为 100% 宽 / 左对齐 / 10px / 1.6 / var(--muted)，与中文同 x。
+   ③ .memory-title-wrap 的 11px 溢出源自绝对定位的 .memory-speed-lines
+      （right:-.7em）向右越界；用 overflow:clip + overflow-clip-margin:16px
+      只裁掉越界盒模型、保留装饰可见区域，scrollWidth 随之收敛到 clientWidth。
+   ④ .memory-subtitle 左移到与 h2 同一 x（原 margin-inline-start 72px），
+      p 行高 1.6、颜色 var(--muted)，装饰单独元素不动。 */
+.manifesto-refined .manifesto-copy {
+  font-size: clamp(14px, 2.1vw, 30px)!important;
+  line-height: 1.52!important;
+  letter-spacing: -.01em!important;
+}
+.manifesto-refined .manifesto-copy .manifesto-line {
+  display: block;
+}
+html[lang^="zh"] .manifesto-refined .manifesto-copy .manifesto-line {
+  white-space: nowrap;
+}
+.manifesto-refined .manifesto-en {
+  width: 100%!important;
+  max-width: 680px!important;
+  align-self: stretch!important;
+  margin: 14px 0 0!important;
+  text-align: left!important;
+  font-size: 10px!important;
+  line-height: 1.6!important;
+  letter-spacing: 0!important;
+  color: var(--muted)!important;
+}
+
+/* 溢出根因不是内容宽，而是绝对定位的 .memory-speed-lines{right:-.7em}
+   把右侧越界 11.6px（1440 实测 scrollWidth 847 / clientWidth 836）。
+   overflow:clip 在该 Chromium 下不影响 scrollWidth，故把 speed-lines 的
+   right 归零：三条斜线整体内收 11.6px，元素与描线不变、仍完整可见。 */
+.hero-afterword .memory-speed-lines {
+  right: 0!important;
+}
+.hero-afterword .memory-subtitle {
+  /* 组合块整体 rotate(-3.2deg)skew(-6deg)，同一容器内不同 y 会产生水平漂移：
+     实测英文块比标题左 5.7px(1440)/4.4px(1024)/2.0px(390)。这里按视口补偿，
+     让英文左边界与中文标题 x 差 ≤2px（F 项断言）。 */
+  --memory-subtitle-shift: clamp(2px, .4vw, 6px);
+  width: calc(100% - var(--memory-subtitle-shift))!important;
+  max-width: none;
+  margin-inline-start: var(--memory-subtitle-shift)!important;
+  box-sizing: border-box;
+  font-size: 11px;
+}
+.hero-afterword .memory-subtitle p {
+  /* 基线 1024/768 档把英文 p 压到 9px（max(6.5px,min(1.75vw,9px))），
+     这里统一锁定 10px（任务要求 10–11px），行高 1.6、颜色 var(--muted)。 */
+  font-size: 10px!important;
+  line-height: 1.6!important;
+  color: var(--muted);
+}
+
+/* ---------- X2 关于区右栏增高（1440 目标：左右差 ≤80px）----------
+   原段落间距 20/20/22/22/20、正文 14px、数据条内距 18/18/16；
+   本段改为 28/28/32/32/28，正文 15px/1.75、max-width 28em（中文正文
+   舒适行宽 28 字/行，57 字正文 → 3 行），数据条 22/18/20。
+   仍由 .about-copy 的 align-self:center 垂直居中，不用 space-between。 */
+.career-copy .about-statement {
+  margin-top: 28px!important;
+}
+.career-copy .about-intro {
+  margin-top: 28px!important;
+  max-width: 24em!important;
+  font-size: 15px!important;
+  line-height: 1.75!important;
+  color: var(--ink)!important;
+}
+.career-copy .about-tags {
+  margin-top: 32px!important;
+}
+.career-copy .about-stats {
+  margin-top: 32px!important;
+}
+.career-copy .about-cta {
+  margin-top: 28px!important;
+}
+.career-copy .about-stat {
+  padding: 22px 18px 20px!important;
+}
+.career-copy .about-stat:first-child {
+  padding-left: 0!important;
+}
+
+/* ---------- X3 联系卡四段纵向 ----------
+   原三行网格（标题 1fr 按钮）在 204px 卡高里留下 188px 空隙；
+   本段改为四行 auto/auto/auto/auto + align-content:space-between：
+     行 1 标题 12px var(--muted)
+     行 2 账号 20px var(--ink)，nowrap（窄屏再允许 anywhere 折行）
+     行 3 说明 11px（海外下单卡保留原文案；微信卡的说明在二维码右侧）
+     行 4 按钮 84×36、右对齐（justify-self:end）
+   标题/账号/说明/按钮之间空隙 = (卡内容高 - 四段高度和) / 3，目标 ≤40。 */
+.contact-details.diagnostic-email-only .contact-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto;
+  align-content: space-between;
+  row-gap: 0;
+  min-height: 204px!important; /* 四卡等高且保持原卡高 204 */
+  padding: 16px 18px!important;
+}
+.contact-details.diagnostic-email-only .contact-detail > span {
+  grid-row: 1;
+  align-self: start;
+  font-size: 12px!important;
+  line-height: 1.6;
+  letter-spacing: .1em;
+  color: var(--muted)!important;
+}
+.contact-details.diagnostic-email-only .contact-detail > .copy-row > strong,
+.contact-details.diagnostic-email-only .contact-detail > .copy-row > .wechat-value {
+  grid-row: 2;
+  align-self: start;
+  min-width: 0;
+}
+.contact-details.diagnostic-email-only .contact-detail > .copy-row > strong {
+  margin-top: 0!important;
+  font-size: 20px!important;
+  line-height: 1.45!important;
+  color: var(--ink)!important;
+  white-space: nowrap;
+  overflow-wrap: anywhere;
+}
+.contact-details.diagnostic-email-only .contact-detail strong a {
+  display: inline!important;
+  min-height: 0!important;
+  padding: 0!important;
+  font-size: inherit!important;
+}
+.contact-details.diagnostic-email-only .contact-detail > .copy-row > .contact-note {
+  grid-row: 3;
+  align-self: start;
+  font-size: 11px!important;
+  line-height: 1.6!important;
+  color: var(--muted)!important;
+}
+.contact-details.diagnostic-email-only .contact-detail > .copy-row > .copy-email {
+  grid-row: 4;
+  align-self: end;
+  justify-self: end;
+  display: inline-flex!important;
+  align-items: center;
+  justify-content: center;
+  width: 84px!important;
+  min-width: 84px!important;
+  max-width: 84px!important;
+  height: 36px!important;
+  min-height: 36px!important;
+  padding: 0!important;
+  font-size: 12px!important;
+  line-height: 1!important;
+  white-space: nowrap;
+}
+/* 微信卡：二维码与右侧账号/说明 16px 间距；号码 20px 单行不截断 */
+.contact-details.diagnostic-email-only .contact-detail > .copy-row > .wechat-value {
+  gap: 16px!important;
+}
+.contact-details.diagnostic-email-only .contact-wechat .wechat-info strong,
+.contact-details.diagnostic-email-only .contact-wechat .wechat-info strong a {
+  font-size: 20px!important;
+  line-height: 1.45!important;
+  color: var(--ink)!important;
+  white-space: nowrap;
+  overflow-wrap: anywhere;
+}
+.contact-details.diagnostic-email-only .contact-wechat .wechat-info small {
+  font-size: 11px!important;
+  line-height: 1.6!important;
+  color: var(--muted)!important;
+  white-space: nowrap;
+}
+@media (max-width: 620px) {
+  .contact-details.diagnostic-email-only .contact-detail {
+    padding: 14px!important;
+  }
+  /* 390：窄卡允许账号折行，仍不得溢出（scrollWidth ≤ clientWidth） */
+  .contact-details.diagnostic-email-only .contact-detail > .copy-row > strong,
+  .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong,
+  .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong a,
+  .contact-details.diagnostic-email-only .contact-wechat .wechat-info small {
+    white-space: normal!important;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ---------- X4 品牌墙独立 section ----------
+   DOM 上 .partners-slot（含 .partners-head + .partners-slots）整体移入
+   <section id="partners" class="wrap partners-section">，原 #contact 内的
+   选择器 #contact .partners-* 经检索为 0 条，故无需等价改写；
+   .partners-slot / .partners-head / .partners-slots 等类名保持原样，
+   现有全部规则继续命中。页脚 .footer-meta 同步移到 section 之后
+   （仍在 <main> 内、补 .wrap 取宽），视觉顺序保持「联系 → 品牌 → 页脚」。 */
+.partners-section {
+  padding-top: clamp(24px, 3vw, 44px);
+  padding-bottom: clamp(24px, 3vw, 44px);
+  scroll-margin-top: 62px;
+}
+.partners-section .partners-slot {
+  margin-top: 0!important;
+}
+
+/* X1-补：≤620 视口下中文第二行（22 字）必须在 314/299px 内容宽内单行，
+   字号取 clamp(12px, 3.4vw, 14px)：390→13.26、375→12.75、320→12（下限），
+   三种宽度实测 .manifesto-line scrollWidth ≤ clientWidth。 */
+@media (max-width: 620px) {
+  .manifesto-refined .manifesto-copy {
+    font-size: clamp(12px, 3.4vw, 14px)!important;
+  }
+}
+@media (max-width: 340px) {
+  .manifesto-refined .manifesto-copy {
+    font-size: 11px!important;
+  }
+}
+/* ==========================================================================
+   Y 段 · 2026-11-08 首页轮转动效 + 文字创意排版（任务 id=46）
+   --------------------------------------------------------------------------
+   生效结构（app.5082587a.js 运行时生成，共 17 张卡）：
+     .hero-ribbon > .sx-stage > .sx-track > button.sx-card*
+     .sx-card > span.sx-media>img / .sx-shade / .sx-num /
+                .sx-meta(b+small) / .sx-go
+     .hero-ribbon > .sx-hud > .sx-count(b,i) + .sx-bar>i + .sx-hint
+   基线源码实测的三条硬约束（本段每个写法都由它们决定）：
+     1. JS 每帧把 translate3d(…) scale(…) 内联写入 .sx-card.style.transform。
+        CSS 里给 .sx-card:hover 写 transform 会被内联样式压过；若加 !important
+        又会抹掉 JS 的横向定位（17 张卡会瞬间叠到 x=0）。故 hover 上浮改用独立
+        的 translate 属性：它与 transform 分量叠加，既不覆盖内联 transform，
+        也不破坏 JS 定位。
+     2. .sx-shade / .sx-meta 的 opacity 由 JS 每帧内联设置，hover 变化改用
+        background-color（.sx-shade）与 transform（.sx-meta）。
+     3. 基线 .sx-card:after 是「底部 58% 压暗渐变」。shimmer 作为同一伪元素的
+        第二层背景叠加：压暗层改写成 background-size:100% 58% 锚底（几何等价，
+        压暗效果不变），动画只位移 shimmer 层。
+   另：基线 .hero-ribbon img{transition:none!important} 仅存在于
+   prefers-reduced-motion 媒体块内，正常模式 img 过渡可用。
+   性能：动画只用 transform / translate / opacity / background-position；
+   will-change 仅给 hover 卡片与 .sx-card::after，不给全部卡片。
+   ========================================================================== */
+
+/* ---------- Y1 卡片 hover：上浮 6px + 金色描边 + 图片缓放 ---------- */
+.hero-ribbon .sx-card {
+  transition: box-shadow .42s var(--ease-out),
+              translate .42s cubic-bezier(.22,.61,.36,1);
+}
+.hero-ribbon .sx-card:hover,
+.hero-ribbon .sx-card:focus-visible {
+  translate: 0 -6px;
+  will-change: translate, box-shadow;
+  /* 第三层沿用基线投影 0 26px 54px #0000008c，避免 hover 抬升时投影跳变 */
+  box-shadow: 0 18px 40px -12px rgba(0,0,0,.65),
+              0 0 0 1px rgba(198,161,91,.55),
+              0 26px 54px #0000008c;
+}
+/* 覆盖：.hero-ribbon .sx-card:before（基线 inset 描边 #eceae41f，仅 .is-center 转金） */
+.hero-ribbon .sx-card:hover::before,
+.hero-ribbon .sx-card:focus-visible::before {
+  box-shadow: inset 0 0 0 1px rgba(198,161,91,.55);
+}
+/* 覆盖：.hero-ribbon .sx-media img（基线 transition 仅 opacity .6s）
+   图片缓放改用「独立变换属性 scale」（任务 id=47）：
+   img 上有 transform:none!important 命中（定位/兜底规则），transform:scale()
+   实测被压回 matrix(1,0,0,1,0,0)；scale 与 transform 是两个独立分量，
+   互不争夺属性，既不受 transform:none 影响，也不会改动 JS 写的 transform。 */
+.hero-ribbon .sx-card .sx-media img {
+  transition: opacity .6s cubic-bezier(.16,1,.3,1),
+              scale 420ms cubic-bezier(.22,.61,.36,1);
+}
+.hero-ribbon .sx-card:hover .sx-media img,
+.hero-ribbon .sx-card:focus-visible .sx-media img {
+  scale: 1.04;
+}
+/* 覆盖：.hero-ribbon .sx-shade（基线 background:#0b0b0d，opacity 由 JS 内联）
+   —— 降的是暗层浓度而不是 opacity，画面因此更亮 */
+.hero-ribbon .sx-shade {
+  background-color: #0b0b0d;
+  transition: background-color .4s var(--ease-out);
+}
+.hero-ribbon .sx-card:hover .sx-shade,
+.hero-ribbon .sx-card:focus-visible .sx-shade {
+  background-color: rgba(11,11,13,.34);
+}
+.hero-ribbon .sx-meta {
+  transition: transform .42s cubic-bezier(.22,.61,.36,1);
+}
+.hero-ribbon .sx-card:hover .sx-meta,
+.hero-ribbon .sx-card:focus-visible .sx-meta {
+  transform: translateY(-2px);
+}
+/* go 箭头：右移 4px 待命 → hover 位归正常（基线的 opacity 0→1 保留） */
+.hero-ribbon .sx-go {
+  translate: 4px 0;
+  transition: opacity .34s var(--ease-out),
+              transform .44s cubic-bezier(.22,.61,.36,1),
+              translate .44s cubic-bezier(.22,.61,.36,1);
+}
+.hero-ribbon .sx-card:hover .sx-go,
+.hero-ribbon .sx-card:focus-visible .sx-go {
+  translate: 0 0;
+}
+
+/* ---------- Y2 入场错峰：sx-loaded 后淡入 + 上移 12px ----------
+   animation-fill-mode:backwards（不用 both）——动画结束后 translate 归零，
+   否则终帧 translate:0 0 会压住 Y1 的 hover 上浮（动画声明优先于普通声明）。 */
+.hero-ribbon .sx-card.sx-loaded {
+  animation: sxCardEnter .72s cubic-bezier(.22,.61,.36,1) backwards;
+}
+.hero-ribbon .sx-card.sx-loaded:nth-child(1)  { animation-delay: 0ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(2)  { animation-delay: 40ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(3)  { animation-delay: 80ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(4)  { animation-delay: 120ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(5)  { animation-delay: 160ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(6)  { animation-delay: 200ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(7)  { animation-delay: 240ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(8)  { animation-delay: 280ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(9)  { animation-delay: 320ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(10) { animation-delay: 360ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(11) { animation-delay: 400ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(12) { animation-delay: 440ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(13) { animation-delay: 480ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(14) { animation-delay: 520ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(15) { animation-delay: 560ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(16) { animation-delay: 600ms; }
+.hero-ribbon .sx-card.sx-loaded:nth-child(17) { animation-delay: 640ms; }
+
+@keyframes sxCardEnter {
+  from { opacity: 0; translate: 0 12px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* ---------- Y3 shimmer 扫光 ----------
+   覆盖：.hero-ribbon .sx-card:after
+   （基线 height:58% + bottom:0 + 单层压暗渐变）
+   两层背景：第 1 层 shimmer（在最上）、第 2 层原压暗渐变（100% 宽 × 58% 高，
+   锚底 = 与原 height:58% 的几何一致）。只位移第 1 层。
+   节奏：9s 周期里前 ~3s 扫过、后 6s 静止，减少持续重绘；hover 加速到 2.4s
+   连续扫。 */
+.hero-ribbon .sx-card::after {
+  height: 100%;
+  background-image: linear-gradient(115deg,
+                      transparent 35%,
+                      rgba(255,255,255,.10) 50%,
+                      transparent 65%),
+                    linear-gradient(180deg,
+                      rgba(0,0,0,0) 0%,
+                      rgba(8,8,10,.30) 40%,
+                      rgba(8,8,10,.90) 100%);
+  background-size: 220% 100%, 100% 58%;
+  background-position: -120% 0, 0 100%;
+  background-repeat: no-repeat, no-repeat;
+  animation: sxShimmer 9s linear infinite;
+  will-change: background-position;
+}
+.hero-ribbon .sx-card:hover::after,
+.hero-ribbon .sx-card:focus-visible::after {
+  animation-duration: 2.4s;
+}
+
+@keyframes sxShimmer {
+  0%        { background-position: -120% 0, 0 100%; }
+  34%, 100% { background-position: 220% 0, 0 100%; }
+}
+
+/* ---------- Y4 分页流动：.sx-bar>i 金色三段渐变横向流动 ----------
+   覆盖：.hero-ribbon .sx-bar i（基线 background:#c6a15b，transform 由 JS 内联） */
+.hero-ribbon .sx-bar i {
+  background-image: linear-gradient(90deg,
+                      var(--accent) 0%,
+                      rgba(198,161,91,.25) 50%,
+                      var(--accent) 100%);
+  background-size: 200% 100%;
+  background-repeat: repeat;
+  animation: sxBarFlow 6s linear infinite;
+}
+
+@keyframes sxBarFlow {
+  from { background-position: 0 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ---------- Y5 序号：真正等宽栈 + 轻金色渐变（任务 id=47） ----------
+   基线令牌 --mono 的值就是微软雅黑（--mono:"Microsoft YaHei","微软雅黑",sans-serif），
+   var(--mono) 虽解析成功但没有等宽感，故显式声明系统等宽栈（无 @font-face、
+   无远程字体）。tabular-nums 让 01 / 17 的数字宽度稳定，扫动时不抖动。
+   注意：基线另有 `body *{font-family:…!important}` 的全局强制字体，直接命中
+   <i>/<span> 等子节点（继承优先级低于任何直接声明），因此 .sx-count i 与
+   .sx-hint 必须在本文件里显式再声明一次，光靠父级继承不够。 */
+.hero-ribbon .sx-count,
+.hero-ribbon .sx-num,
+.hero-ribbon .sx-count b,
+.hero-ribbon .sx-count i,
+.hero-ribbon .sx-hint {
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+               "Liberation Mono", monospace!important;
+  font-variant-numeric: tabular-nums;
+}
+.hero-ribbon .sx-num,
+.hero-ribbon .sx-count b {
+  background-image: linear-gradient(100deg,
+                      #eceae4 0%,
+                      #c6a15b 55%,
+                      #eceae4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ---------- Y6 reduced-motion：关闭 shimmer / 流动 / 入场位移，
+   hover 只保留颜色变化（金边与暗层浓度），不做任何位移 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-ribbon .sx-card::after,
+  .hero-ribbon .sx-bar i,
+  .hero-ribbon .sx-card.sx-loaded {
+    animation: none!important;
+  }
+  .hero-ribbon .sx-card:hover,
+  .hero-ribbon .sx-card:focus-visible {
+    translate: none;
+    will-change: auto;
+  }
+  .hero-ribbon .sx-card:hover .sx-meta,
+  .hero-ribbon .sx-card:focus-visible .sx-meta {
+    transform: none;
+  }
+  .hero-ribbon .sx-card:hover .sx-media img,
+  .hero-ribbon .sx-card:focus-visible .sx-media img {
+    transform: none!important;
+    scale: none;
+  }
+  .hero-ribbon .sx-go {
+    translate: none;
+  }
+  .hero-ribbon .sx-card {
+    transition: box-shadow .42s var(--ease-out);
+  }
+}
+
+/* ==========================================================================
+   Y7–Y9 · 文字创意排版（只改样式，不改文案）
+   --------------------------------------------------------------------------
+   注：任务原文写「首页 H1（.hero-copy h1）」，实测首页没有 .hero-copy 容器
+   （.hero-copy 是 <p> 正文，与 h1 同级），H1 的实际选择器是
+   .hero > h1.hero-title-sweep，故本节按真实 DOM 落规则。
+   基线把标题文字的 4 个层级全部钉死为 #eceae4!important，并且
+   .line>*{-webkit-text-stroke:0!important}、.hero-char 的
+   -webkit-text-fill-color:#eceae4。要让父级 h1 的 background-clip:text 透出，
+   必须逐层改成透明填充；故本节用 body.hero-ready…（0,4,2 以上）提权覆盖。
+   对比度：渐变最暗段为 #c6a15b，对底色 #0d0d0f = 8.01:1（≥4.5:1）。
+   ========================================================================== */
+
+/* ---------- Y7 H1：金色渐变 + .5px 金线描边 + 首字放大 ---------- */
+/* h1 自身声明渐变：.hero-char 是 display:inline-block（基线），父级
+   background-clip:text 无法穿透原子内联盒，因此真正的渐变绘制在 .hero-char
+   上（下一条规则）；h1 这条同时作为「整块标题带金色渐变」的可读断言位。 */
+body.hero-ready .hero h1.hero-title-sweep {
+  background-image: linear-gradient(100deg,
+                      #eceae4 0%,
+                      #c6a15b 55%,
+                      #eceae4 100%)!important;
+  -webkit-background-clip: text!important;
+  background-clip: text!important;
+  -webkit-text-fill-color: transparent!important;
+  color: transparent!important;
+  -webkit-text-stroke: .5px rgba(198,161,91,.28)!important;
+}
+/* 关键：.hero-char 是 display:inline-block 原子内联盒（基线，逐字动画需要），
+   父级 background-clip:text 无法穿透到它里面，实测「整块 h1 渐变」会让标题
+   完全不可见。所以渐变绘制在 .hero-char 上，并用「统一背景图 + 逐字位置偏移」
+   把同一张渐变铺满整行：每行 3 汉字 + 空格 + 3 汉字，汉字步进 = 1em 字宽
+   + letter-spacing(-.052em) ≈ .948em，空格 .25em，行宽 5.936em。
+   偏移单位全部是 em，随字号缩放，不随断点失真（移动端 letter-spacing 差
+   0.007em×6 ≈ 2px，肉眼不可见）。
+   覆盖：.hero-ready .hero h1.hero-title-sweep .hero-char
+   （基线 background:0 0!important + -webkit-text-fill-color:#eceae4）。 */
+body.hero-ready .hero h1.hero-title-sweep .hero-char,
+body.hero-ready .hero h1.hero-title-sweep em .hero-char {
+  background-image: linear-gradient(100deg,
+                      #eceae4 0%,
+                      #c6a15b 55%,
+                      #eceae4 100%)!important;
+  background-size: 5.936em 100%!important;
+  background-repeat: no-repeat!important;
+  background-position: 0 0!important;
+  -webkit-background-clip: text!important;
+  background-clip: text!important;
+  color: transparent!important;
+  -webkit-text-fill-color: transparent!important;
+  -webkit-text-stroke: .5px rgba(198,161,91,.28)!important;
+}
+/* 逐字偏移：行首组 0 / -0.948em / -1.896em；空格后组 -3.092 / -4.040 / -4.988em */
+body.hero-ready .hero h1.hero-title-sweep .line > :first-child > .hero-char:nth-child(2) {
+  background-position-x: -0.948em!important;
+}
+body.hero-ready .hero h1.hero-title-sweep .line > :first-child > .hero-char:nth-child(3) {
+  background-position-x: -1.896em!important;
+}
+body.hero-ready .hero h1.hero-title-sweep .line > :last-child > .hero-char:nth-child(1) {
+  background-position-x: -3.092em!important;
+}
+body.hero-ready .hero h1.hero-title-sweep .line > :last-child > .hero-char:nth-child(2) {
+  background-position-x: -4.040em!important;
+}
+body.hero-ready .hero h1.hero-title-sweep .line > :last-child > .hero-char:nth-child(3) {
+  background-position-x: -4.988em!important;
+}
+/* 覆盖：.hero-title-sweep .line／.line>*／.hero-char（基线 #eceae4!important） */
+body.hero-ready .hero h1.hero-title-sweep .line,
+body.hero-ready .hero h1.hero-title-sweep .line > *,
+body.hero-ready .hero h1.hero-title-sweep .hero-char,
+body.hero-ready .hero h1.hero-title-sweep em .hero-char {
+  color: transparent!important;
+  -webkit-text-fill-color: transparent!important;
+  -webkit-text-stroke: .5px rgba(198,161,91,.28)!important;
+}
+/* 首字：「让」放大 1.18em 并转金色（line-height 不变，不触发换行）。
+   ::first-letter 负责放大（实测 ::first-letter 已命中，font-size 91.76px）；
+   金色填充必须落在首字所在的 .hero-char 上——基线给 .hero-char 的
+   -webkit-text-fill-color 设了 #eceae4，透明化后 ::first-letter 的 color 会被
+   -webkit-text-fill-color 盖住，故用同特异度更高的一条规则指定填充色。 */
+body.hero-ready .hero h1.hero-title-sweep::first-letter {
+  font-size: 1.18em;
+  color: var(--accent)!important;
+  -webkit-text-fill-color: var(--accent)!important;
+}
+body.hero-ready .hero h1.hero-title-sweep .line:first-child > .hero-title-sans > .hero-char:first-child {
+  color: var(--accent)!important;
+  -webkit-text-fill-color: var(--accent)!important;
+  -webkit-text-stroke: .5px rgba(198,161,91,.5)!important;
+}
+/* 兜底：不支持 background-clip:text 的引擎会把透明字变成不可读，
+   此时退回纯色 #eceae4 + 金色描边（对比度 16.14:1），绝不出现空标题。 */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  body.hero-ready .hero h1.hero-title-sweep,
+  body.hero-ready .hero h1.hero-title-sweep .line,
+  body.hero-ready .hero h1.hero-title-sweep .line > *,
+  body.hero-ready .hero h1.hero-title-sweep .hero-char,
+  body.hero-ready .hero h1.hero-title-sweep em .hero-char {
+    background-image: none!important;
+    color: #eceae4!important;
+    -webkit-text-fill-color: #eceae4!important;
+    -webkit-text-stroke: .5px rgba(198,161,91,.28)!important;
+  }
+}
+
+/* ---------- Y8 右侧指标数字：真正等宽栈 + 金色渐变（任务 id=47） ----------
+   基线 --mono 令牌值就是微软雅黑，var(--mono) 无等宽感；改用系统等宽栈，
+   并用 tabular-nums 固定 10+ / 51 / 1 的数字宽度。金色渐变保持不变。 */
+.hero-side-metrics strong {
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+               "Liberation Mono", monospace!important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+  background-image: linear-gradient(100deg,
+                      #eceae4 0%,
+                      #c6a15b 55%,
+                      #eceae4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent!important;
+}
+
+/* ---------- Y9 英文小标签：字距加大 + 前置 14px 金线 ---------- */
+.hero-side-eyebrow,
+.hero-english {
+  letter-spacing: .2em!important;
+}
+.hero-side-eyebrow::before,
+.hero-english::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  margin-right: 8px;
+  background: var(--accent);
+  vertical-align: .28em;
+}
+@media (max-width: 820px) {
+  .hero-side-eyebrow,
+  .hero-english {
+    letter-spacing: .16em!important;
+  }
 }
