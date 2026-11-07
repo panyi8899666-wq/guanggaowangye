@@ -43,8 +43,18 @@ U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可
          W3 合作品牌排序与文案对应修正：组内按拼音/英文首字母 A–Z 排序、
             徽标改拼音/英文首字母（消除「花 花间集」式字面重复）、
             取消跨列改「首牌金框」突出（任务 id=43）
+         W4 合作品牌「logo + 名称」两层：删除 48 个序号节点，徽标放大为
+            44/40/34px logo 位、名称 15px（每组首牌 16px）、
+            格高 88/80/72、品牌格无横线无底色块（任务 id=44）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
+   C-TOKENS 例外登记（任务 id=44）：
+     · 合作品牌格：徽标 44px（1024 40px、≤899 34px）、徽标字 16/15/13px、
+       名称 15px（每组首牌 16px，全断点一致）、格高 88/80/72px、
+       padding 16px 14px、格内 gap 12px；徽标底 rgba(198,161,91,.10)
+       （=var(--accent) 的 alpha 形式）、描边 1px var(--line)
+       （首牌与 hover 转 var(--accent)）；hover 底沿用既有
+       rgba(198,161,91,.07)。均不进入 :root、不新增主题色。
    C-TOKENS 例外登记（任务 id=43）：
      · 首牌（每组第 1 个品牌）：inset 描边 1px var(--accent)、徽标 32px/字 13px、
        名称 16px；其余仍为徽标 30px（≤899 28px）、名称 15px（≤899 14px）。
@@ -1738,8 +1748,8 @@ html.js #process .process-grid .step:not(.is-open) {
    正文色 #eceae4 对 #0d0d0f = 16.14:1（≥4.5:1，计算见报告）；
    max-width:52ch 限制行宽；1440 用 .68fr/1.32fr 收窄左拼贴、放宽右栏，
    使左右两栏高度差从 216px 收到 ≤80px（实测值见报告）。
-   数据可回溯：10+ 年（about-head-intro）、17 个项目（archive-note-count /
-   aria-label）、6 项能力（about-tags 六项），不编造。 */
+数据可回溯：10+ 年（about-head-intro）、51 个项目（archive-note-count /
+    aria-label）、6 项能力（about-tags 六项），不编造。 */
 .about-layout.career-layout {
   align-items: start!important;
 }
@@ -3212,4 +3222,161 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
 /* 无障碍：减弱动效时移除徽标过渡（沿用 V1 的 reduced-motion 语义） */
 @media (prefers-reduced-motion: reduce) {
   .partners-slots .partners-slot-item .partner-badge { transition: none; }
+}
+/* ==========================================================================
+   W4 段 · 合作品牌「logo + 名称」两层（任务 id=44）
+   --------------------------------------------------------------------------
+   用户原话：「合作品牌不好看」。根因：每格三层信息（序号 + 圆形首字徽标 +
+   名称），序号与徽标是重复标识，视觉碎片化、像目录。
+   本任务已在 index.html 删除全部 48 个 .partner-index 节点，本段把品牌格
+   收为两层：.partner-badge（logo 位）+ strong（名称），横向排列、垂直居中。
+   覆盖 W2 的 grid 两行（序号行 + 徽标/名称行）与 V1 的 68px / 16px 12px /
+   gap 6px / flex-direction:column：
+     1440：徽标 44px / 字 16px / min-height 88px
+     1024（900–1199）：徽标 40px / 字 15px / min-height 80px
+     ≤899：徽标 34px / 字 13px / min-height 72px
+   名称 15px（每组首牌 16px，来自 W2-4 的金框突出）；4/3/2 列、gap 12px 20px、
+   padding 16px 14px 与「无横线、无底色块」在同段落定。窄屏长名称换行时
+   格高按内容自然增高（min-height 不裁字）。
+   hover 保留 V1 语义：淡金底 + 左侧 2px 金条 + 徽标描边转金 + 名称 #fff。
+   ========================================================================== */
+
+/* ---------- W4-1 品牌格：两层横排、垂直居中 ----------
+   覆盖：V1 `.partners-slots .partners-slot-item`（min-height:68px!important、
+   padding:16px 12px!important、gap:6px!important、flex-direction:column!important）
+   与 W2-2 的 `display:grid!important; gap:6px 10px!important`。 */
+.partners-slots .partners-slot-item {
+  display: flex!important;
+  flex-direction: row!important;
+  align-items: center!important;
+  justify-content: flex-start!important;
+  gap: 12px!important;
+  min-height: 88px!important;
+  padding: 16px 14px!important;
+}
+/* 名称：15px / 行高 1.35 / var(--ink)，占满徽标右侧剩余宽度，允许换行不裁字 */
+.partners-slots .partners-slot-item strong {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  max-width: none;
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: .02em;
+  color: var(--ink);
+  text-align: left;
+  white-space: normal;
+  overflow: visible;
+  /* break-word 而非 anywhere：窄屏只在整词放不下时断行，避免英文品牌词被逐字拆开 */
+  overflow-wrap: break-word;
+  word-break: normal;
+  transform: none;
+  transition: color 180ms var(--ease-out);
+}
+
+/* ---------- W4-2 徽标 = logo 位（44px）----------
+   覆盖：W2-3 的 30px / 12px。圆形、1px var(--line)、淡金底、金色字母。 */
+.partners-slots .partners-slot-item .partner-badge {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+  border: 1px solid var(--line);
+  background: rgba(198, 161, 91, .10);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 180ms var(--ease-out);
+}
+/* 每组首牌：金框 + 名称 16px；徽标与常规同尺寸，仅描边转金 */
+.partners-slots .partners-group + .partners-slot-item .partner-badge {
+  flex-basis: 44px;
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+  border-color: var(--accent);
+}
+.partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
+  font-size: 16px;
+}
+
+/* ---------- W4-3 1024：徽标 40 / 字 15 / 格高 80 ----------
+   900–1199 沿用 V1 的 3 列。覆盖 W2-3/W2-4 的 30/32px。 */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .partners-slots .partners-slot-item { min-height: 80px!important; }
+  .partners-slots .partners-slot-item .partner-badge {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+  }
+  .partners-slots .partners-group + .partners-slot-item .partner-badge {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+  }
+}
+
+/* ---------- W4-4 ≤899：徽标 34 / 字 13 / min-height 72 ----------
+   覆盖 W2-5 的 28px/11px 与名称 14px：名称保持任务口径 15px
+   （每组首牌 16px）；2 列沿用 V1。长名称在 78px 名称位内换行时，
+   该行卡片按内容增高（实测 72–113px，见任务报告）。 */
+@media (max-width: 899px) {
+  .partners-slots .partners-slot-item { min-height: 72px!important; }
+  .partners-slots .partners-slot-item .partner-badge {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+  .partners-slots .partners-group + .partners-slot-item .partner-badge {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+  .partners-slots .partners-slot-item:nth-child(n) strong,
+  .partners-slots .partners-slot-item:nth-child(-n+6) strong {
+    font-size: 15px;
+  }
+  .partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
+    font-size: 16px;
+  }
+}
+
+/* ---------- W4-5 hover / focus：淡金底 + 左侧金条 + 金描边 + 白名称 ----------
+   同值重述 V1/W2 的交互语义（淡金底与金条位置不变），确保 W4-1 的
+   color: var(--ink) 不会压过 hover 的 #fff。 */
+.partners-slots .partners-slot-item:hover,
+.partners-slots .partners-slot-item:focus-visible,
+.partners-slots .partners-slot-item:focus-within {
+  background-color: rgba(198, 161, 91, .07)!important;
+}
+.partners-slots .partners-slot-item:hover::after,
+.partners-slots .partners-slot-item:focus-visible::after,
+.partners-slots .partners-slot-item:focus-within::after {
+  opacity: 1;
+}
+.partners-slots .partners-slot-item:hover .partner-badge,
+.partners-slots .partners-slot-item:focus-visible .partner-badge,
+.partners-slots .partners-slot-item:focus-within .partner-badge {
+  border-color: var(--accent);
+}
+.partners-slots .partners-slot-item:hover strong,
+.partners-slots .partners-slot-item:focus-visible strong,
+.partners-slots .partners-slot-item:focus-within strong {
+  color: #fff;
+}
+
+/* 无障碍：减弱动效时移除徽标/名称过渡 */
+@media (prefers-reduced-motion: reduce) {
+  .partners-slots .partners-slot-item .partner-badge,
+  .partners-slots .partners-slot-item strong { transition: none; }
 }
