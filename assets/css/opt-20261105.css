@@ -36,8 +36,16 @@ U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可
          V2 合作区呼吸感（上/下 32px、标题→网格 24px）
          V3 PC 端 8px 说明文字 → 10px（hero 案例缩略图名称 / 项目卡 meta）
             （任务 id=40）
+         W1 FAQ 电脑端两栏：≥1024 左侧 6 问题单列 + 右侧 .faq-preview
+            答案面板（sticky，选中金条），≤1023 维持弹窗（任务 id=41）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
+   C-TOKENS 例外登记（任务 id=41）：
+     · .faq-preview：sticky top 96px、min-height 380px、padding 32px、
+       边框 1px var(--line)、圆角 var(--radius-media)、底 rgba(13,13,15,.5)
+       （=--bg/#0d0d0f 的 alpha 形式）；索引 10px/.18em、标题 22px/1.35、
+       正文 14px/1.8/段距 12px；选中底 rgba(198,161,91,.07)（=--accent 的
+       alpha 形式）、左侧金条 2px var(--accent)。均不进入 :root、不新增主题色。
    C-TOKENS 例外登记（任务 id=40）：
      · 合作区：格高 68px、padding 16px 12px、gap 12px 20px、名称 15/16px、
        序号 10px、金条 2px、hover 底 rgba(198,161,91,.07)（=--accent 的
@@ -2895,4 +2903,148 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
   #services .capabilities-note { background: rgba(13, 13, 15, .94); }
   .consult-dialog,
   .modal { background-color: rgba(13, 13, 15, .96)!important; }
+}
+/* ==========================================================================
+   W 段 · 2026-11-07 FAQ 电脑端两栏（任务 id=41）
+   --------------------------------------------------------------------------
+   背景：≤1023 沿用基线弹窗；≥1024 右侧长期留空（K1 把 .faq-layout 改成
+   单列 block，.faq-list 铺满 1320）。本段在桌面恢复两栏：标题横跨，
+   左侧 6 个问题单列成行，右侧 .faq-preview 常驻显示当前答案，
+   点击切换由 opt-20261105.js 的捕获监听完成。不改基线 CSS/JS/图片。
+   列比 .92 / 1.08 与 gap 40 依据：1440 内容宽 1320 → 左 589 / 右 692，
+   左列标题 14px 单行约 210px、卡高 64px 六行 424px；右侧正文 14px/1.8
+   在 626px 行宽约 44 字/行，与左侧卡片的视觉重量接近。
+   ========================================================================== */
+
+/* 默认隐藏：min-width:1024 与 max-width:1023 在 1023.x 存在小数缝隙，
+   基础声明保证该缝隙内不露出空面板；桌面规则显式 display:block 打开。 */
+.faq-preview {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  /* 覆盖 K1：.faq-layout{display:block;grid-template-columns:none;gap:0} */
+  .faq-layout {
+    display: grid!important;
+    grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+    gap: 40px;
+    align-items: start;
+  }
+  /* 标题横跨两栏（K1 的 width/max-width/margin-bottom 保留） */
+  .faq-section .section-head {
+    grid-column: 1 / -1;
+  }
+  /* 覆盖 O1：≥1200 6 列 / 901–1199 4 列 —— 桌面统一单列整行 */
+  #faq .faq-list {
+    grid-template-columns: minmax(0, 1fr)!important;
+    gap: 8px!important;
+  }
+  /* 覆盖 H2：.faq-item{padding:0 15px} 与 O2 ≥1200 的 padding:0；
+     卡片与左列同宽，金条才能贴住卡片左沿 */
+  #faq .faq-item {
+    padding: 0;
+    min-width: 0;
+  }
+  /* 覆盖 H2：.faq-q{padding:13px 0!important;min-height:0!important;
+     grid-template-columns:34px minmax(0,1fr) 20px;gap:11px;font-size:14px}
+     与 O2 ≥1200 的 28/16/11px 密排尺寸：两档统一为 52px 行高 + 14px 内距，
+     34px 图标与 20px 箭头保证桌面可点面积与可读性 */
+  #faq .faq-q {
+    min-height: 52px!important;
+    padding: 14px 16px!important;
+    grid-template-columns: 34px minmax(0, 1fr) 20px;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.35;
+    align-items: center;
+    transform: none;
+    transition:
+      color .2s var(--ease-out),
+      background-color .24s var(--ease-out),
+      box-shadow .24s var(--ease-out);
+  }
+  #faq .faq-icon {
+    width: 34px;
+    height: 34px;
+    background-size: 17px;
+  }
+  #faq .faq-q > i {
+    width: 20px;
+    height: 20px;
+  }
+  /* 选中态：覆盖基线 .faq-q 的 important 渐变底与三层阴影，
+     换成 --accent 7% 的淡金底 + 左侧 2px 金条（同时保留基线 1px 高光与外投影，
+     避免选中卡比相邻卡“塌一层”）。!important 依据：基线
+     :is(...,.faq-q,...){background:linear-gradient(...)!important;
+     box-shadow:inset 0 1px #ffffff0b,0 22px 62px #00000038!important}。 */
+  #faq .faq-q.is-active {
+    background: rgba(198, 161, 91, .07)!important;
+    box-shadow:
+      inset 2px 0 0 var(--accent),
+      inset 0 1px #ffffff0b,
+      0 22px 62px #00000038!important;
+    color: #fff!important;
+  }
+  #faq .faq-q.is-active > span:nth-child(2) {
+    color: #fff;
+  }
+  #faq .faq-q.is-active > i {
+    opacity: 1;
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  /* 右侧答案面板：sticky top 96 = 顶栏 58 + 38 视口余量（与 #faq 的
+     scroll-margin-top 62 同源，滚动锚点时不压住标题） */
+  .faq-preview {
+    display: block;
+    position: sticky;
+    top: 96px;
+    align-self: start;
+    min-height: 380px;
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-media);
+    background: rgba(13, 13, 15, .5);
+  }
+  .faq-preview-index {
+    display: block;
+    color: var(--muted);
+    font: 400 10px/1.4 var(--mono);
+    letter-spacing: .18em;
+  }
+  .faq-preview-title {
+    margin: 14px 0 0;
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: .01em;
+  }
+  .faq-preview-body {
+    margin-top: 18px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  /* 面板内的 p 不受基线 .faq-a p（display:none 的隐藏块）与通用 p 影响，
+     字号/行高/段距显式声明，12px 段距与 32px 内距形成呼吸感 */
+  .faq-preview-body p {
+    margin: 0 0 12px;
+    padding: 0;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .faq-preview-body p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ≤1023 完全回到基线弹窗：面板不占位、.faq-layout 回到 K1 的块级，
+   .faq-list 的 6/4/3/2/1 列（O1）原样保留 */
+@media (max-width: 1023px) {
+  .faq-preview { display: none!important; }
+  .faq-layout { display: block!important; }
 }

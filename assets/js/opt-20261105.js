@@ -254,3 +254,59 @@
     }
   } catch (e) {}
 })();
+/* FAQ 桌面右侧预览（任务 id=41）：capture 挂到祖先 .faq-list 才抢在基线冒泡监听前；
+   ≤1023 解绑恢复，进入桌面关闭遗留弹窗。 */
+(function () {
+  'use strict';
+  var mq = matchMedia('(min-width:1024px)');
+  var list = document.querySelector('#faq .faq-list');
+  var pane = document.querySelector('#faq .faq-preview');
+  if (!mq || !list || !pane) return;
+  var t = pane.querySelector('.faq-preview-title');
+  var b = pane.querySelector('.faq-preview-body');
+  var idx = pane.querySelector('.faq-preview-index');
+  var on,cur;
+  function show(btn) {
+    if (!btn) return;
+    var q = list.querySelectorAll('.faq-q'), n = q.length, i = -1, j;
+    for (j = 0; j < n; j++) if (q[j] === btn) i = j;
+    if (i < 0) return;
+    var ans = btn.closest('.faq-item');
+    ans = ans && ans.querySelector('.faq-a');
+    t.textContent = (btn.children[1] || btn).textContent.trim();
+    b.innerHTML = ans ? ans.innerHTML : '';
+    if (idx) idx.textContent = ('0' + (i + 1)).slice(-2) + ' / ' + ('0' + n).slice(-2);
+    for (j = 0; j < n; j++) {
+      var sel = q[j] === btn;
+      q[j].classList.toggle('is-active', sel);
+      if (sel) q[j].setAttribute('aria-selected', 'true');
+      else q[j].removeAttribute('aria-selected');
+    }
+    cur = btn;
+  }
+  function click(e) {
+    var btn = e.target.closest && e.target.closest('.faq-q');
+    if (!btn) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    try { show(btn); } catch (err) {}
+  }
+  function sync() {
+    try {
+      if (mq.matches && !on) {
+        list.addEventListener('click', click, true);
+        on = true;
+        show(cur || list.querySelector('.faq-q'));
+        var c = document.getElementById('faqModalClose');
+        c && c.click();
+      } else if (!mq.matches && on) {
+        list.removeEventListener('click', click, true);
+        on = false;
+      }
+    } catch (err) {}
+  }
+  try {
+    sync();
+    if (mq.addEventListener) mq.addEventListener('change', sync);
+    else mq.addListener(sync);
+  } catch (err) {}
+})();

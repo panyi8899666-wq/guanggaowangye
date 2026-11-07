@@ -52,9 +52,9 @@ window.__afterLoad=function(f){function go(){setTimeout(function(){'requestIdleC
 (function(){var S=['zh','en','ja','ko','es','fr','de','pt','ru','ar'],l=null,d=document.documentElement;try{l=localStorage.getItem('zxy-lang')}catch(e){}if(!l||S.indexOf(l)<0){l='en';var a=navigator.languages||[navigator.language||'en'];for(var i=0;i<a.length;i++){var x=(a[i]||'').toLowerCase(),p=x.split('-')[0];if(S.indexOf(x)>=0){l=x;break}if(S.indexOf(p)>=0){l=p;break}}}
 if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='script';k.href='assets/i18n-'+l+'.js';document.head.appendChild(k);d.classList.add('i18n-wait');window.__i18nDone=function(){d.classList.remove('i18n-wait')};setTimeout(window.__i18nDone,1200)})();</script>
 <link rel="stylesheet" href="assets/css/site.bd50e7a2.css" />
-<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261127" />
+<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261129" />
 <script defer src="assets/js/app.5082587a.js?v=20261104"></script>
-<script defer src="assets/js/opt-20261105.js?v=20261127"></script>
+<script defer src="assets/js/opt-20261105.js?v=20261129"></script>
 <script type="text/javascript">
 /* Image fallback: a failed image never renders as a broken icon or a pure-black card — it is hidden and its frame keeps a lifted charcoal placeholder tone instead. */
 (function(){
@@ -320,7 +320,7 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
             <div class="about-tags" aria-label="核心能力"><span>广告标识</span><span>发光字与工艺</span><span>商业视觉</span><span>生产落地</span><span>供应链协同</span><span>项目经营管理</span></div>
             <dl class="about-stats" aria-label="经验数据">
               <div class="about-stat"><dt>10+</dt><dd>年行业经验</dd></div>
-              <div class="about-stat"><dt>17</dt><dd>个项目案例</dd></div>
+              <div class="about-stat"><dt>51</dt><dd>个项目案例</dd></div>
               <div class="about-stat"><dt>6</dt><dd>项服务能力</dd></div>
             </dl>
             <a class="about-cta" href="#contact"><span>立即开始设计</span><small>START A PROJECT</small></a>
@@ -386,6 +386,11 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
           <div class="faq-item"><button class="faq-q" type="button" data-icon="feedback" aria-haspopup="dialog"><span class="faq-icon" aria-hidden="true"></span><span>修改与反馈政策是什么</span><i aria-hidden="true"></i></button><div class="faq-a"><p>采用阶段性集中反馈：先确认方向，再处理细节与尺寸延展。已确认方向后的新增需求、内容大改或临时尺寸，不混入当前节点反复修改，而是重新评估工作量并排入当月计划。</p></div></div>
           <div class="faq-item"><button class="faq-q" type="button" data-icon="rights" aria-haspopup="dialog"><span class="faq-icon" aria-hidden="true"></span><span>案例与商用授权怎么处理</span><i aria-hidden="true"></i></button><div class="faq-a"><p>正式合作会在协议中明确源文件交付范围、商用授权方式及作品公开规则。本站案例均为实际项目，画面与说明按真实交付内容呈现。</p></div></div>
         </div>
+        <aside class="faq-preview" aria-live="polite" aria-label="问题答案">
+          <span class="faq-preview-index">01 / 06</span>
+          <h3 class="faq-preview-title">合作包含什么 不包含什么</h3>
+          <div class="faq-preview-body"><p>包含合作期内已确认优先级内的广告主画面、品牌日常延展、常用尺寸适配、文件整理与进度同步。实体制作、印刷、搭建、摄影、第三方素材授权及超出已排计划的新任务不包含在设计服务内；如需制作，将按规格、数量、材质与工艺另计。</p></div>
+        </aside>
       </div>
     </section>
 
