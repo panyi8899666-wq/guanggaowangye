@@ -38,8 +38,16 @@ U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可
             （任务 id=40）
          W1 FAQ 电脑端两栏：≥1024 左侧 6 问题单列 + 右侧 .faq-preview
             答案面板（sticky，选中金条），≤1023 维持弹窗（任务 id=41）
+         W2 合作品牌「分组错落 + 徽标网格」：3 组标题（21/6/21）+
+            首字徽标 30px、组内首格跨 2 列（≥1200）、名称 15px、（任务 id=42）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
+   C-TOKENS 例外登记（任务 id=42）：
+     · 组标题：margin 32px 0 8px（首组 0）、padding-bottom 8px、
+       中文 13px/.12em、英文 10px/.18em；徽标 30px（跨列首格 40px、
+       ≤899 28px）、圆角 50%、底色 rgba(198,161,91,.08)（=--accent 的
+       alpha 形式）、字 12px；名称 15px（跨列首格 18px、≤899 14px）。
+       均为本文件 W2 段局部数值，不进入 :root、不新增主题色。
    C-TOKENS 例外登记（任务 id=41）：
      · .faq-preview：sticky top 96px、min-height 380px、padding 32px、
        边框 1px var(--line)、圆角 var(--radius-media)、底 rgba(13,13,15,.5)
@@ -3047,4 +3055,149 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
 @media (max-width: 1023px) {
   .faq-preview { display: none!important; }
   .faq-layout { display: block!important; }
+}
+/* ==========================================================================
+   W2 段 · 合作品牌「分组错落 + 徽标网格」（任务 id=42）
+   --------------------------------------------------------------------------
+   DOM（本任务同步改造的 index.html .partners-slots 内）：
+     h3.partners-group（3 个组标题）
+     .partners-slot-item × 48（.partner-index 序号 + .partner-badge 首字徽标 +
+     strong 名称）
+   视觉层只在本段覆盖 V1/V2 的既有声明：
+     W2-1 组标题：整行跨列、中文 13px / 英文副标 10px、细线分隔
+     W2-2 品牌格：grid 两行（序号行 + 徽标/名称同行），保持 4/3/2 列与 68px
+     W2-3 徽标：30px 圆形、金边淡金底
+     W2-4 错落：≥1200 每组第 1 格跨 2 列，徽标 40px、名称 18px
+     W2-5 ≤899：不跨列，徽标 28px、名称 14px
+   不新增主题色：rgba(198,161,91,.08) 为 var(--accent) 的 alpha 形式。
+   ========================================================================== */
+
+/* ---------- W2-1 组标题 ----------
+   覆盖 V1 段对 .partners-slot-item 的图标化处理，组标题是纯排版节点：
+   grid-column:1/-1 让标题独占一整行，后续品牌格重新从第 1 列起排。
+   nowrap 防止英文副标被挤成两行。 */
+.partners-slots .partners-group {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin: 32px 0 8px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: left;
+}
+/* 首组贴住网格顶部（V2 已给 .partners-slot 32px 上内距） */
+.partners-slots .partners-group:first-child {
+  margin-top: 0;
+}
+.partners-slots .partners-group .partners-group-cn {
+  flex: 0 0 auto;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .12em;
+  color: var(--ink);
+}
+.partners-slots .partners-group small {
+  flex: 0 1 auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: .18em;
+  color: var(--muted);
+}
+
+/* ---------- W2-2 品牌格内部：序号独占首行，徽标与名称同一行 ----------
+   覆盖 W.../V1 的 `display:flex;flex-direction:column`：
+   grid 两列 + 自动行，第一行（.partner-index，grid-column:1/-1）是 10px 小号，
+   第二行左列徽标、右列名称，等价于「flex 一行（徽标+名称）+ 序号在上方」。
+   gap 的 row/column 分别 6px/10px；V1 的 gap:6px!important 需同步覆盖。 */
+.partners-slots .partners-slot-item {
+  display: grid!important;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-auto-rows: auto;
+  align-items: center!important;
+  align-content: center;
+  justify-content: start!important;
+  justify-items: start;
+  gap: 6px 10px!important;
+}
+.partners-slots .partners-slot-item .partner-index {
+  grid-column: 1 / -1;
+}
+/* V1 的「前 6 张 16px」层次在新结构里由「每组首格跨列」承担，
+   这里同特异性还原 15px / --muted（DOM 新增 h3 后前 6 个 child 已换位）。 */
+.partners-slots .partners-slot-item:nth-child(n) strong {
+  font-size: 15px;
+}
+.partners-slots .partners-slot-item:nth-child(n) .partner-index {
+  color: var(--muted);
+}
+
+/* ---------- W2-3 首字徽标 ---------- */
+.partners-slots .partners-slot-item .partner-badge {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(198, 161, 91, .08);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 180ms var(--ease-out);
+}
+/* 徽标边框转金：沿用 V1 的 hover 语义（淡金底 + 左侧 2px 金条） */
+.partners-slots .partners-slot-item:hover .partner-badge,
+.partners-slots .partners-slot-item:focus-visible .partner-badge,
+.partners-slots .partners-slot-item:focus-within .partner-badge {
+  border-color: var(--accent);
+}
+
+/* ---------- W2-4 错落：≥1200（4 列）每组第 1 格跨 2 列 ----------
+   .partners-group + .partners-slot-item 命中「组标题后的第一张卡」；
+   特异性 (0,3,0) 高于 .partners-slots .partners-slot-item (0,2,0)。 */
+@media (min-width: 1200px) {
+  .partners-slots .partners-group + .partners-slot-item {
+    grid-column: span 2;
+  }
+  .partners-slots .partners-group + .partners-slot-item .partner-badge {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  .partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
+    font-size: 18px;
+  }
+}
+
+/* ---------- W2-5 ≤899：不跨列、徽标 28px、名称 14px ----------
+   （900–1199 仍是 3 列常规格；≤620 的 V1 14px 规则由本段同特异性收口） */
+@media (max-width: 899px) {
+  .partners-slots .partners-slot-item .partner-badge {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+  .partners-slots .partners-slot-item:nth-child(n) strong,
+  .partners-slots .partners-slot-item:nth-child(-n+6) strong {
+    font-size: 14px;
+  }
+}
+
+/* 无障碍：减弱动效时移除徽标过渡（沿用 V1 的 reduced-motion 语义） */
+@media (prefers-reduced-motion: reduce) {
+  .partners-slots .partners-slot-item .partner-badge { transition: none; }
 }
