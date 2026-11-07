@@ -40,8 +40,16 @@ U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可
             答案面板（sticky，选中金条），≤1023 维持弹窗（任务 id=41）
          W2 合作品牌「分组错落 + 徽标网格」：3 组标题（21/6/21）+
             首字徽标 30px、组内首格跨 2 列（≥1200）、名称 15px、（任务 id=42）
+         W3 合作品牌排序与文案对应修正：组内按拼音/英文首字母 A–Z 排序、
+            徽标改拼音/英文首字母（消除「花 花间集」式字面重复）、
+            取消跨列改「首牌金框」突出（任务 id=43）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
+   C-TOKENS 例外登记（任务 id=43）：
+     · 首牌（每组第 1 个品牌）：inset 描边 1px var(--accent)、徽标 32px/字 13px、
+       名称 16px；其余仍为徽标 30px（≤899 28px）、名称 15px（≤899 14px）。
+       同时撤销 id=42 的「首格跨 2 列 / 徽标 40px / 名称 18px」。
+       均不进入 :root、不新增主题色。
    C-TOKENS 例外登记（任务 id=42）：
      · 组标题：margin 32px 0 8px（首组 0）、padding-bottom 8px、
        中文 13px/.12em、英文 10px/.18em；徽标 30px（跨列首格 40px、
@@ -3067,9 +3075,9 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
      W2-1 组标题：整行跨列、中文 13px / 英文副标 10px、细线分隔
      W2-2 品牌格：grid 两行（序号行 + 徽标/名称同行），保持 4/3/2 列与 68px
      W2-3 徽标：30px 圆形、金边淡金底
-     W2-4 错落：≥1200 每组第 1 格跨 2 列，徽标 40px、名称 18px
-     W2-5 ≤899：不跨列，徽标 28px、名称 14px
-   不新增主题色：rgba(198,161,91,.08) 为 var(--accent) 的 alpha 形式。
+     W2-4 突出：每组第 1 个品牌用「金色 inset 描边 + 名称 16px + 徽标 32px」
+     W2-5 ≤899：徽标 28px、名称 14px（首牌仍 32px / 16px）
+    不新增主题色：rgba(198,161,91,.08) 为 var(--accent) 的 alpha 形式。
    ========================================================================== */
 
 /* ---------- W2-1 组标题 ----------
@@ -3164,22 +3172,26 @@ html body .cooperation-entry .coop-intro p.cooperation-note {
   border-color: var(--accent);
 }
 
-/* ---------- W2-4 错落：≥1200（4 列）每组第 1 格跨 2 列 ----------
-   .partners-group + .partners-slot-item 命中「组标题后的第一张卡」；
-   特异性 (0,3,0) 高于 .partners-slots .partners-slot-item (0,2,0)。 */
-@media (min-width: 1200px) {
-  .partners-slots .partners-group + .partners-slot-item {
-    grid-column: span 2;
-  }
-  .partners-slots .partners-group + .partners-slot-item .partner-badge {
-    flex-basis: 40px;
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
-  }
-  .partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
-    font-size: 18px;
-  }
+/* ---------- W2-4 首牌金框（替代「跨列」错落）----------
+   任务 id=43 C：取消 ≥1200 的 span 2 跨列（跨列会让组末留下 1–2 格空位，
+   且格子宽窄不一），改为「每组第 1 个品牌」用金色 inset 描边突出。
+   .partners-group + .partners-slot-item 命中组标题后的第一张卡，
+   特异性 (0,3,0)/(0,4,0)，高于 W2-2 的 (0,2,0) 与 W2-5 的 (0,3,0)/(0,3,1)。
+   box-shadow 用 inset 而非 border，不占布局、不推移内容；
+   1px 金色描边与 hover 的淡金底 / 左侧金条叠加时不冲突。 */
+.partners-slots .partners-group + .partners-slot-item {
+  grid-column: auto;
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.partners-slots .partners-group + .partners-slot-item .partner-badge {
+  flex-basis: 32px;
+  width: 32px;
+  height: 32px;
+  font-size: 13px;
+  border-color: var(--accent);
+}
+.partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
+  font-size: 16px;
 }
 
 /* ---------- W2-5 ≤899：不跨列、徽标 28px、名称 14px ----------
