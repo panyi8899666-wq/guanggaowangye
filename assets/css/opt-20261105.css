@@ -4031,3 +4031,58 @@ body.hero-ready .hero h1.hero-title-sweep .line:first-child > .hero-title-sans >
   .career-copy .about-strengths { max-width: 100%; gap: 8px; font-size: 14px; }
   .career-copy .about-strength-item { font-size: 14px!important; }
 }
+/* ==========================================================================
+   Z2 · 全站留白收紧（visual-polish-r3 · R3 落地）
+   --------------------------------------------------------------------------
+   依据：.codeartsdoer/plans/visual-polish-r3/padding-audit.md §6.5 建议值。
+   只动四处间距：work 底部冗余、#services 底距、#faq/#contact 上下内距、
+   ≤620px 首屏顶距。字号 / 颜色 / 列数 / 卡高一律不动。
+
+   基线既有声明与特异性（实测来源：CDP CSS.getMatchedStylesForNode）：
+     .featured-showcase{margin-bottom:72px}                       (0,1,0) 无 !important
+     @media (max-width:820px) .featured-showcase{margin-bottom:54px} (0,1,0) 无 !important
+     section#services{padding-bottom:max(100px,min(8vw,136px))!important} (0,1,1)
+     section#services{padding-bottom:120px!important}             (0,1,1)
+     section#faq{padding-top|padding-bottom:clamp(56px,6vw,96px)!important}      (0,1,1)
+     section#contact{padding-top|padding-bottom:clamp(56px,6vw,96px)!important}  (0,1,1)
+     .hero-ready section.hero.wrap{padding-top:calc(var(--sec-pad) + var(--hero-top-extra))!important} (0,2,1)
+   本块用 `html body …` 前缀把特异性抬到 (0,1,2)｜(0,2,3) 并逐条 `!important`，
+   保证在 file-order 之后仍能压过上述全部声明（避免静默失效）。
+   数值随视口线性收敛（clamp），1440 / 390 两档精确落在审计目标值。
+   ========================================================================== */
+
+/* ① work 区底部「双层留白」归零：.featured-showcase 的 72 / 54 叠在
+   #work 的 padding-bottom（72 / 40）之外，是全站唯一双层留白。
+   覆盖：.featured-showcase{margin-bottom:72px}、@media (max-width:820px)
+        同选择器 margin-bottom:54px（两条均无 !important，此处 !important
+        用于一次性压过两档媒体查询，不依赖书写顺序）。 */
+html body #work .featured-showcase {
+  margin-bottom: 0!important;
+}
+
+/* ② #services 只收紧底部：115.2 / 120 → 72 / 64（5vw 在 1440 = 72px，
+   390 落到下限 64px）。不声明 padding-top / padding-inline，
+   padding-top 维持基线 50 / 30，左右内距维持 0。 */
+html body section#services {
+  padding-bottom: clamp(64px, 5vw, 72px)!important;
+}
+
+/* ③ #faq / #contact 上下内距：86.4 / 56 → 76 / 52（5.28vw 在 1440 = 76.03
+   → 取上限 76；390 = 20.6 → 取下限 52）。
+   必须拆 padding-top / padding-bottom 两条长属性：padding-block 简写会把
+   基线 padding-inline 一并重置为 0，连带清掉左右内距。 */
+html body section#faq,
+html body section#contact {
+  padding-top: clamp(52px, 5.28vw, 76px)!important;
+  padding-bottom: clamp(52px, 5.28vw, 76px)!important;
+}
+
+/* ④ ≤620px 首屏顶部内距 100 → 88（覆盖实际来源
+   .hero-ready section.hero.wrap 的 calc(--sec-pad + --hero-top-extra)）。
+   ≥621px 不声明：1440 维持基线 72px（--sec-pad + 0）。 */
+@media (max-width: 620px) {
+  html body section.hero.wrap,
+  html body.hero-ready section.hero.wrap {
+    padding-top: 88px!important;
+  }
+}
