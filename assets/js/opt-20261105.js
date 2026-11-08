@@ -982,3 +982,232 @@
     });
   } catch (err) {}
 })();
+
+/* §AI · 导航滚动收缩 + 顶部进度线 + CTA 磁吸（任务 id=70）
+   --------------------------------------------------------------------------
+   与 §AF 的关系：§AF 的 scroll 监听在闭包内、且 prefers-reduced-motion 下直接
+   停掉全部逐帧更新；而本段的收缩必须在该模式下依然生效，无法复用它。
+   故本段自带一个 scroll 监听，严格 { passive: true } + rAF 合并（同帧只算一次，
+   几何量 docHeight / viewportHeight 在滚动起手 160ms 内只测一次），不新增第二个
+   常驻 rAF 循环。
+   CTA 磁吸只在 pointer:fine 且非 reduced-motion 时绑定；位移写 CSS 变量
+   --ai-mg-x / --ai-mg-y（限幅 ±8px），由 §AI 的 translate 消费，绝不写 transform
+   （基线 app.js 的内联磁吸与 hero-ready 皮肤占用 transform）。
+   -------------------------------------------------------------------------- */
+(function () {
+  'use strict';
+  try {
+    var root = document.documentElement;
+
+    function requestFrame(cb) {
+      return window.requestAnimationFrame
+        ? window.requestAnimationFrame(cb)
+        : window.setTimeout(cb, 16);
+    }
+    function cancelFrame(id) {
+      if (window.cancelAnimationFrame) { window.cancelAnimationFrame(id); }
+      else { window.clearTimeout(id); }
+    }
+
+    /* ---------- AI-3 导航：收缩类 + 顶部进度线 ---------- */
+    function initNav() {
+      var topline = document.querySelector('.topline');
+      if (!topline) { return; }
+
+      /* 伪元素审计：.topline::after 实测 content:none 属于空闲位，
+         但伪元素无法被 getBoundingClientRect 测量、也无法单列层级，
+         故按任务允许的兜底方式生成真实节点 <span.ai-nav-progress>。 */
+      var progress = topline.querySelector('.ai-nav-progress');
+      if (!progress) {
+        progress = document.createElement('span');
+        progress.className = 'ai-nav-progress';
+        progress.setAttribute('aria-hidden', 'true');
+        topline.appendChild(progress);
+      }
+
+      var compacted = false;
+      var frame = 0;
+      var burst = false;
+      var burstTimer = 0;
+      var docHeight = 0;
+      var viewHeight = 0;
+      var lastWidth = -1;
+
+      function measure() {
+        docHeight = Math.max(
+          root.scrollHeight || 0,
+          document.body ? document.body.scrollHeight : 0
+        );
+        viewHeight = window.innerHeight || root.clientHeight || 1;
+      }
+
+      function update() {
+        frame = 0;
+        var y = window.pageYOffset || root.scrollTop || 0;
+
+        var compact = y > 80;
+        if (compact !== compacted) {
+          compacted = compact;
+          topline.classList.toggle('ai-nav-compact', compact);
+        }
+
+        var total = docHeight - viewHeight;
+        var p = total > 0 ? y / total : 0;
+        if (p < 0) { p = 0; } else if (p > 1) { p = 1; }
+        var width = Math.round(p * 1000) / 10;   /* 0.1% 精度，避免每帧都写样式 */
+        if (width !== lastWidth) {
+          lastWidth = width;
+          progress.style.width = width + '%';
+          root.style.setProperty('--ai-nav-progress', String(p));
+        }
+      }
+
+      function onScroll() {
+        if (!burst) {
+          burst = true;
+          window.clearTimeout(burstTimer);
+          burstTimer = window.setTimeout(function () {
+            burst = false;
+            burstTimer = 0;
+          }, 160);
+          measure();
+        }
+        if (!frame) { frame = requestFrame(update); }
+      }
+
+      function onResize() {
+        measure();
+        if (!frame) { frame = requestFrame(update); }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize, { passive: true });
+      window.addEventListener('orientationchange', onResize, { passive: true });
+      window.addEventListener('load', onResize, { once: true });
+      try {
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(onResize).catch(function () {});
+        }
+      } catch (e) {}
+
+      measure();
+      update();
+    }
+
+    /* ---------- AI-2 CTA 磁吸：独立 translate，限幅 ±8px ---------- */
+    function initMagnetic() {
+      var actions = document.querySelector('#contact .contact-actions');
+      if (!actions) { return; }
+      var buttons = Array.prototype.slice.call(actions.querySelectorAll('.cta'));
+      if (!buttons.length) { return; }
+
+      /* 限幅取 6px（仍满足 ≤8px 验收）：#contact .contact-actions 两个 .cta 的
+         水平间隙实测 15px，若两侧各自吸到 ±8px 会相向叠进 1px；±6px 留 3px 间隙。
+         影响半径 140px：另一枚按钮中心距本按钮中心约 141px（126/2 + 15 + 212/2），
+         恰好落在衰减边界外，避免「贴近 A 却把 B 拽过来」。 */
+      var MAX = 6;
+      var RADIUS = 140;
+      var RATIO = 0.55;        /* 位移系数：偏移 × 系数 × 距离衰减 */
+      var coarseQuery = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null;
+      var reduceQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
+      function isDisabled() {
+        return !!((coarseQuery && coarseQuery.matches) || (reduceQuery && reduceQuery.matches));
+      }
+
+      /* 任务要求：coarse 指针与 reduced-motion 下不绑定监听，直接返回 */
+      if (isDisabled()) { return; }
+
+      var frame = 0;
+      var pointerX = 0;
+      var pointerY = 0;
+      var bound = false;
+
+      function clearVars() {
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].style.removeProperty('--ai-mg-x');
+          buttons[i].style.removeProperty('--ai-mg-y');
+        }
+      }
+
+      function clampShift(value) {
+        if (value > MAX) { return MAX; }
+        if (value < -MAX) { return -MAX; }
+        return Math.round(value * 100) / 100;
+      }
+
+      function update() {
+        frame = 0;
+        if (!bound || isDisabled()) { clearVars(); return; }
+
+        for (var i = 0; i < buttons.length; i++) {
+          var btn = buttons[i];
+          var rect = btn.getBoundingClientRect();
+          /* rect 已包含上一层写入的 translate，减回去还原未位移的按钮中心，
+             否则中心随位移漂移，形成自反馈抖动 */
+          var curX = parseFloat(btn.style.getPropertyValue('--ai-mg-x')) || 0;
+          var curY = parseFloat(btn.style.getPropertyValue('--ai-mg-y')) || 0;
+          var cx = rect.left + rect.width / 2 - curX;
+          var cy = rect.top + rect.height / 2 - curY;
+          var dx = pointerX - cx;
+          var dy = pointerY - cy;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          /* 距离越远衰减：RADIUS 内线性衰减，RADIUS 外归 0 */
+          var falloff = dist >= RADIUS ? 0 : 1 - dist / RADIUS;
+          btn.style.setProperty('--ai-mg-x', clampShift(dx * RATIO * falloff) + 'px');
+          btn.style.setProperty('--ai-mg-y', clampShift(dy * RATIO * falloff) + 'px');
+        }
+      }
+
+      function onPointerMove(event) {
+        if (!bound) { return; }
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (!frame) { frame = requestFrame(update); }
+      }
+
+      function onPointerLeave() {
+        if (frame) { cancelFrame(frame); frame = 0; }
+        pointerX = 0;
+        pointerY = 0;
+        clearVars();
+      }
+
+      function unbind() {
+        bound = false;
+        actions.removeEventListener('pointermove', onPointerMove);
+        actions.removeEventListener('pointerleave', onPointerLeave);
+        actions.removeEventListener('pointercancel', onPointerLeave);
+        onPointerLeave();
+      }
+
+      function onMediaChange() {
+        if (isDisabled()) { unbind(); }
+      }
+
+      actions.addEventListener('pointermove', onPointerMove, { passive: true });
+      actions.addEventListener('pointerleave', onPointerLeave, { passive: true });
+      actions.addEventListener('pointercancel', onPointerLeave, { passive: true });
+      bound = true;
+
+      /* 运行中切换指针类型 / 动效偏好：解除绑定并归零，不残留位移 */
+      if (coarseQuery && coarseQuery.addEventListener) {
+        coarseQuery.addEventListener('change', onMediaChange);
+      }
+      if (reduceQuery && reduceQuery.addEventListener) {
+        reduceQuery.addEventListener('change', onMediaChange);
+      }
+    }
+
+    function boot() {
+      try { initNav(); } catch (e) {}
+      try { initMagnetic(); } catch (e) {}
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot, { once: true });
+    } else {
+      boot();
+    }
+  } catch (err) {}
+})();

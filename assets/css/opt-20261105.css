@@ -5664,3 +5664,285 @@ html body .ab-mq__track:has(.partners-slot-item:hover) .partners-slot-item:not(:
     display: none!important;
   }
 }
+
+/* ==========================================================================
+   §AI · 页脚大字水印三栏 / CTA 磁吸按钮 / 导航滚动收缩 + 顶部进度线
+   （任务 id=70；参考 footer.design · cta.gallery · navbar.gallery 三站形态）
+   --------------------------------------------------------------------------
+   运行时事实（真实 Chrome 156 headless，绕 SW + 禁缓存，1440×900 实测）：
+     · 基线在滚动 >80px 时已由 app.5082587a.js 给 .topline 加 .is-compact，
+       但该类的 height:46px / width:960px 被基线
+       `.topline{width:100%!important;height:auto!important}` 压制，
+       background 又被 `.topline{background:var(--glass)!important}` 压制；
+       实测滚动到 600 时仍是 54px 高、--glass 底色，只有 padding-inline 生效。
+       → 本段不改基线，用 .ai-nav-compact（由 opt JS 同步加）以更高特异性
+         覆盖背景与胶囊尺寸，走 height:auto 的自然收缩，不碰基线的 height/width。
+     · 基线对 .cta 已有内联 transform 磁吸（app.js：距离<100px 时
+       translate3d(0.18dx, 0.22dy)，实测可达 18/22px），且
+       body.hero-ready 皮肤与 G6 的 hover/active 也都在写 transform。
+       → 本段用独立 translate 做 ≤±8px 磁吸，并对 #contact 的 CTA 压制
+         transform（!important），让位移只有 translate 一个来源。
+     · .topline::after / ::before 实测 content:none（空闲），但验收要求
+       可测量的 rect 与独立层级，故进度线用 JS 生成的 <span.ai-nav-progress>。
+     · 颜色全部映射既有令牌：rgba(198,161,91,…)=--accent、
+       rgba(13,13,15,…)=--bg、rgba(236,234,228,…)=--ink 的 alpha 形式，
+       不新增主题色。
+   ========================================================================== */
+
+/* ---------- AI-1 页脚：三栏（品牌 / 导航+服务 / 联系）+ 底部大字水印 ---------- */
+html body footer.footer-meta {
+  display: grid!important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr) minmax(0, .75fr)!important;
+  align-items: start;
+  column-gap: clamp(28px, 4vw, 72px);
+  row-gap: 0;
+  padding-block: 26px 0;
+  padding-inline: 0;
+  overflow: hidden!important;   /* 水印底部越界部分在此裁切；不收裁则宽度会撑出横向滚动条 */
+}
+
+/* 左栏：品牌大字 + 英文小字 + 版权 + 坐标（#footerCoords 沿用基线节点，JS 每帧写值） */
+html body footer.footer-meta .footer-left {
+  display: flex!important;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+html body footer.footer-meta .footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+html body footer.footer-meta .footer-brand strong {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(22px, 2vw, 30px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: .04em;
+  color: var(--ink);
+}
+html body footer.footer-meta .footer-brand small {
+  display: block;
+  font: 400 9px/1.5 var(--mono);
+  letter-spacing: .18em;
+  color: rgba(236, 234, 228, .58);
+}
+
+/* 版权：基线 `.footer-meta>span:first-child` 原命中页脚直接子级的版权 span，
+   现版权移入 .footer-left 内不再命中，这里按原样补回（同色、同字距） */
+html body footer.footer-meta .footer-left .footer-copyright {
+  display: block;
+  color: var(--ink);
+  letter-spacing: .16em;
+  /* 覆盖既有可读性规则 html body .footer-left span{font-size:12px!important}：
+     版权原本是 10px 的页脚基线字号，这里按原字号保留 */
+  font-size: 10px!important;
+  line-height: 1.6;
+}
+html body footer.footer-meta #footerCoords {
+  display: block;
+  font: 400 9px/1.6 var(--mono);
+  letter-spacing: .12em;
+  color: rgba(236, 234, 228, .5);
+}
+
+/* 中栏：两组竖排链接（导航 5 条沿用 .footer-links 原节点；服务 4 条取 #services 既有标题） */
+html body footer.footer-meta .footer-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(20px, 2.6vw, 44px);
+  min-width: 0;
+}
+html body footer.footer-meta .footer-col-label {
+  display: block;
+  font: 400 9px/1.5 var(--mono);
+  letter-spacing: .2em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+html body footer.footer-meta .footer-links,
+html body footer.footer-meta .footer-services {
+  display: flex!important;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+html body footer.footer-meta .footer-links a,
+html body footer.footer-meta .footer-services a {
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.5;
+  /* 覆盖 html body .footer-links a{font-size:12px!important}：页脚列链接按 11px 收敛 */
+  font-size: 11px!important;
+  letter-spacing: .06em;
+  color: rgba(236, 234, 228, .74);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease-out), border-color .2s var(--ease-out);
+}
+html body footer.footer-meta .footer-links a:hover,
+html body footer.footer-meta .footer-services a:hover,
+html body footer.footer-meta .footer-links a:focus-visible,
+html body footer.footer-meta .footer-services a:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+/* 右栏：咨询按钮 + 既有联系引导文案（取自 #contact 首句，未新增编造内容） */
+html body footer.footer-meta .footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+html body footer.footer-meta .footer-contact-note {
+  margin: 0;
+  font: 400 10px/1.6 var(--mono);
+  letter-spacing: .04em;
+  color: rgba(236, 234, 228, .6);
+  text-transform: none;
+}
+
+/* 底部超大品牌水印：
+   · 字号 clamp(72px,16vw,240px)，1440→230.4px；11 个字母宽约 1.5×视口，
+     居中后左右同时越界，由 footer 的 overflow:hidden 裁掉，宽度取父容器 1320（91.7% 视口）
+   · height:.62em 让字形下缘被自身 overflow:hidden 裁去（line-height:.78 的行盒高于该高度）
+   · 不参与命中：pointer-events:none + user-select:none；aria-hidden 在 HTML 上 */
+html body footer.footer-meta > .footer-watermark {
+  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  margin-top: clamp(20px, 3vw, 44px);
+  height: .62em;
+  overflow: hidden;
+  font-family: var(--display);
+  font-size: clamp(72px, 16vw, 240px);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: .78;
+  text-align: center;
+  white-space: nowrap;
+  color: rgba(198, 161, 91, .08);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 窄屏：单列堆叠，三栏内容全部保留；水印字号由 clamp 收到 72px 起 */
+@media (max-width: 860px) {
+  html body footer.footer-meta {
+    grid-template-columns: minmax(0, 1fr)!important;
+    row-gap: 24px;
+    padding-block: 22px 0;
+  }
+  html body footer.footer-meta .footer-contact {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 18px;
+  }
+}
+
+/* ---------- AI-2 CTA 磁吸按钮（独立 translate，≤±8px） ----------
+   --ai-mg-x / --ai-mg-y 由 opt JS 在 #contact .contact-actions 的 pointermove 后写入，
+   pointerleave 归零；coarse 指针与 reduced-motion 下 JS 不绑定，变量恒缺省 → 0px 0px。
+   transform 必须压制：基线 app.js 的内联磁吸（±18/±22px）与 G6 的 hover/active
+   都用 transform，二者会把实际位移推过 ±8px 验收阈。 */
+html body #contact .contact-actions .cta {
+  translate: var(--ai-mg-x, 0px) var(--ai-mg-y, 0px);
+  transform: none!important;
+  will-change: translate;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html body #contact .contact-actions .cta {
+    transition:
+      translate .28s cubic-bezier(.22, .9, .24, 1),
+      background-color .24s var(--ease-out),
+      color .24s var(--ease-out),
+      border-color .24s var(--ease-out),
+      box-shadow .24s var(--ease-out),
+      background-position .5s var(--ease-out)!important;
+  }
+}
+
+/* ---------- AI-3 导航滚动收缩 + 顶部 2px 金色进度线 ---------- */
+/* 未收缩态也挂同一组过渡，收缩/回弹才有 0.28s 动画。
+   选择器必须带 #siteNav：§G6 的 `:is(...):not(#opt-boost)` 含 .nav-links a，
+   带 ID 计数 1，会压过纯类选择器（实测 a 的 min-height:0 被它挡回 44）。 */
+@media (min-width: 861px) {
+  html body #siteNav .nav-links {
+    transition: height .28s cubic-bezier(.22, .9, .24, 1),
+                padding .28s cubic-bezier(.22, .9, .24, 1)!important;
+  }
+  html body #siteNav .nav-links > a {
+    transition: color .24s var(--ease-out),
+                padding-block .28s cubic-bezier(.22, .9, .24, 1)!important;
+  }
+
+  /* 收缩态：胶囊 54 → 44，内距 4 → 2，a 内距 7 → 5，字号 12 → 11.5
+     · 基线 .nav-inner{min-height:48px} 会兜住 topline 高度，收缩态一并放到 44；
+     · a 的 min-height:44 来自 §G6 的触控下限（带 ID 的 :not(#opt-boost)），
+       这里收到 38：38 + 胶囊内距 2×2 + 边框 1×2 = 44，正好是目标胶囊高。 */
+  html body #siteNav.ai-nav-compact .nav-inner {
+    min-height: 44px!important;
+  }
+  html body #siteNav.ai-nav-compact .nav-links {
+    height: 44px!important;
+    padding: 2px!important;
+  }
+  html body #siteNav.ai-nav-compact .nav-links > a {
+    min-height: 38px!important;
+    padding-block: 5px!important;
+    font-size: 11.5px!important;
+  }
+  html body #siteNav.ai-nav-compact .nav-links .nav-pill {
+    top: 2px!important;
+    height: calc(100% - 4px)!important;
+  }
+
+  /* 背景更实：基线 --glass 是 rgba(20,20,22,.84)，这里降到 --bg 的 .9 并加强模糊。
+     必须 !important：基线 `.topline{background:var(--glass)!important}` (0,1,0) 会压制无 important 声明。 */
+  html body #siteNav.ai-nav-compact {
+    background: rgba(13, 13, 15, .9)!important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(18px) saturate(1.3);
+    transition: height .28s cubic-bezier(.22, .9, .24, 1),
+                padding .28s cubic-bezier(.22, .9, .24, 1),
+                background-color .28s var(--ease-out)!important;
+  }
+}
+
+/* 顶部横向进度线：贴 .topline 下沿外侧（top:100%），2px 金色。
+   位置在导航内容盒（0–54/44）之外，故与 .nav-brand / .nav-links / .nav-side
+   的交叠面积恒为 0；z-index:0 低于 a 的 z-index:1，且 pointer-events:none。
+   与 §AF 的右侧竖线 .af-progress-rail 无关，互不改写。 */
+html body .topline .ai-nav-progress {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  display: block;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-2);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 减少动效：过渡归零（收缩本身仍生效），磁吸变量不写入即 0px 0px */
+@media (prefers-reduced-motion: reduce) {
+  /* 必须带 #siteNav：上面收缩段用的是 html body #siteNav…（ID 计数 1），
+     只用纯类选择器会被它压住，实测过渡仍是 .28s。 */
+  html body #siteNav .nav-links,
+  html body #siteNav .nav-links > a,
+  html body #siteNav.ai-nav-compact,
+  html body #contact .contact-actions .cta {
+    transition-duration: 0s!important;
+  }
+}
