@@ -4086,3 +4086,337 @@ html body section#contact {
     padding-top: 88px!important;
   }
 }
+
+/* ==========================================================================
+   AA · 时间线「光束推进」+ 全站「档案母题」排版（任务 id=54）
+   --------------------------------------------------------------------------
+   背景（用户原话）：时间线「呆板、线条与时间线分离」。实测横线
+   #about .career-timeline.career-strip::before 为一条 2px 的均匀金色渐变
+   （linear-gradient(90deg, transparent, var(--accent), transparent)），静态、
+   整条同亮度、与节点无先后关系；而 --mono 令牌的实际值
+   = "Microsoft YaHei","微软雅黑",sans-serif（并非等宽），6 个编号/标签类
+   各自的字距在 0.63–1.8px 之间摇摆，缺少统一的「档案/标本册」语气。
+
+   A · 光束推进（只改 ::before 的绘制与动画；几何 0 变化）
+     · 暗底线：linear-gradient(90deg, transparent, rgba(198,161,91,.22),
+       transparent) —— 复刻原横线造型，但亮度从 var(--accent) 压到 .22，
+       不再整条亮着（覆盖基线 background 简写 !important）；
+     · 亮段：一条 18% 宽的窄渐变（18% 于 1440 = 237.6px，相对 1320px 轴线
+       即「窄段」），由注册自定义属性 --aa-beam-x（@property <percentage>）
+       驱动 `background-position: var(--aa-beam-x) 0`，行程 0% → 110%
+       （百分比定位公式 offset=(W-0.18W)·p：起点亮段贴着轴线左端可见，
+       终点完全移出右端），并叠 6px drop-shadow 光晕。
+       为什么用变量而不是直接动画 background-position：基线 background 简写
+       必须用 !important 才压得住，而 CSS 动画无法覆盖 !important 声明，
+       直接动画该属性会被整帧丢弃（T54-D1 返工原因）；动画只改注册过的
+       变量，var() 替换后的 background-position 才会真正变化；
+     · 渐进增强：@supports (animation-timeline: view()) 命中时改挂
+       view() 时间线（animation-range: cover 0% → cover 100%），亮段随滚动
+       推进、不自动循环（animation-iteration-count:1 + fill-mode:both）；
+       不命中但支持 @property 时保留基础层的 7s linear infinite 循环流光
+       （6–8s 区间中值，关键帧两端 -30%/110% 均在轴线外，循环接缝不可见）；
+       不支持 @property 的引擎对未注册变量只做 discrete 翻转，且翻转端点
+       恰好就是这两个不可见值 → 视觉上只剩静态暗底线，不会出现假流光闪烁
+       （对照实验见 evidence/aa-fallback2.json）；
+     · 节点依次点亮：桌面 4 个 .career-timeline-node 圆心同 y（横线要同时
+       穿过 4 个圆心，见 P1 块），纵向 view() 无法用空间区分，因此用
+       nth-child 给每个节点 6% 的区间错位（cover 30%→60% 内依次点亮）；
+       只动 background-color / box-shadow，不动 transform、top、left、尺寸，
+       故几何与既有 hover 的 scale(1.15) 互不干扰；悬停/聚焦时关闭该动画
+       （animation:none），交回 P1 的 hover 光晕声明；
+     · ≤820 竖屏：同一套背景改 180deg 竖排、background-position 走 Y 轴
+       （aa-tl-beam-y），节点纵向排列后恢复统一区间 entry 25% → cover 45%；
+     · ::after 已被「刻度尺」（repeating-linear-gradient，opacity .22）占用，
+       本块一律不触碰。
+
+   B · 档案母题排版（只统「字体 + 字距 + 数字宽度」）
+     实测基线（1440 / Chrome 156）：6 个类的 font-family 首项全部是
+     Microsoft YaHei；letter-spacing = 1.21 / 1.8 / 1.08 / 1.26 / 1.21 / 0.63px
+     （hero-eyebrow / hero-side-eyebrow / archive-note-eyebrow / step-num /
+      case-kicker / career-strip time）。统一为显式等宽栈 + tabular-nums
+     + .14em；`html body` 前缀用于压过基线的 *{font-family:…!important} 与
+     body *{font-family:…!important}。字号/颜色/对齐一律不动，唯一例外：
+     .step-num 实测 9px（低于 10px 可读性下限）→ 提到 10px，见下方注释。
+
+   C-TOKENS 例外登记（本块新增的量；颜色全部由 --accent(198,161,91) 派生）
+     --aa-mono                  显式等宽字体栈（不新增色值/尺寸）
+     AA-BEAM-W     18%          亮段宽度（背景动画量，不改几何）
+     AA-BEAM-RUN   0%→110%      亮段推进行程（起点贴轴线左端，终点完全移出）
+     --aa-beam-x / --aa-beam-y  注册自定义属性（@property <percentage>），
+                                由关键帧驱动、被 !important 的 background-position
+                                以 var() 引用（解 D1 的 important 压制）
+     AA-BEAM-FALLBACK -30%      未注册 @property / 动画关闭时的兜底偏移
+                                （亮段移出轴线 → 视觉只剩暗底线）
+     AA-BEAM-GLOW  6px          光束 drop-shadow 光晕半径
+     AA-NODE-RANGE 30%–60%      view() 节点点亮区间（每节点 12% 宽、步进 6%）
+     AA-BEAM-DUR   7s           降级循环流光周期（需求 6–8s 区间中值）
+     颜色：rgba(198,161,91,.22/.16/.92/.08/.45/.5) 均对应 --accent / --accent-glow
+   ========================================================================== */
+
+/* ---------- AA-a 统一等宽令牌（不改动基线 --mono） ---------- */
+:root {
+  --aa-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+             "Liberation Mono", monospace;
+}
+
+/* ---------- AA-b 档案母题：字体栈 + 字距 + 数字宽度 ----------
+   每个目标类都在选择器里直接命中（不靠父级继承），字体栈显式写出，
+   因为基线有 *{font-family:…!important} 与 body *{…!important}。 */
+html body .hero-eyebrow,
+html body .hero-side-eyebrow,
+html body .archive-note-eyebrow,
+html body .step-num,
+html body .case-kicker,
+html body #about .career-timeline.career-strip time {
+  font-family: var(--aa-mono)!important;
+  font-variant-numeric: tabular-nums!important;
+  letter-spacing: .14em!important;
+}
+
+/* 唯一字号例外：.step-num 实测 9px（#process .process-grid .step-num，
+   特异性 (1,2,0) + !important），低于 10px 可读性下限，提到 10px；
+   特异性提到 (1,2,3) 以确保压过上述规则。颜色/对齐/行高不动。 */
+html body #process .process-grid .step-num {
+  font-size: 10px!important;
+}
+
+/* ---------- AA-c 桌面横线：暗底线 + 滚动推进亮段 ----------
+   返工说明（T54-D1）：初版把亮段推进写成 `background-position … !important` 关键帧，
+   而 CSS 动画只能覆盖 normal 声明、无法覆盖 `!important` 声明 → 位置恒为起点，
+   光束从未被绘出（独立验证实测 progress 0.93 时仍 `-30% 0px`，线亮度 median 82.1→46.8）。
+   现改为「注册自定义属性驱动」：
+     · 带 `!important` 的 `background-position` 仍保留（用于压基线 background 简写），
+       但它引用 var(--aa-beam-x)；
+     · @keyframes 只改 --aa-beam-x 的值（@property 注册为 <percentage>，可插值）；
+     · 动画改的是变量 → var() 替换后的 background-position 随之变化 → 光束真正移动。
+   起点改为 0%（初版 -30% 会让亮段停在轴线外的不可见区），终点 110%（完全移出右端）。
+   降级语义：未注册 @property 的引擎无法插值该变量，动画对其不产生视觉变化，
+   变量保持兜底 `--aa-beam-x:-30%` → 只显示暗底线（不保留会闪的假流光）。 */
+@property --aa-beam-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -30%;
+}
+@property --aa-beam-y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -30%;
+}
+
+#about .career-timeline.career-strip::before {
+  /* 兜底值：未注册 @property / 动画被关掉时，亮段完全移出轴线 → 只剩暗底线 */
+  --aa-beam-x: -30%;
+  background-image:
+    /* 0. 亮段（窄，中心最亮，两端渐隐） */
+    linear-gradient(90deg,
+      rgba(198,161,91,0) 0%,
+      rgba(198,161,91,.16) 18%,
+      rgba(198,161,91,.92) 44%,
+      var(--accent) 50%,
+      rgba(198,161,91,.92) 56%,
+      rgba(198,161,91,.16) 82%,
+      rgba(198,161,91,0) 100%),
+    /* 1. 暗底线（复刻原横线造型，亮度压到 .22） */
+    linear-gradient(90deg,
+      rgba(198,161,91,0) 0%,
+      rgba(198,161,91,.22) 14%,
+      rgba(198,161,91,.22) 86%,
+      rgba(198,161,91,0) 100%)!important;
+  background-size: 18% 100%, 100% 100%!important;
+  background-position: var(--aa-beam-x) 0, 0 0!important;
+  background-repeat: no-repeat, no-repeat!important;
+  filter: drop-shadow(0 0 6px rgba(198,161,91,.45));
+  /* 降级流光：支持 @property 时平滑插值（-30% 与 110% 两端都在轴线外，
+     循环接缝不可见）；不支持 @property 的引擎对未注册变量只做 discrete
+     翻转（恰好在 -30% ↔ 110% 之间切），两端都不可见 → 视觉上只剩静态
+     暗底线，不会闪（见 evidence/aa-fallback2.json 的 noProperty 对照）。 */
+  animation-name: aa-tl-beam-x-fallback!important;
+  animation-duration: 7s!important;
+  animation-timing-function: linear!important;
+  animation-iteration-count: infinite!important;
+  animation-fill-mode: both!important;
+  animation-direction: normal!important;
+  will-change: background-position;
+}
+
+/* 关键帧只改注册过的自定义属性（不改带 !important 的 background-position，
+   否则动画帧会被 !important 丢弃，见 AA-c 返工说明）。 */
+/* 滚动驱动关键帧（仅 @supports 命中时启用）：起点 0% 让亮段贴着轴线左端
+   起步，终点 110% 完全移出右端。 */
+@keyframes aa-tl-beam-x {
+  from { --aa-beam-x: 0%; }
+  to   { --aa-beam-x: 110%; }
+}
+
+@keyframes aa-tl-beam-y {
+  from { --aa-beam-y: 0%; }
+  to   { --aa-beam-y: 110%; }
+}
+
+/* 降级流光关键帧（支持 @property 但无 view() 时）：两端都在轴线之外，
+   循环接缝不可见；不支持 @property 时 discrete 翻转也只在这两个不可见
+   值之间跳，因此不会出现「假流光闪烁」。 */
+@keyframes aa-tl-beam-x-fallback {
+  from { --aa-beam-x: -30%; }
+  to   { --aa-beam-x: 110%; }
+}
+
+@keyframes aa-tl-beam-y-fallback {
+  from { --aa-beam-y: -30%; }
+  to   { --aa-beam-y: 110%; }
+}
+
+@keyframes aa-tl-node-lit {
+  from {
+    background-color: rgba(198,161,91,.45);
+    box-shadow:
+      0 0 0 var(--tl-node-ring) rgba(198,161,91,.08),
+      0 0 4px rgba(198,161,91,.12);
+  }
+  to {
+    background-color: var(--accent);
+    box-shadow:
+      0 0 0 var(--tl-node-ring) rgba(198,161,91,.22),
+      0 0 14px rgba(198,161,91,.5);
+  }
+}
+
+/* ---------- AA-d 渐进增强：滚动驱动（view timeline） ---------- */
+@supports (animation-timeline: view()) {
+  /* 亮段：随 #about 时间线进入/离开视口推进，不循环 */
+  #about .career-timeline.career-strip::before {
+    animation-name: aa-tl-beam-x!important;
+    animation-timeline: view()!important;
+    animation-range: cover 0% cover 100%!important;
+    animation-duration: auto!important;
+    animation-iteration-count: 1!important;
+    animation-fill-mode: both!important;
+  }
+
+  /* 节点依次点亮：同一水平线上 4 个圆心，用区间错位表达「先后」 */
+  #about .career-timeline.career-strip > li .career-timeline-node {
+    animation-name: aa-tl-node-lit;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: cover 30% cover 42%;
+  }
+  #about .career-timeline.career-strip > li:nth-child(2) .career-timeline-node {
+    animation-range: cover 36% cover 48%;
+  }
+  #about .career-timeline.career-strip > li:nth-child(3) .career-timeline-node {
+    animation-range: cover 42% cover 54%;
+  }
+  #about .career-timeline.career-strip > li:nth-child(4) .career-timeline-node {
+    animation-range: cover 48% cover 60%;
+  }
+}
+
+/* 悬停/聚焦：交回 P1 的静态光晕（动画会压过无 !important 的 box-shadow） */
+#about .career-timeline.career-strip > li:hover .career-timeline-node,
+#about .career-timeline.career-strip > li:focus-visible .career-timeline-node,
+#about .career-timeline.career-strip > li:focus-within .career-timeline-node {
+  animation: none!important;
+}
+
+/* ---------- AA-e ≤820 竖屏：竖线版本（纵向推进，几何沿用 P1-b） ---------- */
+@media (max-width: 820px) {
+  #about .career-timeline.career-strip::before {
+    /* 同一套 @property 变量驱动，纵向推进 */
+    --aa-beam-y: -30%;
+    background-image:
+      linear-gradient(180deg,
+        rgba(198,161,91,0) 0%,
+        rgba(198,161,91,.16) 18%,
+        rgba(198,161,91,.92) 44%,
+        var(--accent) 50%,
+        rgba(198,161,91,.92) 56%,
+        rgba(198,161,91,.16) 82%,
+        rgba(198,161,91,0) 100%),
+      linear-gradient(180deg,
+        rgba(198,161,91,0) 0%,
+        rgba(198,161,91,.22) 8%,
+        rgba(198,161,91,.22) 92%,
+        rgba(198,161,91,0) 100%)!important;
+    background-size: 100% 18%, 100% 100%!important;
+    background-position: 0 var(--aa-beam-y), 0 0!important;
+    background-repeat: no-repeat, no-repeat!important;
+    animation-name: aa-tl-beam-y-fallback!important;
+  }
+
+  @supports (animation-timeline: view()) {
+    #about .career-timeline.career-strip::before {
+      animation-name: aa-tl-beam-y!important;
+      animation-range: cover 0% cover 100%!important;
+    }
+    /* 竖屏 4 个节点纵向排列，天然依次进入视口 → 恢复统一区间 */
+    #about .career-timeline.career-strip > li .career-timeline-node,
+    #about .career-timeline.career-strip > li:nth-child(2) .career-timeline-node,
+    #about .career-timeline.career-strip > li:nth-child(3) .career-timeline-node,
+    #about .career-timeline.career-strip > li:nth-child(4) .career-timeline-node {
+      animation-range: entry 25% cover 45%!important;
+    }
+  }
+}
+
+/* ---------- AA-e2 ≤820 竖屏（portrait）：把 view() 的滚动源抢回 HTML ----------
+   独立验证 D2：基线在 @media (max-width:820px) and (orientation:portrait)
+   里给 html,body 设了 overflow-x:hidden!important，hidden 会建立滚动容器，
+   于是 body 成为 view() 的 scroll source（body.scrollHeight==clientHeight，
+   是退化容器）→ 光束 progress 恒 0.5113、4 个节点在任意 scrollY 恒 [1,1,1,1]。
+   overflow-x:clip 不建立滚动容器，可让 view() 重新解析到 HTML 视口，
+   同时仍裁剪横向溢出（不放开横向滚动）。 */
+@media (max-width: 820px) and (orientation: portrait) {
+  html body {
+    overflow-x: clip!important;
+  }
+}
+
+/* ---------- AA-e3 末节点「当前经历」高亮不被点亮动画抹平 ----------
+   独立验证 D3：aa-tl-node-lit 的 fill-mode:both 会把终点帧
+   (0.22/6px + 0.5/14px) 长期盖在 li:last-child 独有的
+   0.34/8px + 0.78/26px + 1px 内描边之上，抹掉「当前经历」语义。
+   故末节点完全不参与点亮动画，保持其静态高亮（与 HEAD 逐字符一致），
+   前三个节点仍按区间依次点亮。 */
+#about .career-timeline.career-strip > li:last-child .career-timeline-node {
+  animation: none!important;
+}
+
+/* ---------- AA-f prefers-reduced-motion：全部关闭，回落静态 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  /* 亮段消失：背景层数 2 → 1，仅剩与暗底线同色的单层渐变 */
+  #about .career-timeline.career-strip::before {
+    animation: none!important;
+    animation-timeline: auto!important;
+    background-image: linear-gradient(90deg,
+      rgba(198,161,91,0) 0%,
+      rgba(198,161,91,.22) 14%,
+      rgba(198,161,91,.22) 86%,
+      rgba(198,161,91,0) 100%)!important;
+    background-size: 100% 100%!important;
+    background-position: 0 0!important;
+    background-repeat: no-repeat!important;
+    filter: none!important;
+    will-change: auto;
+  }
+  @media (max-width: 820px) {
+    #about .career-timeline.career-strip::before {
+      background-image: linear-gradient(180deg,
+        rgba(198,161,91,0) 0%,
+        rgba(198,161,91,.22) 8%,
+        rgba(198,161,91,.22) 92%,
+        rgba(198,161,91,0) 100%)!important;
+      background-size: 100% 100%!important;
+      background-position: 0 0!important;
+    }
+  }
+  /* 节点回到静态亮度（主规则 box-shadow） */
+  #about .career-timeline.career-strip > li .career-timeline-node,
+  #about .career-timeline.career-strip > li:nth-child(2) .career-timeline-node,
+  #about .career-timeline.career-strip > li:nth-child(3) .career-timeline-node,
+  #about .career-timeline.career-strip > li:nth-child(4) .career-timeline-node {
+    animation: none!important;
+    animation-timeline: auto!important;
+  }
+}
