@@ -1778,7 +1778,16 @@ html.js #process .process-grid .step:not(.is-open) {
   display: flex!important;
   flex-direction: column;
   justify-content: flex-start;
-  align-self: center; /* 任务 id=38：在左拼贴行高内垂直居中，上下留白均分 */
+  /* 任务 id=62：改 center → start。父级 .about-layout.career-layout 已是
+     align-items:start，但子元素自身的 align-self:center 会覆盖它，
+     导致右栏被垂直居中、顶部比左拼贴低（实测差 95.3px）。 */
+  align-self: start!important;
+  /* 行顶对齐后仍有 16px 偏差：实测 .about-portrait 的
+     margin-top = 16px（下同理 16px），.about-copy 的 margin-top = 0；
+     这里用同值 margin-top 抵消，右栏面板内部距（statement→strengths 28px）
+     完全不动，也不新增内部空白；右栏 599.61 + 16 < 左栏 16+593.09+16 行高，
+     故 #about 高度不变。 */
+  margin-top: 16px!important;
   gap: 0;
   padding: 0!important;
 }
@@ -4419,4 +4428,1109 @@ html body #process .process-grid .step-num {
     animation: none!important;
     animation-timeline: auto!important;
   }
+}
+
+/* ==========================================================================
+   §AB · PC 端四项修复（任务 id=58）
+   --------------------------------------------------------------------------
+   用户反馈（PC 1440）：
+     ① 首屏 H1 两行「让品牌 / 让价值」末端与后段起点错位 3.98px；
+     ② 时间线年份 31.68px 过大，正文偏大；
+     ③ FAQ 右栏是「装了 32px 内距的空盒子」，内部底部空白 163.8px；
+     ④ 合作品牌墙 4 列等高格子墙，像数据表，缺少新意。
+   约束：只在本覆盖层落规则；不改基线 CSS/JS/图片/i18n，不新增色值。
+   每个子项对应一段，按 AB-1 → AB-4 顺序追加，便于单独复核。
+
+   AB-1 · H1 两行分段边界对齐
+   --------------------------------------------------------------------------
+   实测（Chrome 156 / 1440×900，逐字符 rect）：
+     sans 段继承 h1 letter-spacing -0.052em（77.76px 字号 → -4.04352px），
+       每字 73.719px；
+     serif 段命中基线 .hero-title-serif{-0.035em!important} → -2.7216px，
+       每字 75.047px；
+     于是行 1 前段右边界 281.156、行 2 前段右边界 285.141（差 3.985px），
+     而整行右边界都 525.734。
+   做法：两段统一到 -0.0437em（77.76px → -3.3983px），
+     每字宽 = 77.76 − 3.398 = 74.362px，两段完全相同；字号、文案、
+     「前段 sans / 后段 serif」的交错设计均不变。
+   重复空格：DOM 实测为「外层 .hero-char.space 内再嵌一个 .hero-char.space」
+     （index.html 内联拆字 + 基线 app.js 二次拆字叠加）。两层 rect 完全相同
+     （x=281.156 / right=300.594），外层宽度就是内层宽度 19.438px，
+     不额外占位。这里只把内层设为 visibility:hidden（保留盒子，不改布局），
+     消除重复节点参与绘制，视觉间距（19.438px）保持不变。
+   ========================================================================== */
+
+html body.hero-ready .hero h1.hero-title-sweep .hero-title-sans .hero-char,
+html body.hero-ready .hero h1.hero-title-sweep .hero-title-serif .hero-char {
+  letter-spacing: -0.0437em!important;
+}
+
+/* 嵌套重复空格：保留外层占位，内层不再参与绘制（visibility:hidden 不影响布局） */
+html body.hero-ready .hero h1.hero-title-sweep .hero-char.space > .hero-char.space {
+  visibility: hidden!important;
+}
+
+/* --------------------------------------------------------------------------
+   AB-2 · 时间线字号收紧（几何不变）
+   --------------------------------------------------------------------------
+   改前（1440）：time 31.68px / h3 14px / strong 12px / p 12.5px，
+     li 高 162；节点圆心 y=54.42（相对 li 顶），横线贯穿 4 个圆心。
+   只改「字」与「字块内距」，不动列数/列宽/gap，也不动 --tl-year-size
+   （该变量驱动 --tl-year-h → --tl-node-center，改它会移动横线与圆心）：
+     · time 字号 clamp(20px,1.6vw,23px)：1440 → 23px、1280 → 20.48px，
+       盒高仍由 --tl-year-h 决定（1440 36.42 / 1280 32.38），仅文字居中缩小；
+     · p 12.5 → 12px、行高 1.6；
+     · h3 行高 1.45 → 1.32、下距 4 → 2；strong 下距 8 → 2；
+     · 节点下连接线 --tl-connector-h 10 → 6（只缩短连接线，圆心与横线不动）。
+   预期 li 高：1440 145.3、1280 141.3；文字块顶部 = 圆心 + 6 + 6，
+   仍与连接线末端相接。 */
+html body #about .career-timeline.career-strip {
+  --tl-connector-h: 6px;
+}
+html body #about .career-timeline.career-strip time {
+  font-size: clamp(20px, 1.6vw, 23px)!important;
+  line-height: 1.15!important;
+  align-items: center!important;
+}
+html body #about .career-timeline.career-strip h3 {
+  margin: 0 0 2px!important;
+  line-height: 1.32!important;
+}
+html body #about .career-timeline.career-strip strong {
+  margin: 0 0 2px!important;
+}
+html body #about .career-timeline.career-strip p {
+  font-size: 12px!important;
+  line-height: 1.6!important;
+}
+
+/* --------------------------------------------------------------------------
+   AB-3 · FAQ 右栏：从「空盒子」改为无框问答文字栏
+   --------------------------------------------------------------------------
+   改前（1440）：.faq-preview 380 高（min-height 380 + 32px 内距 + 1px 边框），
+     内容只有 184.25 高，panelBottom − 最后一行 − padding-bottom = 163.75px，
+     形态是「左边一条满列问题卡 + 右边一个空框」。左列 436 高，右栏反而矮 56。
+   做法：
+     · 去边框 / 去底色 / 去圆角 / 去投影 / 内距 32 → 0（无框文字栏）；
+     · min-height:0 + height:auto，让面板高度=内容高度；
+     · align-self:start（继承 W 段）保持与左列首卡同顶；
+     · 保留 01 / 06、标题、正文三段与 sticky 滚动跟随；
+     · 正文后用 ::after 画一条 40×1px 金色短线（var(--accent)、opacity .5）
+       作为收束，不新增文案、不使用 space-between 拉开三段。
+   说明：#faq 区块高度由左列（.faq-list 436）、标题区与 40px 行距共同决定，
+     面板 380 < 436，删掉面板的 380 不会改变该网格行高，故 #faq 高度预计不变；
+     实测值见 evidence/step3-1440.json（如实记录，不伪造下降）。
+   ========================================================================== */
+html body .faq-preview {
+  border: 0!important;
+  border-radius: 0!important;
+  background: none!important;
+  box-shadow: none!important;
+  padding: 0!important;
+  min-height: 0!important;
+  height: auto!important;
+  align-self: start!important;
+}
+html body .faq-preview::after {
+  content: ""!important;
+  display: block!important;
+  width: 40px!important;
+  height: 1px!important;
+  margin-top: 20px!important;
+  background: var(--accent)!important;
+  opacity: .5!important;
+}
+
+/* --------------------------------------------------------------------------
+   AB-4 · 合作品牌墙：4 列等高格子 → 流式名录（typographic roster）
+   --------------------------------------------------------------------------
+   改前（1440）：.partners-slots 4 列 grid（303.5px 等宽）、row-gap 12 →
+     48 个 303.5×88px 等高盒，徽标 44×44 圆形，整块 1590 高，#partners 1889。
+   改后形态（用户已否掉：序号+细线索引墙 / 等高同形卡片 / 菱形 / 六边形）：
+     · .partners-slots 改为 flex-wrap 流式：品牌项自宽、无格、无边框、无底线；
+     · 项与项靠「自身 padding 10px ×2 + 行 gap」分组，不靠线；
+     · .partner-badge 20×20（9px 字、radius 3px、淡金底 + 金描边），
+       与名称同基线；名称 15px 保持可读；
+     · 三组标题保留为「01 / 02 / 03 + 组名 + 英文·数量」行式标题
+       （CSS counter 生成编号，不改文案 / DOM 数量）；
+     · hover 只改颜色：名称转金、徽标转实心金底深色字，无 transform / 位移。
+   组内数量仍由 DOM 决定（实测 21 / 6 / 21，共 48 项）。 */
+html body .partners-slots {
+  display: flex!important;
+  flex-direction: row!important; /* 覆盖基线 ≤620 的 .partners-slots{flex-direction:column} */
+  flex-wrap: wrap!important;
+  align-items: center!important;
+  gap: 2px 0!important;
+  margin: 0!important;
+  padding: 0!important;
+  counter-reset: ab-partner-group;
+}
+
+/* 组标题：整行、无底线，编号由 counter 生成 */
+html body .partners-slots .partners-group {
+  flex: 0 0 100%!important;
+  width: 100%!important;
+  display: flex!important;
+  align-items: baseline!important;
+  flex-wrap: wrap!important;
+  gap: 8px 12px!important;
+  margin: 44px 0 10px!important;
+  padding: 0!important;
+  border: 0!important;
+  border-bottom: 0!important;
+  white-space: normal!important;
+  text-align: left!important;
+  counter-increment: ab-partner-group;
+}
+html body .partners-slots .partners-group:first-child {
+  margin-top: 0!important;
+}
+html body .partners-slots .partners-group::before {
+  content: counter(ab-partner-group, decimal-leading-zero)!important;
+  flex: 0 0 auto;
+  font-family: var(--aa-mono, ui-monospace, monospace)!important;
+  font-size: 11px!important;
+  font-weight: 400!important;
+  line-height: 1!important;
+  letter-spacing: .14em!important;
+  color: var(--accent)!important;
+}
+html body .partners-slots .partners-group .partners-group-cn {
+  flex: 0 0 auto;
+  font-family: var(--display)!important;
+  font-size: 18px!important;
+  font-weight: 500!important;
+  line-height: 1.25!important;
+  letter-spacing: .04em!important;
+  color: var(--ink)!important;
+}
+html body .partners-slots .partners-group small {
+  flex: 0 1 auto;
+  margin-left: auto!important;
+  font-family: var(--aa-mono, ui-monospace, monospace)!important;
+  font-size: 10px!important;
+  font-weight: 400!important;
+  line-height: 1.3!important;
+  letter-spacing: .16em!important;
+  color: var(--muted)!important;
+}
+
+/* 品牌项：自宽流式，无格子/无边框/无底线 */
+html body .partners-slots .partners-slot-item {
+  position: relative;
+  isolation: auto;
+  display: inline-flex!important;
+  flex: 0 0 auto!important;
+  flex-direction: row!important;
+  align-items: center!important;
+  justify-content: flex-start!important;
+  gap: 7px!important;
+  width: auto!important;
+  max-width: 100%!important;
+  height: auto!important;
+  min-height: 0!important;
+  aspect-ratio: auto!important;
+  margin: 0!important;
+  padding: 4px 10px!important;
+  border: 0!important;
+  border-bottom: 0!important;
+  border-radius: 0!important;
+  background: transparent!important;
+  box-shadow: none!important;
+  letter-spacing: 0!important;
+  text-indent: 0!important;
+  text-align: left!important;
+  transform: none!important;
+  transition: none!important;
+}
+/* 清掉 V1 左侧金条与 W2/R1 的伪元素装饰 */
+html body .partners-slots .partners-slot-item::before,
+html body .partners-slots .partners-slot-item::after {
+  content: none!important;
+  display: none!important;
+  background: none!important;
+  border: 0!important;
+  box-shadow: none!important;
+}
+
+/* 徽标：20×20 inline 方块，与名称同基线 */
+html body .partners-slots .partners-slot-item .partner-badge,
+html body .partners-slots .partners-group + .partners-slot-item .partner-badge {
+  flex: 0 0 20px!important;
+  width: 20px!important;
+  height: 20px!important;
+  font-family: var(--aa-mono, ui-monospace, monospace)!important;
+  font-size: 9px!important;
+  font-weight: 500!important;
+  line-height: 1!important;
+  border: 1px solid rgba(198, 161, 91, .55)!important;
+  border-radius: 3px!important;
+  background: rgba(198, 161, 91, .08)!important;
+  color: var(--accent)!important;
+  display: inline-flex!important;
+  align-items: center!important;
+  justify-content: center!important;
+  transition: background-color .18s var(--ease-out),
+              border-color .18s var(--ease-out),
+              color .18s var(--ease-out)!important;
+}
+
+/* 名称：15px 保持可读，单项自宽不换行（最长名 15px 约 135px，390 仍可容） */
+html body .partners-slots .partners-slot-item strong,
+html body .partners-slots .partners-slot-item:nth-child(n) strong,
+html body .partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
+  display: block;
+  flex: 0 0 auto!important;
+  min-width: 0;
+  width: auto!important;
+  max-width: 100%;
+  font-size: 15px!important;
+  font-weight: 400!important;
+  line-height: 1.35!important;
+  letter-spacing: .02em!important;
+  color: var(--ink)!important;
+  text-align: left!important;
+  white-space: nowrap!important;
+  overflow: visible;
+  overflow-wrap: normal!important;
+  word-break: normal!important;
+  transform: none!important;
+  transition: color .18s var(--ease-out)!important;
+}
+
+/* hover / focus：只改颜色，不位移、不改背景块 */
+html body .partners-slots .partners-slot-item:hover,
+html body .partners-slots .partners-slot-item:focus-visible,
+html body .partners-slots .partners-slot-item:focus-within {
+  background: transparent!important;
+  box-shadow: none!important;
+  transform: none!important;
+}
+/* 每组首牌同时命中基础规则里的 (0,4,3) 选择器，hover 需同特异性补齐，
+   否则名称颜色会被「首牌基础规则」的 color:var(--ink) 压住 */
+html body .partners-slots .partners-slot-item:hover strong,
+html body .partners-slots .partners-slot-item:focus-visible strong,
+html body .partners-slots .partners-slot-item:focus-within strong,
+html body .partners-slots .partners-group + .partners-slot-item:hover strong,
+html body .partners-slots .partners-group + .partners-slot-item:focus-visible strong,
+html body .partners-slots .partners-group + .partners-slot-item:focus-within strong {
+  color: var(--accent)!important;
+}
+html body .partners-slots .partners-slot-item:hover .partner-badge,
+html body .partners-slots .partners-slot-item:focus-visible .partner-badge,
+html body .partners-slots .partners-slot-item:focus-within .partner-badge {
+  background: var(--accent)!important;
+  border-color: var(--accent)!important;
+  color: #0d0d0f!important;
+}
+
+/* ≤620：间距收一档，保持流式换行不溢出（名称仍 15px） */
+@media (max-width: 620px) {
+  html body .partners-slots .partners-slot-item {
+    padding: 3px 8px!important;
+  }
+  html body .partners-slots .partners-group {
+    margin: 32px 0 8px!important;
+    gap: 6px 10px!important;
+  }
+  html body .partners-slots .partners-group .partners-group-cn {
+    font-size: 16px!important;
+  }
+  html body .partners-slots .partners-group small {
+    margin-left: 0!important;
+  }
+}
+/* ===== AB-5 · 移除 H1 左侧扫描光带（visual-polish · 用户判为「左侧异物」） =====
+   来源：基线 .hero-title-sweep:after{left:-14%;width:7%;filter:blur(7px);mix-blend-mode:screen;
+   animation:heroReferenceSweep 7.2s infinite} —— 位于文字左侧之外，来回扫过字缘，被用户判为异物。
+   纯装饰、不影响可读性与布局，故整条移除。 */
+html body .hero-title-sweep::after,
+html body.hero-ready .hero h1.hero-title-sweep::after{
+  content:none!important;
+  display:none!important;
+  animation:none!important;
+  background:none!important;
+  filter:none!important;
+}
+/* ==========================================================================
+   §AB-6 · 品牌墙：固定等高网格 + 明显动效（任务 id=62）
+   --------------------------------------------------------------------------
+   用户否掉 AB-4 的「流式名录」：宽度参差、没有"固定展示"的秩序感，
+   要求「固定展示 + 动感明显」。本段完全接管 AB-4（不删 AB-4，保留历史），
+   对 display / width / flex / min-height / padding / border / background
+   逐项给出确定值，避免 AB-4 与基线残留声明参与计算。
+
+   版式（固定）：
+     .partners-slots  = 6 列等宽 grid，gap 8，组标题 grid-column:1/-1 独占整行；
+     三组 → 三块（21 / 6 / 21 项，48 项总数不变），每块内按 6 列排；
+     项 = 48px 等高、flex 行内布局（徽标 20 + 名称），同一行宽度由 grid 列宽
+     决定，因此行内宽度极差为 0（网格项 stretch 撑满列宽）。
+   动效（三条叠加，肉眼可见）：
+     ① 常驻扫光 abSweep：整块 105deg 金色光带 7s 线性循环；
+     ② 逐格入场 abRise：0/40/80/120/160/200ms 六档延迟波浪式浮起；
+     ③ hover：translate 上浮 3px + 金底深字 + 同行其余降透明；
+     ④ 光标光斑（JS 写 --ab-mx/--ab-my，::before 径向渐变跟随）。
+   注意：animation-fill-mode 用 backwards（不是 both）——否则动画终态的
+     translate:0 0 会一直压住 hover 的普通 translate 声明，上浮失效。
+   ========================================================================== */
+html body .partners-slots {
+  position: relative;
+  isolation: isolate;
+  display: grid!important;
+  grid-template-columns: repeat(6, minmax(0, 1fr))!important;
+  grid-auto-flow: row;
+  grid-auto-rows: auto;
+  align-items: stretch!important;
+  align-content: start!important;
+  gap: 8px!important;
+  width: 100%!important;
+  margin: 0!important;
+  padding: 0!important;
+  border: 0!important;
+  background: transparent!important;
+  counter-reset: ab-partner-group;
+}
+
+/* 组标题：独占整行，保留 AB-4 的 01/02/03 计数器与组名排版，去掉横线 */
+html body .partners-slots .partners-group {
+  grid-column: 1 / -1;
+  width: auto!important;
+  display: flex!important;
+  flex: 0 0 auto!important;
+  align-items: baseline!important;
+  flex-wrap: wrap!important;
+  gap: 8px 12px!important;
+  margin: 34px 0 2px!important;
+  padding: 0!important;
+  border: 0!important;
+  border-bottom: 0!important;
+  background: none!important;
+  white-space: normal!important;
+  text-align: left!important;
+  counter-increment: ab-partner-group;
+}
+html body .partners-slots .partners-group:first-child {
+  margin-top: 0!important;
+}
+html body .partners-slots .partners-group::before {
+  content: counter(ab-partner-group, decimal-leading-zero)!important;
+  flex: 0 0 auto;
+  font-family: var(--aa-mono, ui-monospace, monospace)!important;
+  font-size: 11px!important;
+  font-weight: 400!important;
+  line-height: 1!important;
+  letter-spacing: .14em!important;
+  color: var(--accent)!important;
+}
+html body .partners-slots .partners-group .partners-group-cn {
+  flex: 0 0 auto;
+  font-family: var(--display)!important;
+  font-size: 18px!important;
+  font-weight: 500!important;
+  line-height: 1.25!important;
+  letter-spacing: .04em!important;
+  color: var(--ink)!important;
+}
+html body .partners-slots .partners-group small {
+  flex: 0 1 auto;
+  margin-left: auto!important;
+  font-family: var(--aa-mono, ui-monospace, monospace)!important;
+  font-size: 10px!important;
+  font-weight: 400!important;
+  line-height: 1.3!important;
+  letter-spacing: .16em!important;
+  color: var(--muted)!important;
+}
+
+/* 品牌项：固定 48px 等高网格卡（覆盖 AB-4 的 inline-flex 自宽） */
+html body .partners-slots .partners-slot-item,
+html body .partners-slots .partners-group + .partners-slot-item {
+  position: relative;
+  z-index: 2;
+  isolation: auto;
+  display: flex!important;
+  flex-direction: row!important;
+  flex-wrap: nowrap!important;
+  align-items: center!important;
+  justify-content: flex-start!important;
+  flex: 1 1 auto!important;
+  gap: 5px!important;
+  width: auto!important;
+  min-width: 0!important;
+  max-width: 100%!important;
+  height: 48px!important;
+  min-height: 48px!important;
+  max-height: 48px!important;
+  aspect-ratio: auto!important;
+  margin: 0!important;
+  padding: 0 9px!important;
+  border: 1px solid rgba(198, 161, 91, .18)!important;
+  border-radius: 6px!important;
+  background: rgba(198, 161, 91, .05)!important;
+  box-shadow: none!important;
+  transform: none!important;
+  letter-spacing: 0!important;
+  text-indent: 0!important;
+  text-align: left!important;
+  overflow: hidden;
+  transition: translate .22s var(--ease-out),
+              background-color .22s var(--ease-out),
+              border-color .22s var(--ease-out),
+              opacity .22s var(--ease-out),
+              box-shadow .22s var(--ease-out)!important;
+  animation: abRise .55s cubic-bezier(.22, .9, .24, 1) backwards;
+}
+/* 清掉 AB-4 / 更早版本遗留的伪元素装饰，避免卡片内出现多余线条 */
+html body .partners-slots .partners-slot-item::before,
+html body .partners-slots .partners-slot-item::after {
+  content: none!important;
+  display: none!important;
+}
+
+/* 徽标 20×20：与名称同一水平线 */
+html body .partners-slots .partners-slot-item .partner-badge,
+html body .partners-slots .partners-group + .partners-slot-item .partner-badge {
+  flex: 0 0 20px!important;
+  width: 20px!important;
+  height: 20px!important;
+  font-family: var(--aa-mono, ui-monospace, monospace)!important;
+  font-size: 9px!important;
+  font-weight: 500!important;
+  line-height: 1!important;
+  border: 1px solid rgba(198, 161, 91, .55)!important;
+  border-radius: 3px!important;
+  background: rgba(198, 161, 91, .08)!important;
+  color: var(--accent)!important;
+  display: inline-flex!important;
+  align-items: center!important;
+  justify-content: center!important;
+  transition: background-color .18s var(--ease-out),
+              border-color .18s var(--ease-out),
+              color .18s var(--ease-out)!important;
+}
+
+/* 名称：12.2px 单行；6 列下最长名「柚见饮品 YUJIAN BEVERAGE」实测
+   13.5px→sw 178/cw 157、12.8px→sw 168/cw 161，仍差 7px；
+   12.2px + 字距 -.02em 后 sw ≤ cw+1，全部 48 个名称不靠省略号兜底 */
+html body .partners-slots .partners-slot-item strong,
+html body .partners-slots .partners-slot-item:nth-child(n) strong,
+html body .partners-slots .partners-group + .partners-slot-item:nth-child(n) strong {
+  display: block;
+  flex: 1 1 auto!important;
+  min-width: 0;
+  width: auto!important;
+  max-width: 100%;
+  font-family: var(--display)!important;
+  font-size: 12.2px!important;
+  font-weight: 400!important;
+  line-height: 1.3!important;
+  letter-spacing: -.02em!important;
+  padding-inline-end: 2px;
+  color: var(--ink)!important;
+  text-align: left!important;
+  white-space: nowrap!important;
+  overflow: hidden!important;
+  text-overflow: ellipsis!important;
+  overflow-wrap: normal!important;
+  word-break: normal!important;
+  transform: none!important;
+  transition: color .18s var(--ease-out)!important;
+}
+
+/* 动效 ①：常驻扫光（不锁 background-position!important，否则动画整条失效） */
+html body .partners-slots::after {
+  content: ""!important;
+  position: absolute!important;
+  inset: 0!important;
+  background-image: linear-gradient(105deg, transparent 42%, rgba(198, 161, 91, .16) 50%, transparent 58%)!important;
+  background-repeat: no-repeat!important;
+  background-size: 220% 100%!important;
+  animation: abSweep 7s linear infinite!important;
+  pointer-events: none!important;
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+@keyframes abSweep {
+  0% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
+}
+
+/* 动效 ④：光标光斑（JS 只写 --ab-mx/--ab-my，不触发 reflow） */
+html body .partners-slots::before {
+  content: ""!important;
+  position: absolute!important;
+  inset: 0!important;
+  background: radial-gradient(220px circle at var(--ab-mx, 50%) var(--ab-my, 50%), rgba(198, 161, 91, .14), transparent 65%)!important;
+  pointer-events: none!important;
+  z-index: 0;
+  transition: opacity .3s var(--ease-out);
+}
+
+/* 动效 ②：逐格入场波浪（0/40/80/120/160/200ms 六档循环） */
+html body .partners-slots .partners-slot-item:nth-child(6n+1) { animation-delay: 0ms; }
+html body .partners-slots .partners-slot-item:nth-child(6n+2) { animation-delay: 40ms; }
+html body .partners-slots .partners-slot-item:nth-child(6n+3) { animation-delay: 80ms; }
+html body .partners-slots .partners-slot-item:nth-child(6n+4) { animation-delay: 120ms; }
+html body .partners-slots .partners-slot-item:nth-child(6n+5) { animation-delay: 160ms; }
+html body .partners-slots .partners-slot-item:nth-child(6n+6) { animation-delay: 200ms; }
+@keyframes abRise {
+  from { translate: 0 10px; opacity: 0; }
+  to { translate: 0 0; opacity: 1; }
+}
+
+/* 动效 ③：hover 上浮 3px（独立 translate 属性，不碰 transform）+ 金底深字 */
+html body .partners-slots .partners-slot-item:hover,
+html body .partners-slots .partners-group + .partners-slot-item:hover,
+html body .partners-slots .partners-slot-item:nth-child(n):focus-visible {
+  translate: 0 -3px;
+  background: rgba(198, 161, 91, .92)!important;
+  border-color: rgba(198, 161, 91, .92)!important;
+  box-shadow: 0 8px 24px rgba(198, 161, 91, .22)!important;
+  z-index: 3;
+}
+html body .partners-slots .partners-slot-item:nth-child(n):hover strong,
+html body .partners-slots .partners-group + .partners-slot-item:nth-child(n):hover strong,
+html body .partners-slots .partners-slot-item:nth-child(n):focus-visible strong {
+  color: #0d0d0f!important;
+}
+html body .partners-slots .partners-slot-item:nth-child(n):hover .partner-badge,
+html body .partners-slots .partners-group + .partners-slot-item:nth-child(n):hover .partner-badge,
+html body .partners-slots .partners-slot-item:nth-child(n):focus-visible .partner-badge {
+  background: var(--accent)!important;
+  border-color: var(--accent)!important;
+  color: #0d0d0f!important;
+}
+/* 同行其余卡片降透明（:has 不支持时自动降级为不变） */
+html body .partners-slots:has(.partners-slot-item:hover) .partners-slot-item:not(:hover) {
+  opacity: .5;
+}
+
+/* 断点：≥1280 六列 / 1024–1279 五列 / 768–1023 四列 / ≤767 三列 / ≤480 两列 */
+@media (max-width: 1279px) {
+  html body .partners-slots {
+    grid-template-columns: repeat(5, minmax(0, 1fr))!important;
+  }
+}
+@media (max-width: 1023px) {
+  html body .partners-slots {
+    grid-template-columns: repeat(4, minmax(0, 1fr))!important;
+  }
+}
+@media (max-width: 767px) {
+  html body .partners-slots {
+    grid-template-columns: repeat(3, minmax(0, 1fr))!important;
+    gap: 6px!important;
+  }
+  html body .partners-slots .partners-slot-item {
+    padding: 0 8px!important;
+    gap: 6px!important;
+  }
+  html body .partners-slots .partners-slot-item:nth-child(n) strong {
+    font-size: 13px!important;
+  }
+  html body .partners-slots .partners-group {
+    margin: 26px 0 2px!important;
+  }
+}
+@media (max-width: 480px) {
+  html body .partners-slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr))!important;
+  }
+}
+/* ≤520：两列下再收紧名称与间距（13.5px 长名在 390 两列会溢出） */
+@media (max-width: 520px) {
+  html body .partners-slots .partners-slot-item {
+    gap: 4px!important;
+  }
+  html body .partners-slots .partners-slot-item:nth-child(n) strong {
+    font-size: 12px!important;
+  }
+}
+
+/* 无障碍：减少动效时三条动画全关（含扫光与入场） */
+@media (prefers-reduced-motion: reduce) {
+  html body .partners-slots .partners-slot-item {
+    animation: none!important;
+    translate: none!important;
+    transition: none!important;
+  }
+  html body .partners-slots::after {
+    animation: none!important;
+    background: none!important;
+  }
+}
+/* ==========================================================================
+   §AC · 导航玻璃胶囊 + 金色滑动指示块 / 悬浮 CTA 金色光环（任务 id=63）
+   --------------------------------------------------------------------------
+   只改覆盖层：基线 site.bd50e7a2.css 与 app.5082587a.js 零改动。
+   颜色全部映射既有令牌：rgba(198,161,91,…) = var(--accent) #c6a15b，
+   rgba(13,13,15,…) = var(--bg) #0d0d0f，不引入新主题色。
+   ========================================================================== */
+
+/* AC-1 导航玻璃胶囊
+   仅 ≥861px 生效：≤860px 基线把 .nav-links 变成汉堡下拉面板
+   （@media (max-width:860px){ .topline .nav-links{flex-direction:column;…} }），
+   胶囊化会破坏该面板，故用 min-width 隔离，窄屏完全沿用基线。 */
+@media (min-width: 861px) {
+  html body .topline .nav-links {
+    position: relative;
+    display: flex!important;              /* 覆盖：.topline .nav-links{display:flex} */
+    flex: 0 0 auto!important;             /* 覆盖：.topline .nav-links{flex:auto}，胶囊按内容收缩 */
+    align-items: center!important;        /* 覆盖：.topline .nav-links{align-items:center} */
+    justify-content: center!important;    /* 覆盖：.topline .nav-links{justify-content:space-between} */
+    gap: 2px!important;                   /* 覆盖：.topline .nav-links{gap:22px} */
+    max-width: none!important;            /* 覆盖：.topline .nav-links{max-width:430px} */
+    width: auto!important;
+    margin-inline: auto!important;        /* 覆盖：.topline .nav-links{margin-inline:auto} */
+    padding: 4px!important;               /* 覆盖：.topline .nav-links{padding:0} */
+    border: 1px solid rgba(198, 161, 91, .22)!important;
+    border-radius: 999px!important;
+    background: rgba(20, 19, 18, .55)!important;
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+
+  html body .topline .nav-links > a {
+    position: relative!important;
+    z-index: 1!important;
+    padding: 7px 14px!important;          /* 覆盖：.topline .nav-links a{padding:6px 0} */
+    border-radius: 999px!important;
+    color: #c9c5bd!important;             /* 覆盖：.topline .nav-links a{color:#eceae4cc} */
+    transition: color .24s var(--ease-out)!important; /* 覆盖：…{transition:color .25s} */
+  }
+
+  /* 当前项 / 悬停项落在金色滑块上，文字反相为深色（--bg）保证对比度 */
+  html body .topline .nav-links > a[aria-current="page"],
+  html body .topline .nav-links > a.is-nav-active,
+  html body .topline .nav-links > a:hover,
+  html body .topline .nav-links > a:focus-visible {
+    color: #0d0d0f!important;             /* 覆盖：…a:hover{color:#fff} */
+  }
+
+  html body .topline .nav-links .nav-pill {
+    display: block!important;
+    position: absolute!important;
+    top: 4px!important;
+    left: 0;
+    width: 0;
+    height: calc(100% - 8px)!important;
+    border-radius: 999px!important;
+    z-index: 0!important;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(198, 161, 91, .95), rgba(198, 161, 91, .78))!important;
+    box-shadow: 0 2px 10px rgba(198, 161, 91, .28)!important;
+    transition: left .32s cubic-bezier(.22, .9, .24, 1),
+                width .32s cubic-bezier(.22, .9, .24, 1)!important;
+  }
+}
+
+/* 窄屏 / 汉堡模式：滑块永不显示（JS 也不会启动）
+   只在 ≤860px 生效，避免与上方 @media (min-width:861px) 的 display:block 同级相争 */
+@media (max-width: 860px) {
+  html body .topline .nav-links .nav-pill {
+    display: none!important;
+  }
+}
+
+/* 减少动效：滑块不做滑动位移，直接落位 */
+@media (prefers-reduced-motion: reduce) {
+  html body .topline .nav-links .nav-pill {
+    transition: none!important;
+  }
+}
+
+/* AC-2 悬浮 CTA 金色光环
+   伪元素审计（实测 getComputedStyle(.consult-fab,'::before'/'::after')）：
+     · ::before 已被基线占用：content:"" / display:block / 18×18 / 背景 #eceae4，
+       是 hero-ready 按钮的图标圆点底座 —— 不可复用。
+     · ::after 在基线是废弃位：content:none（图标已由 ::before 的 mask 承担）。
+   基线 body.hero-ready :is(…,.consult-fab,…):after{content:none!important} 的
+   特异性是 (0,4,2)（:is() 取最具体的 .btnstd.btnstd.btnstd 三连 class），
+   所以这里选择器提升到 (0,4,3)：.hero-ready + .consult-fab + 两个属性选择器。
+   另：基线 .hero-ready :is(…) 的 box-shadow 带 !important，在层叠中
+   「important author」高于「animations」，box-shadow 呼吸动画实测会恒值不动，
+   故不采用 box-shadow 方案，改用可动画的 conic-gradient 角度做旋转光环。 */
+@property --ab7-ring {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+html body.hero-ready .consult-fab[aria-controls][aria-haspopup] {
+  position: fixed!important;
+  isolation: isolate;
+}
+
+html body.hero-ready .consult-fab[aria-controls][aria-haspopup]::after {
+  content: ""!important;                 /* 覆盖：body.hero-ready :is(…) :after{content:none!important} */
+  display: block!important;              /* 覆盖：…{display:none!important} */
+  position: absolute!important;
+  inset: -3px!important;                 /* 环向外扩 3px，不改变按钮盒模型 */
+  width: auto!important;
+  height: auto!important;
+  box-sizing: border-box!important;
+  padding: 2px!important;                /* 环带粗细 2px（content-box 被 mask 挖空） */
+  border: 0!important;
+  border-radius: inherit!important;      /* 跟随按钮胶囊圆角 */
+  z-index: 1!important;                  /* 在按钮底之上、文字(z-index:2)之下 */
+  pointer-events: none!important;
+  opacity: 1!important;
+  transform: none!important;
+  background: conic-gradient(from var(--ab7-ring),
+      transparent 0deg 250deg,
+      rgba(198, 161, 91, .9) 292deg,
+      rgba(255, 246, 220, .95) 300deg,
+      rgba(198, 161, 91, .9) 308deg,
+      transparent 350deg)!important;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)!important;
+  -webkit-mask-composite: xor!important;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)!important;
+  mask-composite: exclude!important;
+  filter: drop-shadow(0 0 5px rgba(198, 161, 91, .55));
+  animation: ab7Ring 3.4s linear infinite!important;
+}
+
+@keyframes ab7Ring {
+  to { --ab7-ring: 360deg; }
+}
+
+/* 减少动效：环停止旋转，保留静态细金边 */
+@media (prefers-reduced-motion: reduce) {
+  html body.hero-ready .consult-fab[aria-controls][aria-haspopup]::after {
+    animation: none!important;
+    background: rgba(198, 161, 91, .55)!important;
+    filter: none!important;
+  }
+}
+
+/* ===================================================================
+   §AD · 展示类动效第二批（任务 id=64）
+   AD-1 首屏金色光斑层 light-cove
+        挂载点选择说明：基线里 .hero::before 已被首屏底图占用（z-index:-2）、
+        .hero::after 已被暗遮罩占用（z-index:-1）、.hero-main::before 已被
+        1px 金色竖线占用（z-index:0）；唯一空闲且层级合适的是
+        .hero-main::after（基线 background:none、7×7 不可见、z-index:0）。
+        本段显式接管它的 content/inset/背景/层级，z-index 压到 -1，
+        位于 .hero-copy(z-index:3) 与所有文字之下，只做背景光晕。
+   AD-2 #work 精选 4 张弧形波浪 arc-wave
+        运行时 DOM 事实：.work-grid 为空（app.js 把 51 个 .project 迁到
+        .featured-ledger），#work 的“精选 4 张”实际是
+        .featured-showcase > .featured-card；故本段作用于后者。
+        位移一律使用独立 translate / rotate 属性，不触碰 transform
+        （.featured-card 的 transform 归基线 hover/筛选动画所有）。
+   =================================================================== */
+
+/* ---------- AD-1 首屏金色光斑（缓慢游移，不抢标题） ---------- */
+html body .hero-main::after {
+  content: ""!important;
+  position: absolute!important;
+  inset: -14% -6% -10% -6%!important;     /* 首屏内铺开，超出部分由 .hero overflow:hidden 裁掉 */
+  width: auto!important;
+  height: auto!important;
+  box-sizing: border-box!important;
+  padding: 0!important;
+  border: 0!important;
+  z-index: -1!important;                   /* 低于 .hero-copy(z-index:3) 与全部文字 */
+  pointer-events: none!important;
+  opacity: 1!important;
+  background-image:
+    radial-gradient(circle at 18% 28%, rgba(198, 161, 91, .20), rgba(198, 161, 91, 0) 42%),
+    radial-gradient(circle at 76% 64%, rgba(240, 226, 191, .14), rgba(240, 226, 191, 0) 46%)!important;
+  background-color: transparent!important;  /* 基线给该伪元素留了 background-color:rgb(198,161,91)，必须清掉，否则整层是实心金色 */
+  background-repeat: no-repeat!important;
+  background-size: 130% 130%!important;   /* 放大渐变层，使 background-position 百分比产生真实游移 */
+  filter: blur(46px) saturate(1.1);
+  animation: ab8Cove 22s ease-in-out infinite alternate!important;
+}
+
+@keyframes ab8Cove {
+  0%   { translate: -3% 2%;  scale: 1.00; background-position: 8% 14%; }
+  50%  { translate: 4% -3%;  scale: 1.06; background-position: 28% 36%; }
+  100% { translate: -2% 3%;  scale: 1.02; background-position: 14% 20%; }
+}
+
+/* ---------- AD-2 弧形波浪：静态弧线偏移 ---------- */
+/* 两端卡片旋转 1.6deg 后外接盒每边增高约 9px，原 24px 行距会与下一行相碰；
+   行距补到 36px，保证 4 张卡两两 bbox 交叠面积为 0（列距与列数均不改）。 */
+html body #work .featured-showcase { row-gap: 36px!important; }
+
+html body #work .featured-showcase > .featured-card:nth-child(1) { --ab8-y: 18px; --ab8-r: -1.6deg; }
+html body #work .featured-showcase > .featured-card:nth-child(2) { --ab8-y: 2px;  --ab8-r: -0.4deg; }
+html body #work .featured-showcase > .featured-card:nth-child(3) { --ab8-y: 2px;  --ab8-r: 0.4deg; }
+html body #work .featured-showcase > .featured-card:nth-child(4) { --ab8-y: 18px; --ab8-r: 1.6deg; }
+
+html body #work .featured-showcase > .featured-card:nth-child(-n+4) {
+  translate: 0 var(--ab8-y, 0px)!important;
+  rotate: var(--ab8-r, 0deg)!important;
+  transition:
+    translate .72s cubic-bezier(.22, .9, .24, 1),
+    rotate .72s cubic-bezier(.22, .9, .24, 1),
+    opacity .5s cubic-bezier(.22, .9, .24, 1),
+    border-color .35s var(--ease-out),
+    box-shadow .35s var(--ease-out)!important;
+}
+
+/* 入场初始态：仅 JS 标记 html.ab8-arc-armed 后生效，无 JS 时卡片照常可见 */
+html.ab8-arc-armed body #work .featured-showcase > .featured-card:nth-child(-n+4):not(.ab8-arc-in) {
+  opacity: 0!important;
+  translate: 0 calc(var(--ab8-y, 0px) + 34px)!important;
+}
+
+/* hover / 键盘聚焦：回正并上浮；x 方向位移恒为 0，不做横向漂移 */
+html body #work .featured-showcase > .featured-card:nth-child(-n+4):hover,
+html body #work .featured-showcase > .featured-card:nth-child(-n+4):focus-visible {
+  translate: 0 -6px!important;
+  rotate: 0deg!important;
+  z-index: 3!important;
+  border-color: #716141!important;
+}
+
+/* ---------- 减少动效 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html body .hero-main::after {
+    animation: none!important;
+    translate: none!important;
+    scale: none!important;
+  }
+  html body #work .featured-showcase > .featured-card:nth-child(-n+4) {
+    transition: none!important;
+  }
+  html.ab8-arc-armed body #work .featured-showcase > .featured-card:nth-child(-n+4):not(.ab8-arc-in) {
+    opacity: 1!important;
+    translate: 0 var(--ab8-y, 0px)!important;
+  }
+}
+/* ==========================================================================
+   §AE · 案例卡文件夹外观 + 案例详情层叠卡与数字滚动（任务 id=65）
+   --------------------------------------------------------------------------
+   AE-1 案例卡「文件夹式」外观
+     运行时事实：51 张案例卡位于 .featured-ledger > .project；点击类别筛选
+     （非「精选案例」）后该容器才从 hidden 切为可见。基线已占用
+     .project::before（金线扫过）与 .project::after（底部渐变压暗），并对
+     .featured-ledger .project:before/:after 置 display:none!important，
+     因此本段不触碰任何伪元素：标签带与顶部提亮全部由 background-image
+     多层渐变绘制，圆角 14/14/6/6 模拟文件夹上圆下直的折页轮廓。
+   AE-2 案例详情层叠卡
+     实测：.case-hero::before 空闲（content:none）；.case-hero::after 已被
+     基线暗色渐变遮罩占用（position:absolute / inset:0 / z-index:2）；
+     且 .case-hero 自身 overflow:hidden!important 会把内嵌伪元素下移 6/12px
+     露出的边缘裁掉。故改用 .case-hero 的 box-shadow 双层模拟层叠卡，
+     打开时 0→6/12px 过渡，reduced-motion 直接到位。
+   ========================================================================== */
+
+/* 覆盖：.featured-showcase .featured-card,…, .featured-ledger .project{background:#151517!important}
+        .featured-ledger .project,…, .work-grid .project{border-radius:24px!important;box-shadow:…!important}
+        .work-grid .project,.project,…{border-radius:0!important}
+        基线以 background 简写与本段同属性 !important/高特异规则锁定圆角、底色与
+        阴影；此处逐条 !important 覆盖，保留基线背景色 #151517，只叠加标签带。 */
+html body #work .featured-ledger > .project {
+  border-radius: 14px 14px 6px 6px!important;
+  background-image:
+    linear-gradient(90deg, rgba(198, 161, 91, .55) 0 88px, transparent 88px),
+    linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, 0) 60%)!important;
+  background-repeat: no-repeat!important;
+  background-size: 88px 3px, 100% 100%!important;
+  background-position: 14px 0, 0 0!important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .06) inset, 0 14px 34px rgba(0, 0, 0, .30)!important;
+}
+
+/* 运行时层叠：ledger 卡片的 .pixel-preview 铺满整张卡且自带 #171719 不透明
+   底，会盖住 .project 的 background-image；故在同一位置同步绘制标签带。
+   内层圆角同步收敛到文件夹轮廓（14/14/6/6），否则 24px 圆角会把 y=0 处
+   x<24px 的标签带裁掉。 */
+html body #work .featured-ledger > .project .pixel-preview {
+  border-radius: 14px 14px 6px 6px!important;
+  background-image:
+    linear-gradient(90deg, rgba(198, 161, 91, .55) 0 88px, transparent 88px),
+    linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, 0) 60%)!important;
+  background-repeat: no-repeat!important;
+  background-size: 88px 3px, 100% 100%!important;
+  background-position: 14px 0, 0 0!important;
+}
+
+/* 清晰标签带：.pixel-preview::after 是基线毛玻璃遮罩（z-index:2，
+   backdrop-filter:blur(4px)），会把底层 3px 标签带糊掉；::before 实测空闲
+   （content:none），故用它以 z-index:3 在最上层重绘同一段标签带。 */
+html body #work .featured-ledger > .project .pixel-preview::before {
+  content: ""!important;
+  position: absolute!important;
+  top: 0!important;
+  left: 0!important;
+  right: 0!important;
+  height: 3px!important;
+  z-index: 3!important;
+  pointer-events: none!important;
+  background-image: linear-gradient(90deg, rgba(198, 161, 91, .55) 0 88px, transparent 88px)!important;
+  background-repeat: no-repeat!important;
+  background-size: 88px 3px!important;
+  background-position: 14px 0!important;
+  transition: background-size .28s var(--ease-out, cubic-bezier(.22, .9, .24, 1));
+}
+
+/* ::after 的毛玻璃从 3px 处开始，给顶部标签带让出第一条 3px 视线；
+   覆盖基线 .pixel-preview:after{top:0!important}。 */
+html body #work .featured-ledger > .project .pixel-preview::after {
+  top: 3px!important;
+}
+
+/* 覆盖：.featured-ledger .project:hover{background:var(--ink)!important}
+   基线用 background 简写并带 !important，会把 background-image 一并清成
+   none、把 size/position/repeat 重置为初始值；这里用同属性长写法逐条
+   !important 反向覆盖，保证 hover 时标签带仍在且 88px→120px 展开。 */
+html body #work .featured-ledger > .project:hover,
+html body #work .featured-ledger > .project:focus-visible {
+  background-image:
+    linear-gradient(90deg, rgba(198, 161, 91, 1) 0 120px, transparent 120px),
+    linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0) 60%)!important;
+  background-repeat: no-repeat!important;
+  background-size: 120px 3px, 100% 100%!important;
+  background-position: 14px 0, 0 0!important;
+}
+
+html body #work .featured-ledger > .project:hover .pixel-preview,
+html body #work .featured-ledger > .project:focus-visible .pixel-preview {
+  background-image:
+    linear-gradient(90deg, rgba(198, 161, 91, 1) 0 120px, transparent 120px),
+    linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0) 60%)!important;
+  background-repeat: no-repeat!important;
+  background-size: 120px 3px, 100% 100%!important;
+  background-position: 14px 0, 0 0!important;
+}
+
+html body #work .featured-ledger > .project:hover .pixel-preview::before,
+html body #work .featured-ledger > .project:focus-visible .pixel-preview::before {
+  background-image: linear-gradient(90deg, rgba(198, 161, 91, 1) 0 120px, transparent 120px)!important;
+  background-size: 120px 3px!important;
+}
+
+/* ---------- AE-2 案例详情层叠卡 ---------- */
+#caseModal .case-hero {
+  box-shadow:
+    0 0 0 -1px rgba(198, 161, 91, .18),
+    0 0 0 -2px rgba(198, 161, 91, .10);
+  transition: box-shadow .5s var(--ease-out, cubic-bezier(.22, .9, .24, 1));
+}
+
+/* 打开态：底部露出 6px / 12px 两层错位卡边缘（缩 1px/2px，形成 1px 金线） */
+#caseModal.open .case-hero {
+  box-shadow:
+    0 6px 0 -1px rgba(198, 161, 91, .18),
+    0 12px 0 -2px rgba(198, 161, 91, .10);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #caseModal .case-hero {
+    transition: none;
+  }
+}
+/* ==========================================================================
+   §AF · 全站分层视差 + 滚动进度轨迹线（任务 id=66）
+   --------------------------------------------------------------------------
+   运行时事实（真实 Chrome 156，Network.setBypassServiceWorker + 禁缓存）：
+     · 位移一律走独立 translate 属性：.project 与 .sx-card 的 transform 已被
+       基线逐帧内联占用，用 transform 会互相覆盖；translate 与 transform 互不
+       干扰。
+     · 不使用 animation-timeline:view()：本项目 ≤820 portrait 下 view() 的
+       时间线源会被 body{overflow-x} 劫持到 BODY（任务 54/56 已实测），故改由
+       JS 滚动监听写 CSS 变量，跨浏览器一致、可随时归零。
+     · 候选层取舍（全部实测过裁切余量）：
+       - #services .backdrop-finish：背板第三列。父级 .capabilities-backdrop
+         仍保留基线 top/bottom:-8%，且 #services 同时有 overflow:hidden 与
+         overflow-x:clip，±26px 位移完全落在裁切区外 → 不可能露背景缝。
+       - .manifesto-refined .manifesto-blueprint：figure 四边 inset:-26px，
+         父级 .manifesto-refined{overflow:hidden} → ±20px 后仍有 6px 余量。
+       - #contact .contact-visual .contact-collab-art：SVG 自带满幅
+         <rect width=720 height=560 fill=url(#contactBg)>。若位移 figure 本体，
+         面板背景会在其上/下露出 13px 直边缝，故改为位移 SVG 并给
+         scale:1.12 的四周出血（实测 figure 高：1440=303.8 → 单侧出血
+         18.2px；390=237.2 → 14.2px），均大于 ±13px 上限，裁切只发生在
+         渐变底边，图稿主体（四周留白≥57px）不受影响。
+       - .hero .hero-veil：实测进入 .hero-ready 后被
+         `.hero-ready .hero-veil{display:none!important}` 无条件隐藏（基线
+         241319 处，不在任何媒体查询内），加视差无可见效果 → 放弃该层。
+     · 单帧只写 4 个 CSS 变量：3 个 translate 位移 + 1 个轨迹进度；层位置在
+       「滚动起手 / resize / 字体就绪」时缓存，帧内不读布局。
+     · prefers-reduced-motion：位移与出血 scale 全部撤销；轨迹线保留静态细线
+       并隐藏金色推进段（JS 同步不启动逐帧更新）。
+   ========================================================================== */
+
+/* ---------- AF-1 视差层：只用独立 translate，x 恒为 0 ---------- */
+html body #services .capabilities-backdrop .backdrop-finish {
+  translate: 0 calc(var(--af-p1, 0) * 1px);
+  will-change: translate;
+}
+
+html body .manifesto-refined .manifesto-blueprint {
+  translate: 0 calc(var(--af-p2, 0) * 1px);
+  will-change: translate;
+}
+
+html body #contact .contact-visual .contact-collab-art {
+  /* scale 只做四周出血供 translate 取用，不改变布局盒尺寸，也不裁到图稿主体 */
+  scale: 1.12;
+  translate: 0 calc(var(--af-p3, 0) * 1px);
+  will-change: translate, scale;
+}
+
+/* ---------- AF-2 滚动进度轨迹线 ----------
+   位置：右侧 18px，通栏视口高，2px 宽；pointer-events:none。
+   层级：z-index:60 低于 .topline{z-index:80}，高于页面内容与背景层，
+   也低于 .noise(z-index:90) 与咨询 FAB(2450) / 弹窗，不遮挡交互。 */
+html body .af-progress-rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 18px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  opacity: .9;
+  pointer-events: none;
+  z-index: 60;
+  contain: strict;
+}
+
+/* 金色推进段：scaleY = --af-progress（0→1），由 JS 逐帧写；无 JS 时保持 0 */
+html body .af-progress-rail > .af-progress-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-origin: 50% 0;
+  scale: 1 var(--af-progress, 0);
+  background: linear-gradient(180deg, var(--accent-2) 0%, var(--accent) 10%, var(--accent) 100%);
+  box-shadow: 0 0 8px var(--accent-2);
+}
+
+/* 移动端（≤620）隐藏，避免遮挡内容 */
+@media (max-width: 620px) {
+  html body .af-progress-rail { display: none!important; }
+}
+
+/* ---------- AF-3 减少动效：视差归零，轨迹线只留静态细线 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html body #services .capabilities-backdrop .backdrop-finish,
+  html body .manifesto-refined .manifesto-blueprint,
+  html body #contact .contact-visual .contact-collab-art {
+    translate: none!important;
+    scale: none!important;
+    will-change: auto!important;
+  }
+  html body .af-progress-rail > .af-progress-fill { display: none!important; }
+  html body .af-progress-rail { opacity: .55; }
+}
+/* ===== AG · 修首字被裁（用户 2026-11-08 圈出「让」残缺） =====
+   成因：h1.hero-title-sweep 有 overflow:clip；首字经 ::first-letter 放大 1.18em
+   后 .hero-title-sans 实测高 102px，而行盒仅 91.7568px，超出部分被上下裁切。
+   扫光装饰已于 AB-5 移除，h1 不再需要 clip，放开裁剪即可（hero 区自身 overflow
+   仍为 hidden，不会把内容溢出到页面外）。 */
+html body.hero-ready .hero h1.hero-title-sweep{
+  overflow: visible!important;
+  overflow-x: visible!important;
+  overflow-y: visible!important;
+}
+/* AG-2：::first-letter 的 1.18em 在「逐字 .hero-char 内联块」结构下不会放大字形
+   （实测首字 font-size 仍为 77.76px），只会把 .hero-title-sans 行盒撑到 102px，
+   在 h1 overflow:clip 时造成首字上下被裁。故撤销该放大，首字与其余字符同字号。 */
+html body.hero-ready .hero h1.hero-title-sweep::first-letter{
+  font-size: inherit!important;
 }
