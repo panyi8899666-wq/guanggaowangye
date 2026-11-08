@@ -6400,3 +6400,134 @@ html body .partners-slots .ab-mq[data-dir="reverse"] {
 html body .partners-slots .partners-group {
   display: none!important;
 }
+
+/* ==========================================================================
+   §AM · 联系区「微信 / 手机」卡重排（任务 id=74）
+   --------------------------------------------------------------------------
+   用户原话：「重新设计排版」（语音误转为「重新色剂排版」），截图指出四类问题：
+     ① 手机号被拆成三行、读不成连续号码；
+     ② 说明文字折行，末字「号」单独掉到下一行；
+     ③ 二维码比右侧文本块高，右侧底部留出一截空白；
+     ④ 说明文字对比度偏低、复制按钮的 1px 淡描边在深底上几乎看不见。
+
+   改前实测（Chrome 156 / CDP 9378 / 全新 profile / bypass SW / 禁缓存 /
+   Emulation.setFocusEmulationEnabled + visibilityState=visible；
+   逐档数值见 evidence/cw-before.json）：
+     · 卡片 298.9×204（1440）/ 343×204（768）/ 450×204（520）/ 320×204（390）
+       / 290×204（360），四档高度恒为 204；
+     · 号码 20px：1440/768 为 nowrap，**520/390/360 被 X3 的
+       `white-space:normal!important` 改成可折行**（真机字宽更大即三行）；
+     · 说明 11px、nowrap 仅在 ≥621 生效，≤620 为 normal，末尾「号」易掉行；
+       颜色 rgba(236,234,228,.55)，对卡片实测底 #121214 仅 5.33:1；
+     · 二维码 92/92/88/84/84 高，`.wechat-info` 恒 147.594×68.188，
+       `|Δh|` = 23.812/23.812/19.812/15.812/15.812，底边差 11.906/…/7.906；
+     · 复制按钮 84×36、底色透明、`1px solid rgba(236,234,228,.2)`。
+
+   处理原则：**不改 DOM、不改文案、不改卡片宽高**；二维码保持原尺寸
+   （92/88/84），改由 `.wechat-info` 纵向拉伸补足内容行高——这样
+   `.wechat-value` 的高度仍由二维码决定（与改前完全一致），卡片 204 不变，
+   而右栏底边与二维码底边严格对齐，「右下留白」消失。
+   这是任务给出的「stretch 方案」的安全实现：直接对 <img> 拉伸会让方形二维码
+   变形，故只拉伸容器与文本块，图片始终等比（width/height 原值）。
+
+   号码/说明字号用 clamp 落在 16–20px 与 11.5px，均为既有字号的收敛，
+   不新增色值：rgba(198,161,91,…) 即 --accent、rgba(236,234,228,…) 即 --ink。
+   ========================================================================== */
+
+/* ---------- AM-1 · 号码：全档强制单行 ----------
+   覆盖 X3 在 ≤620 写的 white-space:normal!important（选择器 (0,5,0)），
+   这里补 :not(#opt-boost) 抬到 (1,5,0) 并同样带 !important；
+   tabular-nums 让「173 0698 3179」三位分组等宽，配合 -.01em 字距压缩总宽。
+   clamp(16px,4.6vw,20px)：1440/768/520 → 20px，390 → 17.94px，
+   360 → 16.56px；按实测单行宽 147.6px（20px）线性折算，390 约 132px、
+   360 约 122px，均小于可用宽度（390≈190px、360≈160px），不会溢出。 */
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong:not(#opt-boost),
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong a:not(#opt-boost) {
+  display: block;
+  white-space: nowrap!important;
+  overflow-wrap: normal!important;
+  word-break: keep-all!important;
+  font-size: clamp(16px, 4.6vw, 20px)!important;
+  line-height: 1.45!important;
+  letter-spacing: -.01em!important;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink)!important;
+}
+/* 覆盖：html body .contact-detail strong a{display:inline!important}（X3）——
+   inline 盒在折行判定上不受控，统一为 block 后 rect 高度 = 行数 × 行高。 */
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong a:not(#opt-boost) {
+  display: block!important;
+  padding: 0!important;
+  min-height: 0!important;
+}
+
+/* ---------- AM-2 · 两条说明：各自锁单行 + 提亮 ----------
+   字号 11 → 11.5（轻微放大提升可读性），行高 1.55；
+   颜色 rgba(236,234,228,.75) 对卡片实测底 #121214 的对比度为 9.15:1
+   （公式见 evidence/cw-after.json 的 contrast 字段），高于 4.5:1。
+   360 档实测「微信号同手机号」单行宽约 80.5px，可用宽度约 160px，
+   仍有余量，无需降到 11px。 */
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info small:not(#opt-boost) {
+  display: block;
+  white-space: nowrap!important;
+  overflow-wrap: normal!important;
+  word-break: keep-all!important;
+  font-size: 11.5px!important;
+  line-height: 1.55!important;
+  letter-spacing: .01em!important;
+  color: rgba(236, 234, 228, .75)!important;
+}
+
+/* ---------- AM-3 · 二维码与右栏等高 / 底边对齐 ----------
+   .wechat-value 由 align-items:center 改为 stretch：容器高度仍由二维码决定
+   （92/88/84，未被改动），`.wechat-info` 作为 stretch 子项被拉到同高，
+   justify-content:space-between 让号码贴顶、说明贴底，右栏底部不再空一截。
+   picture 与图片保持原尺寸与等比，因此二维码不会变形。 */
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-value:not(#opt-boost) {
+  align-items: stretch!important;
+  gap: 16px!important;
+  min-width: 0;
+}
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-value picture:not(#opt-boost) {
+  align-self: stretch;
+  display: flex!important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-qr:not(#opt-boost) {
+  align-self: center;
+  flex: 0 0 auto;
+}
+#contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info:not(#opt-boost) {
+  display: flex!important;
+  flex-direction: column!important;
+  justify-content: space-between!important;
+  align-items: flex-start;
+  align-self: stretch;
+  gap: 2px!important;
+  /* 填满二维码右侧的剩余宽度，避免号码/说明右侧再出现一条窄空白 */
+  flex: 1 1 auto;
+  min-width: 0;
+  height: auto;
+}
+
+/* ---------- AM-4 · 复制按钮：加 7% 墨色底 + 金色描边 ----------
+   改前透明底 + rgba(236,234,228,.2) 描边，在 #121214 上边界几乎不可见；
+   现改为 7% 墨色填充 + 45% 金色描边，hover/focus 描边升到 100% --accent。
+   金色 alpha 直接取自 --accent(#c6a15b) 的 rgba，不引入新主题色。 */
+#contact .contact-details.diagnostic-email-only .contact-wechat .copy-email:not(#opt-boost) {
+  background-color: rgba(236, 234, 228, .07)!important;
+  border: 1px solid rgba(198, 161, 91, .45)!important;
+  color: var(--ink)!important;
+  transition: background-color .18s var(--ease-out),
+              border-color .18s var(--ease-out),
+              color .18s var(--ease-out);
+}
+#contact .contact-details.diagnostic-email-only .contact-wechat .copy-email:not(#opt-boost):hover,
+#contact .contact-details.diagnostic-email-only .contact-wechat .copy-email:not(#opt-boost):focus-visible {
+  background-color: rgba(236, 234, 228, .12)!important;
+  border-color: var(--accent)!important;
+  color: var(--ink)!important;
+}
