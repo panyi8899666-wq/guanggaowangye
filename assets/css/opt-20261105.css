@@ -5946,3 +5946,457 @@ html body .topline .ai-nav-progress {
     transition-duration: 0s!important;
   }
 }
+
+/* ==========================================================================
+   §AJ · 首页案例轮转带：51 个案例全部轮转 / 卡片不写任何数字 / 两侧渐隐
+   （任务 id=71；动画直接复用 §AH 的官方 abMarquee keyframes）
+   --------------------------------------------------------------------------
+   运行时事实（真实 Chrome 156 headless · 绕 SW + 禁缓存 · 1440×900 实测）：
+     .hero-ribbon（1 个，全宽 0–1440，高 440px）内由 app.5082587a.js 生成
+       .sx-stage > .sx-track > button.sx-card × 17（序号 01–17 写进卡片内容）
+       .sx-hud > .sx-count(<b>01</b><i>/ 17</i>) + .sx-bar + .sx-hint
+     旧带左缘实测有 1 张被裁的「半张卡」（x=-34.53 / right=215.5），
+     用户明确判定这是「多余的东西」。
+     ✱ .sx-card 的 transform 被 app.js 每帧内联写入（translate3d + scale），
+       任何 CSS transform 都会被内联值压过。故本段绝不复用 .sx-card 做驱动，
+       而是新建独立容器 .hero-mq：track 用 animation、卡片 hover 只用独立的
+       translate 属性，与内联 transform 完全隔离、互不争夺。
+   --------------------------------------------------------------------------
+   结构（由 opt-20261105.js 末尾 §AJ IIFE 生成，不改 index.html）：
+     .hero-ribbon
+       .hero-mq                   ← 带容器：flex + overflow:hidden + 两侧 mask
+         .hero-mq__track         ← 原始 51 张，正向
+         .hero-mq__track--clone  ← 同一批克隆（aria-hidden），正向跟随
+   --------------------------------------------------------------------------
+   为什么两条 track 都正向（而不像 §AH 品牌墙那样第 2 条 reverse）：
+     本带是「单行无缝循环」，位移 = 一条 track 宽 + 一个 gap。若克隆轨反向，
+     两条轨会相向而行、在容器接缝处拉开空白，循环点必然露空。故两条同向。
+     方向切换能力（data-dir="reverse"）仍保留给 §AH 的多带场景。
+   --------------------------------------------------------------------------
+   可调参数（只改下面三个自定义属性，不必动 keyframes）：
+     --hm-cw     单卡宽：247px（任务给定；1440 下 5.4 张可见）
+     --hm-ch     单卡高：309px（同上；.hero-ribbon 高 440，上下各留 65px）
+     --hm-gap    卡间距 12px（同时喂给 §AH 的 abMarquee 作 --ab-gap）
+     --hm-dur    单条 track 滚完一遍 90s：51 卡 × 259px ≈ 13.2k px 行程，
+                 90s 折合 ≈ 147px/s，恰好「看得清、又不静止」。
+   ========================================================================== */
+
+/* ---------- AJ-1 · 隐藏旧 17 卡轮播 ----------
+   刻意用 visibility 而不是 display:none：app.js 每帧要读 .sx-stage / .sx-card
+   的几何量做定位，display:none 会让它们测量为 0，可能抛出除零或 NaN 位移。
+   visibility:hidden 保留全部布局与测量结果，只是不再绘制、不再接收指针。 */
+html body .hero-ribbon .sx-stage,
+html body .hero-ribbon .sx-hud {
+  visibility: hidden!important;
+  pointer-events: none!important;
+}
+
+/* ---------- AJ-2 · 带容器 ----------
+   定位一律用显式 top/left/right/bottom 并清零 margin/border，确保
+   getBoundingClientRect().x 恒等于 .hero-ribbon 的左边（实测 0），
+   避免 inset:0 被其它覆盖层的 margin 带出 -7px 偏移。
+   两侧 mask 的拐点（实测调参，见 evidence/hm-after.json 的 edge 段）：
+     · transparent 0→4%：1440 档 57.6px 内 mask alpha 恒为 0，故「视口最左/
+       最右 40px」条带与背景完全同色（实测平均通道差 < 1）。
+     · #000 11% / 89%：1440 档 158px 处才到全不透明，渐入带 100px，柔和无硬边。
+     · transparent 96%（1382px）起再渐出。
+   为什么不是 8% / 92%：8% 拐点（115px）时「左右各 120px」条带内单卡可见占比
+   峰值 0.1732，超过「可见 > 0.15 算半卡」的阈值；收到 11% 后同一指标降到 0.08
+   以下，且 40px 内仍为 0。 */
+html body .hero-ribbon .hero-mq {
+  --hm-cw: 247px;
+  --hm-ch: 309px;
+  --hm-gap: 12px;
+  --hm-dur: 90s;
+  --ab-gap: var(--hm-gap); /* 供 §AH 的 abMarquee keyframes 读取，避免重复定义 */
+  position: absolute!important;
+  top: 0!important;
+  left: 0!important;
+  right: 0!important;
+  bottom: 0!important;
+  margin: 0!important;
+  border: 0!important;
+  z-index: 2; /* 与基线 .hero-ribbon-track 同层，低于 :before(7)/:after(6) 装饰 */
+  display: flex!important;
+  align-items: center!important;
+  gap: var(--hm-gap)!important;
+  overflow: hidden!important;
+  padding-block: 12px; /* 给 hover 上浮 6px 留余量，避免被自身 overflow 裁掉 */
+  touch-action: pan-x pinch-zoom; /* .hero-ribbon 是 pan-y，横滑需要单独放行 */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 4%, #000 11%, #000 89%, transparent 96%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, transparent 4%, #000 11%, #000 89%, transparent 96%, transparent 100%);
+}
+
+/* ---------- AJ-3 · 两条 track：不收缩、按内容撑开、挂 §AH 的 abMarquee ----------
+   位移 = -100% - gap，第二条起点正好顶到第一条头部，循环处无跳变。 */
+html body .hero-ribbon .hero-mq__track {
+  display: flex!important;
+  flex: 0 0 auto!important;
+  align-items: center!important;
+  gap: var(--hm-gap)!important;
+  animation: abMarquee var(--hm-dur) linear infinite;
+  will-change: transform;
+}
+
+/* ---------- AJ-4 · hover 暂停（只停本带，不影响页面其余动画） ---------- */
+html body .hero-ribbon .hero-mq:hover .hero-mq__track {
+  animation-play-state: paused;
+}
+
+/* ---------- AJ-5 · 单卡：247×309 / 圆角 12 / 图片 cover / 底部渐变 + 标题分类 ----------
+   hover 上浮用独立的 translate 属性（不改 transform，避免与动画/内联值相争）。 */
+html body .hero-ribbon .hero-mq__card {
+  position: relative;
+  flex: 0 0 auto!important;
+  width: var(--hm-cw);
+  height: var(--hm-ch);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .72),
+              inset 0 0 0 1px var(--glass-hi);
+  transition: translate .42s cubic-bezier(.22, .61, .36, 1),
+              box-shadow .42s var(--ease-out);
+}
+html body .hero-ribbon .hero-mq__card:hover,
+html body .hero-ribbon .hero-mq__card:focus-within {
+  translate: 0 -6px;
+  will-change: translate, box-shadow;
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, .65),
+              0 0 0 1px rgba(198, 161, 91, .55),
+              0 26px 54px rgba(0, 0, 0, .55);
+}
+
+/* 媒体层：图片（或概念稿）铺满，cover 裁切 */
+html body .hero-ribbon .hero-mq__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+html body .hero-ribbon .hero-mq__media > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: none!important;
+  transition: scale .5s cubic-bezier(.22, .61, .36, 1);
+}
+html body .hero-ribbon .hero-mq__card:hover .hero-mq__media > img {
+  scale: 1.04;
+}
+/* 无图片的概念卡（MOSS 山岚茶事）：clone 的 .concept-art 同样铺满 */
+html body .hero-ribbon .hero-mq__media > .concept-art {
+  position: absolute!important;
+  inset: 0!important;
+  width: 100%!important;
+  height: 100%!important;
+  margin: 0!important;
+  border-radius: 0!important;
+}
+
+/* 纯文字卡（既无图片也无概念稿时才使用，兜底避免空图片框）：
+   渐变底用既有令牌换算的 rgba(198,161,91,…) 与 rgba(13,13,15,…)，不引入新主题色；
+   分类大字以 45% 透明度铺在卡面中部，正文仍压在底部（同 .hero-mq__meta）。 */
+html body .hero-ribbon .hero-mq__card--text {
+  background: linear-gradient(160deg, rgba(198, 161, 91, .18), rgba(13, 13, 15, .9));
+}
+html body .hero-ribbon .hero-mq__media > .hero-mq__glyph {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 44%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: .04em;
+  color: rgba(198, 161, 91, .45);
+  text-align: left;
+  word-break: break-word;
+}
+
+/* 底部渐变遮罩：只压暗下半部分，保证标题可读又不糊满画面 */
+html body .hero-ribbon .hero-mq__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+              rgba(13, 13, 15, 0) 40%,
+              rgba(13, 13, 15, .52) 68%,
+              rgba(13, 13, 15, .93) 100%);
+}
+
+/* 文本层：分类在上、标题在下；卡片内不出现任何序号或页码 */
+html body .hero-ribbon .hero-mq__meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 14px 14px;
+  pointer-events: none;
+}
+html body .hero-ribbon .hero-mq__cat {
+  display: block;
+  font-size: 9px;
+  line-height: 1.35;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html body .hero-ribbon .hero-mq__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  transition: transform .42s cubic-bezier(.22, .61, .36, 1);
+}
+html body .hero-ribbon .hero-mq__card:hover .hero-mq__title {
+  transform: translateY(-2px);
+}
+
+/* ---------- AJ-6 · 窄屏尺寸：卡宽/卡高随 .hero-ribbon 高度收敛 ----------
+   各档 .hero-ribbon 实测高度：1440=440 / 1280=409.6 / 1024=327.7 / 768=336 / 390=316。
+   卡高统一留 ≥24px 上下余量（12px padding×2 之外再留 hover 上浮 6px）。 */
+@media (max-width: 1199px) {
+  html body .hero-ribbon .hero-mq { --hm-cw: 208px; --hm-ch: 260px; }
+}
+@media (max-width: 1023px) {
+  html body .hero-ribbon .hero-mq { --hm-cw: 188px; --hm-ch: 236px; }
+}
+@media (max-width: 900px) {
+  html body .hero-ribbon .hero-mq { --hm-cw: 176px; --hm-ch: 222px; }
+}
+@media (max-width: 767px) {
+  html body .hero-ribbon .hero-mq {
+    --hm-cw: 62vw;
+    --hm-ch: 62vw;
+    --hm-gap: 10px;
+  }
+}
+
+/* ---------- AJ-7 · 减少动效：退回可横滚的静态流，51 张仍可全部看到 ----------
+   克隆轨隐藏，避免同一批案例重复出现两遍；mask 去掉，两端不再吃内容。 */
+@media (prefers-reduced-motion: reduce) {
+  html body .hero-ribbon .hero-mq {
+    overflow-x: auto!important;
+    overflow-y: hidden!important;
+    padding-inline: 16px;
+    -webkit-mask-image: none!important;
+    mask-image: none!important;
+    scrollbar-width: thin;
+  }
+  html body .hero-ribbon .hero-mq__track {
+    animation: none!important;
+    will-change: auto;
+  }
+  html body .hero-ribbon .hero-mq__track--clone {
+    display: none!important;
+  }
+  html body .hero-ribbon .hero-mq__card {
+    transition: none!important;
+  }
+}
+
+/* ---------- AJ-8 · 触屏（pointer:coarse）：不自动滚动，改为手动横滑 ----------
+   手机上无限滚动会一直动、抢注意力；改为和 reduced-motion 一样的静态横滚，
+   51 张全部可手动翻到。lenis / 惯性交给原生滚动。 */
+@media (pointer: coarse) {
+  html body .hero-ribbon .hero-mq {
+    overflow-x: auto!important;
+    overflow-y: hidden!important;
+    padding-inline: 16px;
+    -webkit-mask-image: none!important;
+    mask-image: none!important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  html body .hero-ribbon .hero-mq::-webkit-scrollbar {
+    display: none;
+  }
+  html body .hero-ribbon .hero-mq__track {
+    animation: none!important;
+    will-change: auto;
+  }
+  html body .hero-ribbon .hero-mq__track--clone {
+    display: none!important;
+  }
+}
+
+/* ==========================================================================
+   §AK · 页脚导航重排：三栏高度差收敛 / 圆点提亮 / 说明文字提对比度
+   （任务 id=72；紧接 §AI 的页脚三栏，只调观感，不改 DOM 与链接文本）
+   --------------------------------------------------------------------------
+   运行时事实（Chrome 156 headless · 绕 SW + 禁缓存 · 1440×900 实测，改前）：
+     · 页脚三栏 rect 高度 73.59 / 268.50 / 92.89 → 高度差 194.91px。
+     · .footer-cols 在 §AI 里**已经是两列 grid**（202.16 + 37.44 gap + 202.16），
+       中栏偏高不是「上下堆叠」造成的：.footer-links a 被基线 hero-ready 按钮皮肤
+       撑成 44px 高（min-height:44px!important + padding:10px 4px!important，
+       5 条 = 220px），而它的裸 line-height 只有 16.5px —— 多余高度全是可点区内边距。
+       → 本段把导航项收敛到 21.5px（16.5 行高 + 4 上下内边距 + 1 下划线），
+         中栏落到 147px 量级，三栏高度差 73.41px（目标 ≤80）。
+     · 导航圆点：基线 .footer-meta .footer-links a::before{background:currentColor}
+       而链接色是 rgba(236,234,228,.55)，再乘 opacity:.75 → 有效 alpha 约 .41，
+       压在 #0d0d0f 上几乎看不见，这就是「小圆点对比度低」的根因。
+       → 改成 6px 金色方点（mask:none 去掉基线的 icon-diamond 菱形蒙版），
+         rgba(198,161,91,.78) 对 #0d0d0f 的对比度 5.23:1；
+         hover / focus-visible 转 var(--accent) 全亮（≈8.77:1）。
+     · 右栏说明文字 rgba(236,234,228,.6) → .78，对 #0d0d0f 对比度 9.64:1。
+     · 颜色只走既有令牌：rgba(198,161,91,…)=--accent 的 alpha 形式、
+       rgba(236,234,228,…)=--ink、#0d0d0f=--bg-base；未引入新主题色。
+     · 用户明确反对「用空白换对齐」：三栏一律 align-self:start +
+       justify-content:flex-start，**不使用** justify-content:space-between 撑高。
+     · 水印（.footer-watermark，230.4px / rgba(198,161,91,.08)）仍在三栏下方，
+       由 footer 的 overflow:hidden 裁底，五档视口 scrollWidth 均未超视口。
+   ========================================================================== */
+
+/* ---------- AK-1 三栏统一顶部对齐，禁止 space-between 拉大间距 ---------- */
+html body footer.footer-meta > .footer-left,
+html body footer.footer-meta > .footer-cols,
+html body footer.footer-meta > .footer-contact {
+  align-self: start!important;
+  justify-content: flex-start!important;
+}
+
+/* ---------- AK-2 中栏：「导航 | 服务」左右两个子列并排 ----------
+   §AI 已给出 repeat(2,1fr)，这里用显式 minmax + 固定 24px 列距并锁 align 为 start，
+   防止任一子列内容变高时把另一列一起拉长（grid 默认 stretch）。 */
+html body footer.footer-meta .footer-cols {
+  display: grid!important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)!important;
+  column-gap: 24px!important;
+  row-gap: 0!important;
+  align-items: start!important;
+  align-content: start!important;
+}
+/* 链接行距收紧到 4px：5 条导航 + 4 条服务都按 4px 节奏排 */
+/* 列标签与首项的间距 10px → 6px：中栏再收 4px，高度差留出余量（151 → 147） */
+html body footer.footer-meta .footer-cols .footer-col-label {
+  margin-bottom: 6px!important;
+}
+html body footer.footer-meta .footer-cols .footer-links,
+html body footer.footer-meta .footer-cols .footer-services {
+  gap: 4px!important;
+}
+
+/* ---------- AK-3 导航项瘦身：44px → 21.5px ----------
+   基线两条 !important 规则的优先级来源：
+     .footer-meta .footer-links a{min-height:44px!important}                    → (0,3,1) 级
+     body.hero-ready .footer-meta .footer-links a{padding:10px 4px!important}   → (0,3,2) 级
+   本段选择器 html body footer.footer-meta .footer-cols .footer-links a[href]
+   = 4 元素 + 3 类 + 1 属性 = (0,4,4)，高于上述两条，故 !important 对 !important 也能赢。
+   width:100% 让每条链接占满子列，hover 下划线是整行宽，两列文字块对齐不参差。 */
+html body footer.footer-meta .footer-cols .footer-links a[href] {
+  display: flex!important;
+  width: 100%!important;
+  align-items: center;
+  min-height: 0!important;
+  padding: 2px 0!important;
+  line-height: 1.5;
+}
+
+/* ---------- AK-4 导航圆点：6px 金色方点，hover/focus 全亮 ----------
+   mask:none 去掉基线 body.hero-ready :is(...)::before 的 --icon-diamond 蒙版，
+   否则 6px 方块会被裁成菱形；color/background 都改走 --accent 的 alpha 形式。 */
+html body footer.footer-meta .footer-cols .footer-links a[href]::before {
+  width: 6px!important;
+  height: 6px!important;
+  opacity: 1!important;
+  border-radius: 0;
+  background: rgba(198, 161, 91, .78)!important;
+  -webkit-mask: none!important;
+  mask: none!important;
+  flex: 0 0 6px;
+}
+html body footer.footer-meta .footer-cols .footer-links a[href]:hover::before,
+html body footer.footer-meta .footer-cols .footer-links a[href]:focus-visible::before {
+  background: var(--accent)!important;
+}
+
+/* ---------- AK-5 右栏说明文字提亮 ----------
+   仅提 .footer-contact-note（「先说目标，不必先写一份完美需求。」）；
+   「开始设计」按钮内的 START A PROJECT 仍由按钮皮肤控制，不动。 */
+html body footer.footer-meta .footer-contact .footer-contact-note {
+  color: rgba(236, 234, 228, .78)!important;
+}
+/* ==========================================================================
+   §AL · 合作品牌墙：缩略小图 + 去业务分类 + 三带 16/16/16（任务 id=73）
+   --------------------------------------------------------------------------
+   用户原话：「加入缩略小图不需要分类，按这个模式平均分3分」——
+     ① .partner-badge 里的字母换成 24×24 真实缩略图（assets/thumbs/*.webp；
+        品牌→文件的显式映射表在 opt-20261105.js 末尾 §AL 的 THUMB_MAP，
+        无对应图的品牌保留字母徽标兜底，不删品牌）；
+     ② 移除 3 个 .partners-group 业务标题（HTML 已删，此处只留一条隐藏兜底，
+        防旧缓存 HTML 里残留标题被渲染）；
+     ③ 48 个品牌按 DOM 原顺序每 16 个一条带：3 带 × 2 track = 96 张卡。
+
+   只动品牌墙内部：条目仍是 48px 高（§AB-6 的 height:48px 未被触碰），
+   hover 仍单带暂停（§AH ④），两侧 mask 渐隐仍由 §AH ②提供。
+
+   尺寸：badge 20×20 → 24×24（缩略图略大更易辨识），圆角 3px → 4px，
+   图片 object-fit:cover 裁成方图；描边/底色沿用既有 --accent 的 alpha 值，
+   不新增主题色。带速：每带由 21/6/21 变为 16/16/16，46/52s 显得偏慢，
+   收到 34/40/34s（反向带同样 16 项、略慢于正向，避免反方向视觉过快）。
+   ========================================================================== */
+/* ① 徽标：24×24 方形图位（覆盖 §AB-6/AK 的 20×20、3px 圆角）
+   描边改用 inset box-shadow 而非 border：border 会吃掉 2px 内容区，缩略图只能
+   22×22；inset 描边不占盒模型，图片内容区正好 24×24，视觉仍是 1px 金线。 */
+html body .partners-slots .partners-slot-item .partner-badge,
+html body .partners-slots .partners-group + .partners-slot-item .partner-badge {
+  flex: 0 0 24px!important;
+  width: 24px!important;
+  height: 24px!important;
+  padding: 0!important;
+  border: 0!important;
+  border-radius: 4px!important;
+  overflow: hidden!important;
+  font-size: 9px!important;
+  box-shadow: inset 0 0 0 1px rgba(198, 161, 91, .55)!important;
+  transition: box-shadow .18s var(--ease-out),
+              background-color .18s var(--ease-out),
+              color .18s var(--ease-out)!important;
+}
+/* hover/focus：描边转金（等价于被替换掉的 border-color:var(--accent) 反馈） */
+html body .partners-slots .partners-slot-item:hover .partner-badge,
+html body .partners-slots .partners-slot-item:focus-visible .partner-badge,
+html body .partners-slots .partners-slot-item:focus-within .partner-badge {
+  box-shadow: inset 0 0 0 1px var(--accent)!important;
+}
+
+/* ② 缩略图：填满徽标、居中裁切；不做缩放动画，hover 只变描边/底色 */
+html body .partners-slots .partner-badge img.partner-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 3px;
+  background: rgba(198, 161, 91, .08);
+}
+
+/* ③ 带速：三条带等长（各 16 项），默认 34s；第 2 条 data-dir="reverse" 40s */
+html body .partners-slots .ab-mq {
+  --ab-dur: 34s;
+}
+html body .partners-slots .ab-mq[data-dir="reverse"] {
+  --ab-dur: 40s;
+}
+
+/* ④ 业务分类标题已从 DOM 移除；旧缓存 HTML 若仍带标题，运行时隐藏而非占行 */
+html body .partners-slots .partners-group {
+  display: none!important;
+}

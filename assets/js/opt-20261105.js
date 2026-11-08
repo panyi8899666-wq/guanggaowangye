@@ -1211,3 +1211,414 @@
     }
   } catch (err) {}
 })();
+
+/* §AJ · 首页案例轮转带：51 个案例 DOM 生成（任务 id=71）
+   --------------------------------------------------------------------------
+   只做 DOM 构建，动画 / 渐隐 / 暂停 / 静态横滚全部在 §AJ 的 CSS 里。
+   数据来源：.featured-ledger .project × 51（app.js 运行时把 .work-grid 的案例卡
+   搬进该容器）。逐张提取：
+     · 图片：srcset 里的最小候选（-800 变体）→ 卡片只显示 247px 宽，
+       用 800w 已足够（2x DPR 也覆盖），102 个 <img> 的解码内存比直接引原图
+       低约 5.8 倍；srcset 缺失时退回 img 的 src。
+     · 分类：.project-meta small    · 标题：.project-meta strong
+     · 无图片的概念卡（MOSS 山岚茶事）clone 它的 .concept-art 作为视觉层。
+   去数字（A + C 双重保障）：
+     ① 提取时逐段清洗：去行首两位序号、去 "/ 17"、"02 / 17" 这类页码残留、
+        去尾部两位序号；.sample-tag（"01 · 产品级 3D 渲染"）整块不提取。
+     ② 组装完成后再对 .hero-mq 的全部文本节点做一次正则兜底清零
+        （concept-art 自带的文本也在内），保证卡片内不残留任何序号。
+   幂等：检测到 .hero-ribbon 里已有 .hero-mq 就退出；全程 try/catch，
+        异常不影响页面其余脚本。 */
+(function () {
+  'use strict';
+  try {
+    var RIBBON_SEL = '.hero-ribbon';
+    var ribbon = document.querySelector(RIBBON_SEL);
+    if (!ribbon || ribbon.querySelector('.hero-mq')) return;
+
+    /* ---------- 文本清洗 ---------- */
+    function cleanText(raw) {
+      var s = String(raw == null ? '' : raw);
+      s = s.replace(/\b\d{1,2}\s*\/\s*17\b/g, ' ');        /* "02 / 17" */
+      s = s.replace(/\/\s*17\b/g, ' ');                     /* "/ 17" */
+      s = s.replace(/^\s*\d{2}\s*[·.、:：\-—–]?\s*/, '');  /* 行首两位序号 */
+      s = s.replace(/\s+\d{2}\s*$/, '');                    /* 尾部两位序号 */
+      return s.replace(/\s+/g, ' ').trim();
+    }
+
+    /* 组装后再扫一遍所有文本节点（兜底：防止 concept-art / 分类串里的残留） */
+    function scrubNumbers(root) {
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      var nodes = [], node;
+      while ((node = walker.nextNode())) nodes.push(node);
+      nodes.forEach(function (n) {
+        var t = n.nodeValue;
+        if (!t || !/\d/.test(t)) return;
+        var next = t.replace(/\b\d{1,2}\s*\/\s*17\b/g, ' ')
+                    .replace(/\/\s*17\b/g, ' ')
+                    .replace(/^\s*\d{2}\s*[·.、:：\-—–]?\s*/, ' ');
+        if (next !== t) n.nodeValue = next.replace(/[ \t]{2,}/g, ' ');
+      });
+    }
+
+    /* ---------- 逐张取素材 ----------
+       app.5082587a.js 对「第 6 张之后」的案例卡做懒加载接力：把 img 的 src / srcset
+       摘掉、原图路径挪到 data-cgsrc，等卡进入视口附近（rootMargin 600px）才还原。
+       本段在 DOMContentLoaded 取素材，若不读 data-cgsrc，这 2 张
+       （投币盒子 / 天马微电子奠基）会被整条丢弃 —— 实测正是 49/51 的成因。
+       四档兜底：srcset 最小候选 → src（多为 assets/r/*-w480 响应式缩略图）
+                 → data-cgsrc（原图，两张分别 21KB / 5KB）→ concept-art → 文字卡。 */
+    function pickImage(pj) {
+      var img = pj.querySelector('img');
+      if (img) {
+        var srcset = img.getAttribute('srcset') || '';
+        var first = (srcset.split(',')[0] || '').trim().split(/\s+/)[0];
+        var src = first || img.getAttribute('src') || img.getAttribute('data-cgsrc') || '';
+        if (src) return { kind: 'img', src: src, alt: img.getAttribute('alt') || '' };
+      }
+      var art = pj.querySelector('.concept-art');
+      if (art) return { kind: 'art', node: art };
+      return { kind: 'text' };
+    }
+
+    function buildMedia(media, title, cat) {
+      var box = document.createElement('div');
+      box.className = 'hero-mq__media';
+
+      if (media.kind === 'text') {
+        /* 无图、也无概念稿：绝不留空图片框，改渲染渐变底 + 分类大字 */
+        var glyph = document.createElement('span');
+        glyph.className = 'hero-mq__glyph';
+        glyph.setAttribute('aria-hidden', 'true');
+        glyph.textContent = cat || title;
+        box.appendChild(glyph);
+        return box;
+      }
+
+      if (media.kind === 'img') {
+        var img = document.createElement('img');
+        img.setAttribute('src', media.src);
+        img.setAttribute('alt', media.alt || title);
+        img.setAttribute('loading', 'lazy');
+        img.setAttribute('decoding', 'async');
+        img.setAttribute('draggable', 'false');
+        box.appendChild(img);
+      } else {
+        var art = media.node.cloneNode(true);
+        art.removeAttribute('id');
+        art.removeAttribute('tabindex');
+        Array.prototype.forEach.call(art.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+        Array.prototype.forEach.call(art.querySelectorAll('[tabindex]'), function (n) { n.removeAttribute('tabindex'); });
+        art.setAttribute('aria-hidden', 'true');
+        box.appendChild(art);
+      }
+      return box;
+    }
+
+    function buildCard(pj) {
+      var media = pickImage(pj);
+
+      var catEl = pj.querySelector('.project-meta small');
+      var titleEl = pj.querySelector('.project-meta strong');
+      var cat = cleanText(catEl ? catEl.textContent : '');
+      var title = cleanText(titleEl ? titleEl.textContent : '');
+      if (!title) return null;
+
+      var card = document.createElement('article');
+      card.className = 'hero-mq__card' + (media.kind === 'text' ? ' hero-mq__card--text' : '');
+      /* 去重与验收用：data-case 来自 .project 的案例键，data-media 记录视觉来源 */
+      card.setAttribute('data-case', pj.getAttribute('data-case') || '');
+      card.setAttribute('data-media', media.kind);
+      /* 整卡的 textContent 以「分类」开头，天然不以两位数字开头 */
+      card.appendChild(buildMedia(media, title, cat));
+
+      var shade = document.createElement('span');
+      shade.className = 'hero-mq__shade';
+      shade.setAttribute('aria-hidden', 'true');
+      card.appendChild(shade);
+
+      var meta = document.createElement('div');
+      meta.className = 'hero-mq__meta';
+      if (cat) {
+        var catNode = document.createElement('span');
+        catNode.className = 'hero-mq__cat';
+        catNode.textContent = cat;
+        meta.appendChild(catNode);
+      }
+      var titleNode = document.createElement('strong');
+      titleNode.className = 'hero-mq__title';
+      titleNode.textContent = title;
+      meta.appendChild(titleNode);
+      card.appendChild(meta);
+
+      return card;
+    }
+
+    function makeTrack(cards, isClone) {
+      var track = document.createElement('div');
+      track.className = 'hero-mq__track' + (isClone ? ' hero-mq__track--clone' : '');
+      if (isClone) track.setAttribute('aria-hidden', 'true');
+      cards.forEach(function (card) {
+        track.appendChild(isClone ? card.cloneNode(true) : card);
+      });
+      return track;
+    }
+
+    /* ---------- 组装（.featured-ledger 由 app.js 异步生成，未就绪时短轮询） ---------- */
+    function build() {
+      if (ribbon.querySelector('.hero-mq')) return true;
+
+      var projects = Array.prototype.slice.call(
+        document.querySelectorAll('.featured-ledger .project'));
+      if (!projects.length) return false;
+
+      var cards = [];
+      projects.forEach(function (pj) {
+        var card = buildCard(pj);
+        if (card) cards.push(card);
+      });
+      if (!cards.length) return false;
+
+      var mq = document.createElement('div');
+      mq.className = 'hero-mq';
+      mq.setAttribute('data-count', String(cards.length));
+      mq.setAttribute('aria-label', '案例作品无限轮转展示，鼠标移入暂停');
+      mq.appendChild(makeTrack(cards, false));
+      mq.appendChild(makeTrack(cards, true));
+
+      scrubNumbers(mq);
+      ribbon.appendChild(mq);
+      return true;
+    }
+
+    var timer = null;
+    var tries = 0;
+
+    function start() {
+      if (build()) return;
+      timer = setInterval(function () {
+        tries += 1;
+        if (build() || tries >= 40) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }, 100);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+      start();
+    }
+  } catch (err) {}
+})();
+/* §AL · 合作品牌墙：缩略小图 + 三带 16/16/16（任务 id=73）
+   --------------------------------------------------------------------------
+   与 §AH 的分工：§AH 按 .partners-group 切段并生成 .ab-mq 结构；本次用户要求
+   「加入缩略小图不需要分类，按这个模式平均分3分」，index.html 里已删掉 3 个组
+   标题，因此 §AH 的 groups 为空、不再建带，本段在其后接管新形态：
+     ① 用 THUMB_MAP 把 .partner-badge 的字母换成 24×24 缩略图（<img> 由本段生成，
+        loading="lazy" / decoding="async" / alt=""；表中没有的品牌保留字母徽标兜底，
+        且把原字母存进 data-letter，便于幂等恢复）。查表键取品牌项上的
+        data-brand 属性而非 <strong> 文本：i18n-en 等译文会把名称换成英文，
+        属性值不变，缩略图因此不随语言切换丢失；
+     ② 兜底清理 .partners-group（正常情况下 HTML 里已无该节点）；
+     ③ 48 个品牌按 DOM 原顺序每 16 个一条带，3 条带各 2 条 track（原 + 克隆），
+        方向 normal / reverse / normal，视觉样式完全复用 §AH 的 CSS。
+   映射原则：只收「该品牌确有独立成图」的条目。portfolio-signage-series 是发光字
+   系列汇总图，同时含闪亮柚 / 哪吒汽车 / 良初肉业三个品牌，不能一张图套三个品牌，
+   故只取闪亮柚的单图 portfolio-signage-shinyou；海丝智谷产业园、良初肉业、
+   哪吒汽车、柚见饮品（p01-sparkling-water 属「清屿饮品」，不是本品牌）四个
+   品牌保留字母兜底。
+   幂等：已是 3 带 × 16 项 × 2 轨且无组标题时，补图后直接返回。
+   全程 try/catch，任何异常不影响页面其余脚本。
+   -------------------------------------------------------------------------- */
+(function () {
+  'use strict';
+  try {
+    var slots = document.querySelector('#partners .partners-slots');
+    if (!slots) return;
+
+    var THUMB_DIR = 'assets/thumbs/';
+    var PER_BAND = 16;
+    var BAND_COUNT = 3;
+
+    /* 品牌名（<strong> 全文，含英文后缀）→ assets/thumbs 下的文件名（不含扩展名） */
+    var THUMB_MAP = {
+      '灯下小馆': 'dengxia-01',
+      '光影食序': 'lumen-01',
+      '甘棠记': 'gantang-01',
+      '花间集 HUAJIANJI': 'huajianji-01',
+      '黑曜镜像': 'heiyao-01',
+      '棱镜无界': 'lengjing-01',
+      '留声暮色': 'liusheng-01',
+      '落日切片': 'luori-01',
+      'MOSS 山岚茶事': 'media-generation-moss-box-front-0-8c63708c-8a6b-4fbc-82e1-a5bcd69f39e8',
+      'MUGU 木谷烘焙': 'mugu-render-angle-true3d',
+      '麦屿烘焙 MAIYU': 'maiyu-bakery-storefront-day',
+      '霓光矩阵': 'neomatrix-01',
+      'ORBIT 播客空间': 'media-generation-orbit-brand-0-a44e6f94-1c41-454f-8577-5faf99223c82',
+      '栖石研磨': 'qishi-01',
+      '松隐茶境': 'songyin-01',
+      '素因实验': 'suyin-01',
+      '素物陶社': 'sowoo-01',
+      '晚风书店': 'wanfeng-01',
+      '望舒小厨': 'wangshu-01',
+      '寻木记': 'xunmu-01',
+      '野径集': 'yejing-01',
+      /* 海丝智谷产业园：thumbs 里没有该园区成图 → 字母兜底 */
+      '慕思 DeRUCCI': 'derucci-01',
+      '天马微电子': 'portfolio-tianma-led',
+      '厦门士兰集华微电子': 'shilan-05',
+      '厦门市孝贤技工学校': 'xiaoxian-01',
+      '新阳街道': 'xinyang-04',
+      'AERA': 'aera-open-render',
+      '春日樱花': 'portfolio-spring-sakura',
+      'FOLD 家居': 'media-generation-fold-cover-0-f062dc91-d151-4b16-bb8b-2d0f4953d29f',
+      '机器人 IP': 'portfolio-robot-ip-blender',
+      'KILO': 'kilo-render-front-true3d',
+      'LENS 影像节': 'lens-render-angle',
+      'LUMA 夜跑': 'luma',
+      'LUNO': 'media-generation-luno-giftbox-0-7c0fb9ec-e542-49cb-b201-3c26b161ba6e',
+      /* 良初肉业：仅出现在发光字汇总图 → 字母兜底 */
+      'MONO 家居': 'media-generation-mono-storefront-0-6e1b4108-1b54-4846-8b62-0ab5191862c5',
+      'NEXA': 'media-generation-nexa-product-0-c6a5b9d2-4fa7-4eea-9b6d-be338b68dff1',
+      'NOVA': 'nova',
+      /* 哪吒汽车：仅出现在发光字汇总图 → 字母兜底 */
+      'PINK DUST': 'media-generation-pink-xiaohongshu-0-526d3888-2a29-4dd3-91a7-be35ec962138',
+      '跑动的小车': 'portfolio-running-car-render',
+      '青年趣享时光': 'youth2025-01',
+      '商城展台': 'portfolio-mall-booth-spring',
+      '闪亮柚': 'portfolio-signage-shinyou',
+      'TIDE 夏日企划': 'tide-render-front',
+      '投币盒子': 'portfolio-coin-box-render'
+      /* 柚见饮品 YUJIAN BEVERAGE：无对应图 → 字母兜底 */
+    };
+
+    /* 克隆节点不能带 id / tabindex：否则同页出现重复 id 与重复可聚焦元素 */
+    function stripFocusable(node) {
+      if (node.id) node.removeAttribute('id');
+      if (node.hasAttribute('tabindex')) node.removeAttribute('tabindex');
+      Array.prototype.forEach.call(node.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+      Array.prototype.forEach.call(node.querySelectorAll('[tabindex]'), function (n) { n.removeAttribute('tabindex'); });
+    }
+
+    /* 只取直接子 .ab-mq__track，避免命中嵌套节点 */
+    function tracksOf(band) {
+      var out = [];
+      Array.prototype.forEach.call(band.children, function (child) {
+        if (child.classList && child.classList.contains('ab-mq__track')) out.push(child);
+      });
+      return out;
+    }
+
+    /* ---------- 0) 收集原始品牌项（旧带存在时取第一条 track，避免把克隆算进来） ---------- */
+    var oldBands = Array.prototype.slice.call(slots.querySelectorAll('.ab-mq'));
+    var items = [];
+    if (oldBands.length) {
+      Array.prototype.forEach.call(oldBands, function (band) {
+        var tracks = tracksOf(band);
+        if (!tracks.length) return;
+        Array.prototype.forEach.call(tracks[0].children, function (item) {
+          if (item.classList && item.classList.contains('partners-slot-item')) items.push(item);
+        });
+      });
+    } else {
+      Array.prototype.forEach.call(slots.children, function (child) {
+        if (child.classList && child.classList.contains('partners-slot-item')) items.push(child);
+      });
+    }
+    if (!items.length) return;
+
+    /* ---------- 1) 缩略图注入（映射命中才换图，其余保留字母） ---------- */
+    var matched = 0;
+    var fallback = [];
+    Array.prototype.forEach.call(items, function (item) {
+      var nameEl = item.querySelector('strong');
+      var badge = item.querySelector('.partner-badge');
+      if (!nameEl || !badge) return;
+
+      /* data-brand 是稳定锚点：切英文/多语言时 i18n 会把 <strong> 换成译文，
+         但不会改属性值；<strong> 文本仅作老 HTML 的回退。 */
+      var name = (item.getAttribute('data-brand') || (nameEl.textContent || '')).trim();
+      var key = THUMB_MAP[name];
+      var img = badge.querySelector('img.partner-thumb');
+
+      if (key) {
+        if (!img) {
+          badge.setAttribute('data-letter', (badge.textContent || '').trim());
+          badge.textContent = '';
+          img = document.createElement('img');
+          img.className = 'partner-thumb';
+          img.src = THUMB_DIR + key + '.webp';
+          img.alt = '';                 /* 装饰性：品牌名已由相邻 <strong> 提供 */
+          img.width = 24;
+          img.height = 24;
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          badge.appendChild(img);
+        }
+        matched += 1;
+      } else {
+        if (img && img.parentNode) img.parentNode.removeChild(img);
+        if (!(badge.textContent || '').trim()) {
+          var letter = badge.getAttribute('data-letter');
+          if (letter) badge.textContent = letter;
+        }
+        fallback.push(name);
+      }
+    });
+    slots.setAttribute('data-thumb-matched', String(matched));
+    slots.setAttribute('data-thumb-fallback', fallback.join('|'));
+
+    /* ---------- 2) 幂等短路：已是 3 带 × 16 项 × 2 轨 ---------- */
+    var alreadySplit = oldBands.length === BAND_COUNT && !slots.querySelector('.partners-group');
+    if (alreadySplit) {
+      for (var b = 0; b < oldBands.length; b += 1) {
+        var bt = tracksOf(oldBands[b]);
+        if (bt.length !== 2 || bt[0].children.length !== PER_BAND || bt[1].children.length !== PER_BAND) {
+          alreadySplit = false;
+          break;
+        }
+      }
+    }
+    if (alreadySplit) return;
+
+    /* ---------- 3) 清理业务标题与旧带，把 48 项按原顺序归位 ---------- */
+    Array.prototype.forEach.call(slots.querySelectorAll('.partners-group'), function (head) {
+      if (head.parentNode) head.parentNode.removeChild(head);
+    });
+    Array.prototype.forEach.call(oldBands, function (band) {
+      if (band.parentNode) band.parentNode.removeChild(band);
+    });
+    Array.prototype.forEach.call(items, function (item) { slots.appendChild(item); });
+
+    /* ---------- 4) 每 16 项一条带：原 track + 克隆 track ---------- */
+    for (var i = 0; i < BAND_COUNT; i += 1) {
+      var slice = items.slice(i * PER_BAND, (i + 1) * PER_BAND);
+      if (!slice.length) break;
+
+      var band = document.createElement('div');
+      band.className = 'ab-mq';
+      band.setAttribute('data-band', String(i + 1));
+      if (i === 1) band.setAttribute('data-dir', 'reverse'); /* 第 2 条反向 */
+
+      var track = document.createElement('div');
+      track.className = 'ab-mq__track';
+      Array.prototype.forEach.call(slice, function (item) { track.appendChild(item); });
+
+      var clone = document.createElement('div');
+      clone.className = 'ab-mq__track ab-mq__track--clone';
+      clone.setAttribute('aria-hidden', 'true');
+      Array.prototype.forEach.call(track.children, function (item) {
+        var copy = item.cloneNode(true);
+        stripFocusable(copy);
+        clone.appendChild(copy);
+      });
+
+      band.appendChild(track);
+      band.appendChild(clone);
+      slots.appendChild(band);
+    }
+  } catch (err) {}
+})();
