@@ -5534,3 +5534,133 @@ html body.hero-ready .hero h1.hero-title-sweep{
 html body.hero-ready .hero h1.hero-title-sweep::first-letter{
   font-size: inherit!important;
 }
+
+/* ==========================================================================
+   §AH · 合作品牌墙改为 Magic UI 官方 Marquee（任务 id=69）
+   --------------------------------------------------------------------------
+   用户要求「复制参考站的代码」：结构与 keyframes 直接照 Magic UI Marquee 官方实现。
+
+   结构（由 opt-20261105.js 末尾 IIFE 生成，不改 index.html）：
+     .partners-slots（改回 block）
+       h3.partners-group        ← 组标题：留在带上方的静态行，不参与滚动
+       div.ab-mq                ← 带容器：flex + overflow:hidden + 两侧 mask 渐隐
+         div.ab-mq__track       ← 原始品牌项整批
+         div.ab-mq__track       ← 克隆同一整批（aria-hidden），两条拼成无缝循环
+   三组三条带，方向交替：第 1 组正向 / 第 2 组 data-dir="reverse" / 第 3 组正向，
+   避免三条同向看起来像静止。
+
+   可调参数（只改下面两个自定义属性，不必动 keyframes）：
+     --ab-gap   项间与两条 track 之间的间隙，默认 8px（≤767px 收到 6px）
+     --ab-dur   单条 track 滚完一遍的时长：正向 46s，反向 52s
+                （第 2 组只有 6 项、track 更短，同速会明显更快，故反向放慢）
+
+   动画只做 transform（走合成层，不触发重排/重绘）；位移 = 一条 track 宽 + 一个 gap，
+   正好让第二条 track 顶到第一条的起点，因此循环处无跳变。
+   hover 进入某条带 → 该带 animation-play-state: paused（仍停留在合成层）。
+   prefers-reduced-motion: reduce → 动画关闭，带退回 overflow-x:auto 的静态横向流。
+   ========================================================================== */
+/* ① 容器：由 6 列等高 grid 退回 block —— 三组各自成段，段内才是滚动带 */
+html body .partners-slots {
+  display: block!important;
+  grid-template-columns: none!important;
+  grid-auto-flow: row;
+  grid-auto-rows: auto;
+}
+
+/* 组标题保持静态（只清掉 grid 专属的跨列声明，其余排版沿用 §AB-6） */
+html body .partners-slots .partners-group {
+  grid-column: auto!important;
+  grid-row: auto!important;
+}
+
+/* ② 带容器：Magic UI 的 flex + overflow:hidden + gap，两侧 1/4 宽度渐隐 */
+html body .partners-slots .ab-mq {
+  --ab-gap: 8px;
+  --ab-dur: 46s;
+  position: relative;
+  display: flex!important;
+  overflow: hidden!important;
+  gap: var(--ab-gap)!important;
+  padding-block: 6px; /* 给 hover 上浮 3px 留余量，避免被 overflow 裁掉 */
+  margin: 0 0 4px!important;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+/* 第 2 条带反向并放慢（data-dir 由 JS 打在带容器上） */
+html body .partners-slots .ab-mq[data-dir="reverse"] {
+  --ab-dur: 52s;
+}
+
+/* ③ 每条 track：不收缩、按内容撑开、均分间隙，并挂 marquee 动画 */
+html body .partners-slots .ab-mq__track {
+  display: flex!important;
+  flex-shrink: 0!important;
+  align-items: center!important;
+  justify-content: space-around!important;
+  gap: var(--ab-gap)!important;
+  min-width: 100%;
+  animation: abMarquee var(--ab-dur) linear infinite;
+  will-change: transform;
+}
+html body .partners-slots .ab-mq[data-dir="reverse"] .ab-mq__track {
+  animation-direction: reverse;
+}
+/* ④ hover 暂停：进入某条带即停住该带（不影响其余两条带） */
+html body .partners-slots .ab-mq:hover .ab-mq__track {
+  animation-play-state: paused;
+}
+
+/* ⑤ 官方 keyframes：位移 = 一条 track 宽 + 一个 gap，循环处无缝衔接 */
+@keyframes abMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-100% - var(--ab-gap, 8px))); }
+}
+
+/* ⑥ 带内卡片改回按内容自适应宽度（§AB-6 的 flex:1 1 auto 是按 grid 列宽撑满，
+   用于滚动带会把 21 项压进一屏、名称被省略号截断） */
+html body .partners-slots .ab-mq__track .partners-slot-item {
+  flex: 0 0 auto!important;
+  max-width: none!important;
+  white-space: nowrap;
+}
+/* 名称随卡片自然宽度，不再需要省略号兜底 */
+html body .partners-slots .ab-mq__track .partners-slot-item strong {
+  flex: 0 0 auto!important;
+  max-width: none!important;
+  overflow: visible!important;
+  text-overflow: clip!important;
+  padding-inline-end: 0;
+}
+
+/* ⑦ hover 降透明改为只在同一条 track 内生效：§AB-6 的 :has 规则会命中全部 96 项
+   （含克隆），鼠标停在一条带上时三条带一起变暗；这里先把它压回 1，
+   再只对「同一 track」生效 —— 两条都带 !important，同特异性下后写的这条胜出 */
+html body .partners-slots:has(.partners-slot-item:hover) .partners-slot-item:not(:hover) {
+  opacity: 1!important;
+}
+html body .ab-mq__track:has(.partners-slot-item:hover) .partners-slot-item:not(:hover) {
+  opacity: .5!important;
+}
+
+/* ⑧ 窄屏：间距 / 字号沿用 §AB-6 断点，带内只把 gap 收到 6px */
+@media (max-width: 767px) {
+  html body .partners-slots .ab-mq { --ab-gap: 6px; }
+}
+
+/* ⑨ 无障碍：减少动效时动画全关，退回可横向滚动的静态流，内容完整可见 */
+@media (prefers-reduced-motion: reduce) {
+  html body .partners-slots .ab-mq {
+    overflow-x: auto!important;
+    overflow-y: hidden!important;
+    -webkit-mask-image: none!important;
+    mask-image: none!important;
+  }
+  html body .partners-slots .ab-mq__track {
+    animation: none!important;
+    will-change: auto;
+  }
+  /* 静态流只需一条 track：隐藏克隆，避免同一批品牌重复出现两遍 */
+  html body .partners-slots .ab-mq__track + .ab-mq__track {
+    display: none!important;
+  }
+}

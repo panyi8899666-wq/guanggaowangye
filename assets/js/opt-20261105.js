@@ -923,3 +923,62 @@
     boot();
   }
 })();
+
+/* §AH · 合作品牌墙 Magic UI Marquee 结构生成（任务 id=69）
+   只做 DOM 搬运，动画/渐隐/暂停全部在 §AH 的 CSS 里：
+   按 .partners-group 把 .partners-slots 切成三段，每段成一条 .ab-mq 带，
+   带内 2 条 track（第二条是第一条的整批克隆）拼成无缝循环；组标题留在带上方。
+   幂等：检测到已有 .ab-mq 就退出。全程 try/catch，异常不影响页面其余脚本。 */
+(function () {
+  'use strict';
+  try {
+    var slots = document.querySelector('#partners .partners-slots');
+    if (!slots || slots.querySelector('.ab-mq')) return;
+
+    /* 克隆节点不能带 id / tabindex：否则同页出现重复 id 与重复可聚焦元素 */
+    function stripFocusable(node) {
+      if (node.id) node.removeAttribute('id');
+      if (node.hasAttribute('tabindex')) node.removeAttribute('tabindex');
+      Array.prototype.forEach.call(node.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+      Array.prototype.forEach.call(node.querySelectorAll('[tabindex]'), function (n) { n.removeAttribute('tabindex'); });
+    }
+
+    /* 按组标题切段：标题之后连续的 .partners-slot-item 归入该组 */
+    var groups = [], cur = null;
+    Array.prototype.forEach.call(slots.children, function (el) {
+      if (el.classList.contains('partners-group')) {
+        cur = { head: el, items: [] };
+        groups.push(cur);
+      } else if (cur && el.classList.contains('partners-slot-item')) {
+        cur.items.push(el);
+      }
+    });
+
+    groups.forEach(function (g, i) {
+      if (!g.items.length || !g.head.parentNode) return;
+
+      var band = document.createElement('div');
+      band.className = 'ab-mq';
+      if (i === 1) band.setAttribute('data-dir', 'reverse'); /* 第 2 组反向 */
+
+      /* 原始节点整批搬进第一条 track：保留原有语义、aria 与既有绑定 */
+      var track = document.createElement('div');
+      track.className = 'ab-mq__track';
+      g.items.forEach(function (item) { track.appendChild(item); });
+
+      /* 第二条 track = 第一条的整批克隆，供 CSS 无缝衔接 */
+      var clone = document.createElement('div');
+      clone.className = 'ab-mq__track ab-mq__track--clone';
+      clone.setAttribute('aria-hidden', 'true');
+      Array.prototype.forEach.call(track.children, function (item) {
+        var copy = item.cloneNode(true);
+        stripFocusable(copy);
+        clone.appendChild(copy);
+      });
+
+      band.appendChild(track);
+      band.appendChild(clone);
+      slots.insertBefore(band, g.head.nextSibling); /* 标题留在带上方 */
+    });
+  } catch (err) {}
+})();
