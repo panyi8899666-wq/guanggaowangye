@@ -52,9 +52,9 @@ window.__afterLoad=function(f){function go(){setTimeout(function(){'requestIdleC
 (function(){var S=['zh','en','ja','ko','es','fr','de','pt','ru','ar'],l=null,d=document.documentElement;try{l=localStorage.getItem('zxy-lang')}catch(e){}if(!l||S.indexOf(l)<0){l='en';var a=navigator.languages||[navigator.language||'en'];for(var i=0;i<a.length;i++){var x=(a[i]||'').toLowerCase(),p=x.split('-')[0];if(S.indexOf(x)>=0){l=x;break}if(S.indexOf(p)>=0){l=p;break}}}
 if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='script';k.href='assets/i18n-'+l+'.js';document.head.appendChild(k);d.classList.add('i18n-wait');window.__i18nDone=function(){d.classList.remove('i18n-wait')};setTimeout(window.__i18nDone,1200)})();</script>
 <link rel="stylesheet" href="assets/css/site.bd50e7a2.css" />
-<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261204" />
+<link rel="stylesheet" href="assets/css/opt-20261105.css?v=20261205" />
 <script defer src="assets/js/app.5082587a.js?v=20261104"></script>
-<script defer src="assets/js/opt-20261105.js?v=20261204"></script>
+<script defer src="assets/js/opt-20261105.js?v=20261205"></script>
 <script type="text/javascript">
 /* Image fallback: a failed image never renders as a broken icon or a pure-black card — it is hidden and its frame keeps a lifted charcoal placeholder tone instead. */
 (function(){
@@ -315,7 +315,11 @@ if(l==='zh')return;var k=document.createElement('link');k.rel='preload';k.as='sc
             <p class="about-note">ZHENGXINYUE CULTURE STUDIO</p>
             <p class="about-statement">从一线设计走到经营管理，<em>每一步都在补全设计落地的能力。</em></p>
           </div>
-          <p class="about-intro">长期服务厦门本地门店、餐饮与零售品牌：从策划、设计到生产落地，按项目节奏推进，一位负责人从头跟到尾。</p>
+          <ul class="about-strengths">
+            <li class="about-strength-item"><strong class="about-strength-lead">能判断可落地性：</strong><span class="about-strength-detail">设计阶段就考虑工艺、材料与安装条件；</span></li>
+            <li class="about-strength-item"><strong class="about-strength-lead">能控成本与工艺：</strong><span class="about-strength-detail">熟悉发光字、标识与门头的制作与报价结构；</span></li>
+            <li class="about-strength-item"><strong class="about-strength-lead">能一位负责人跟到尾：</strong><span class="about-strength-detail">从策划到现场交付，不换人、不漏环节。</span></li>
+          </ul>
           <div class="about-actions">
             <div class="about-tags" aria-label="核心能力"><span>广告标识</span><span>发光字与工艺</span><span>商业视觉</span><span>生产落地</span><span>供应链协同</span><span>项目经营管理</span></div>
             <dl class="about-stats" aria-label="经验数据">

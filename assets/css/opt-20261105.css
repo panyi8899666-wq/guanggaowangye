@@ -50,7 +50,11 @@ U1 .reveal 兜底类 .opt-reveal-fallback（IO 失效 / 2s 仍隐藏时强制可
             H1 金色渐变描边、指标与序号等宽渐变、英文标签字距金线（任务 id=46）
        （G7 首页轮转参数于任务 id=28 重定：--cw 28vw / --r 1.9×cw /
           --persp 190vw，环投影并集 86–88% 视口）
-   C-TOKENS 例外登记（任务 id=47）：
+   C-TOKENS 例外登记（任务 visual-polish-r3 R1）：
+      · 新增 #9a7638（暗金端，对 #0d0d0f = 4.64:1）与 #f0e2bf（浅香槟端，
+        15.10:1）两个字面量，仅用于首页 H1 .hero-title-sweep 及其 .hero-char
+        的 background-image（用户指定色）；除这两个值外未引入任何新色值。
+    C-TOKENS 例外登记（任务 id=47）：
      · 轮转图片缓放改用独立 scale 属性（1.04 / 420ms）——img 上命中
        transform:none!important，transform:scale() 被压回单位矩阵；scale 与
        transform 是独立分量，互不覆盖，reduced 下置 none。
@@ -3865,18 +3869,17 @@ html[lang^="zh"] .manifesto-refined .manifesto-copy .manifesto-line {
    .line>*{-webkit-text-stroke:0!important}、.hero-char 的
    -webkit-text-fill-color:#eceae4。要让父级 h1 的 background-clip:text 透出，
    必须逐层改成透明填充；故本节用 body.hero-ready…（0,4,2 以上）提权覆盖。
-   对比度：渐变最暗段为 #c6a15b，对底色 #0d0d0f = 8.01:1（≥4.5:1）。
+   对比度（visual-polish-r3 R1）：渐变最暗段 #9a7638 对底色 #0d0d0f
+   = 4.64:1（≥4.5:1），亮端 #f0e2bf = 15.10:1；两者仅在 H1 渐变中使用，
+   已登记在文件头 C-TOKENS 例外登记。
    ========================================================================== */
 
-/* ---------- Y7 H1：金色渐变 + .5px 金线描边 + 首字放大 ---------- */
+/* ---------- Y7 H1：逐字金色渐变 + .5px 金线描边 + 首字放大 ---------- */
 /* h1 自身声明渐变：.hero-char 是 display:inline-block（基线），父级
    background-clip:text 无法穿透原子内联盒，因此真正的渐变绘制在 .hero-char
    上（下一条规则）；h1 这条同时作为「整块标题带金色渐变」的可读断言位。 */
 body.hero-ready .hero h1.hero-title-sweep {
-  background-image: linear-gradient(100deg,
-                      #eceae4 0%,
-                      #c6a15b 55%,
-                      #eceae4 100%)!important;
+  background-image: linear-gradient(90deg, #9a7638 0%, #f0e2bf 100%)!important;
   -webkit-background-clip: text!important;
   background-clip: text!important;
   -webkit-text-fill-color: transparent!important;
@@ -3885,20 +3888,16 @@ body.hero-ready .hero h1.hero-title-sweep {
 }
 /* 关键：.hero-char 是 display:inline-block 原子内联盒（基线，逐字动画需要），
    父级 background-clip:text 无法穿透到它里面，实测「整块 h1 渐变」会让标题
-   完全不可见。所以渐变绘制在 .hero-char 上，并用「统一背景图 + 逐字位置偏移」
-   把同一张渐变铺满整行：每行 3 汉字 + 空格 + 3 汉字，汉字步进 = 1em 字宽
-   + letter-spacing(-.052em) ≈ .948em，空格 .25em，行宽 5.936em。
-   偏移单位全部是 em，随字号缩放，不随断点失真（移动端 letter-spacing 差
-   0.007em×6 ≈ 2px，肉眼不可见）。
+   完全不可见。所以渐变绘制在 .hero-char 上，每个字符各自持有一份完整渐变：
+   background-size:100% 100% + background-position:0 0，使字符自身的明暗过渡
+   与字号、断点、letter-spacing 全部解耦（旧实现用「整行背景 + 逐字 em 偏移」，
+   已知会在不同断点下产生字符间渐变错位，visual-polish-r3 R1 改为逐字独立渐变）。
    覆盖：.hero-ready .hero h1.hero-title-sweep .hero-char
    （基线 background:0 0!important + -webkit-text-fill-color:#eceae4）。 */
 body.hero-ready .hero h1.hero-title-sweep .hero-char,
 body.hero-ready .hero h1.hero-title-sweep em .hero-char {
-  background-image: linear-gradient(100deg,
-                      #eceae4 0%,
-                      #c6a15b 55%,
-                      #eceae4 100%)!important;
-  background-size: 5.936em 100%!important;
+  background-image: linear-gradient(90deg, #9a7638 0%, #f0e2bf 100%)!important;
+  background-size: 100% 100%!important;
   background-repeat: no-repeat!important;
   background-position: 0 0!important;
   -webkit-background-clip: text!important;
@@ -3906,22 +3905,6 @@ body.hero-ready .hero h1.hero-title-sweep em .hero-char {
   color: transparent!important;
   -webkit-text-fill-color: transparent!important;
   -webkit-text-stroke: .5px rgba(198,161,91,.28)!important;
-}
-/* 逐字偏移：行首组 0 / -0.948em / -1.896em；空格后组 -3.092 / -4.040 / -4.988em */
-body.hero-ready .hero h1.hero-title-sweep .line > :first-child > .hero-char:nth-child(2) {
-  background-position-x: -0.948em!important;
-}
-body.hero-ready .hero h1.hero-title-sweep .line > :first-child > .hero-char:nth-child(3) {
-  background-position-x: -1.896em!important;
-}
-body.hero-ready .hero h1.hero-title-sweep .line > :last-child > .hero-char:nth-child(1) {
-  background-position-x: -3.092em!important;
-}
-body.hero-ready .hero h1.hero-title-sweep .line > :last-child > .hero-char:nth-child(2) {
-  background-position-x: -4.040em!important;
-}
-body.hero-ready .hero h1.hero-title-sweep .line > :last-child > .hero-char:nth-child(3) {
-  background-position-x: -4.988em!important;
 }
 /* 覆盖：.hero-title-sweep .line／.line>*／.hero-char（基线 #eceae4!important） */
 body.hero-ready .hero h1.hero-title-sweep .line,
@@ -3932,19 +3915,13 @@ body.hero-ready .hero h1.hero-title-sweep em .hero-char {
   -webkit-text-fill-color: transparent!important;
   -webkit-text-stroke: .5px rgba(198,161,91,.28)!important;
 }
-/* 首字：「让」放大 1.18em 并转金色（line-height 不变，不触发换行）。
-   ::first-letter 负责放大（实测 ::first-letter 已命中，font-size 91.76px）；
-   金色填充必须落在首字所在的 .hero-char 上——基线给 .hero-char 的
-   -webkit-text-fill-color 设了 #eceae4，透明化后 ::first-letter 的 color 会被
-   -webkit-text-fill-color 盖住，故用同特异度更高的一条规则指定填充色。 */
+/* 首字：「让」放大 1.18em（line-height 不变，不触发换行）。
+   visual-polish-r3 决策 D1：不再给首字单独指定纯色填充，让它与其余字符一样
+   走 background-clip:text 的逐字渐变，避免「整行渐变里唯一一个纯色字」。 */
 body.hero-ready .hero h1.hero-title-sweep::first-letter {
   font-size: 1.18em;
-  color: var(--accent)!important;
-  -webkit-text-fill-color: var(--accent)!important;
 }
 body.hero-ready .hero h1.hero-title-sweep .line:first-child > .hero-title-sans > .hero-char:first-child {
-  color: var(--accent)!important;
-  -webkit-text-fill-color: var(--accent)!important;
   -webkit-text-stroke: .5px rgba(198,161,91,.5)!important;
 }
 /* 兜底：不支持 background-clip:text 的引擎会把透明字变成不可读，
@@ -4000,4 +3977,57 @@ body.hero-ready .hero h1.hero-title-sweep .line:first-child > .hero-title-sans >
   .hero-english {
     letter-spacing: .16em!important;
   }
+}
+/* ==========================================================================
+   Z1 · 关于区三条优势要点（visual-polish-r3 · R2）
+   --------------------------------------------------------------------------
+   来源契约：C-ABOUT-STRENGTHS@1。
+   DOM：index.html 原 .about-intro 原位替换为 <ul class="about-strengths"> 三条
+   <li class="about-strength-item">（strong=能力，span=做法），保留列表语义。
+   间距：margin-top:28px 复刻 X2 段对原 .about-intro 的承诺；.about-tags 仍由
+   既有 margin-top:32px!important 控制，右栏总节奏不变。
+   旧 .about-intro 规则保留在文件中（不再匹配新 DOM），不删除以免扩大覆盖层
+   diff 面（决策 D5）。
+   ========================================================================== */
+.career-copy .about-strengths {
+  display: grid;
+  gap: 10px;
+  margin: 28px 0 0!important;
+  padding: 0;
+  list-style: none;
+  max-width: 24em;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.career-copy .about-strength-item {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 18px;
+  border: 0;
+  max-width: none;
+  font-size: 15px!important;
+  line-height: 1.6!important;
+  color: var(--ink)!important;
+}
+.career-copy .about-strength-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.career-copy .about-strength-lead {
+  color: var(--accent);
+  font-weight: 600;
+}
+.career-copy .about-strength-detail {
+  color: var(--ink);
+}
+@media (max-width: 620px) {
+  .career-copy .about-strengths { max-width: 100%; gap: 8px; font-size: 14px; }
+  .career-copy .about-strength-item { font-size: 14px!important; }
 }
