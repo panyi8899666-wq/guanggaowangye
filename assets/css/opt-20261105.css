@@ -6542,8 +6542,8 @@ html body .partners-slots .partners-group {
                 `::after` 的 content 为 `none`、display:none（空闲），
                 故扩散层复用 `::after`，不碰图标。
       纯 CSS 降级：Magic UI 的扩散原点取自 pointermove 的光标坐标，需要 JS
-      写 `--x/--y`；本轮禁止改 opt JS，故原点固定为按钮左下角
-      （transform-origin:0% 100%），视觉为「从左下角涌起铺满」。
+      写 `--x/--y`；本轮禁止改 opt JS，故原点固定为按钮中心
+      （transform-origin:50% 50%），视觉为「从中心向外涌起铺满」。
       `transform` 被基线 `transform:none!important` / 磁吸 translate 独占，
       这里用独立 `scale` 属性（scale 不被 transform 简写命中），
       过渡只补在 scale 上，磁吸 translate 过渡保持不变。
@@ -6562,6 +6562,9 @@ html body .partners-slots .partners-group {
 #contact .contact-actions .cta:not(#opt-boost) {
   /* 建立独立层叠上下文，保证扩散层 z-index:0 只压在本按钮背景之上 */
   isolation: isolate;
+  /* 实测基线 .cta 的 overflow 为 visible（Q1 的 hidden 未生效），
+     scale 2.2 的扩散层会溢出到按钮外；这里显式裁剪到按钮圆角内。 */
+  overflow: hidden!important;
 }
 
 #contact .contact-actions .cta:not(#opt-boost)::after {
@@ -6577,11 +6580,18 @@ html body .partners-slots .partners-group {
   border-radius: 999px!important;
   background-color: var(--accent)!important;
   background-image: none!important;
+  /* 关键：基线 .hero-ready :is(... .contact-actions .cta ...):after 用
+     mask:var(--control-icon) 把这个伪元素裁成聊天气泡图标（改前 display:none，
+     所以看不见）。若不清掉 mask，金色块只会显示成被放大 2.2 倍的图标
+     （实测截图会出现一个巨大的金色气泡），必须显式 mask:none。 */
+  -webkit-mask: none!important;
+  mask: none!important;
   opacity: 1!important;
   z-index: 0!important;
   pointer-events: none!important;
-  /* 纯 CSS 降级：无光标坐标，固定从左下角扩散 */
-  transform-origin: 0% 100%!important;
+  /* 纯 CSS 降级：无光标坐标，从按钮中心扩散（左下原点会在左下圆角处留缺口，
+     中心原点的 2.2 倍胶囊可完整覆盖 126×48 / 212×48 两种尺寸） */
+  transform-origin: 50% 50%!important;
   /* 覆盖基线 .contact-actions .cta:after{transform:translateY(-50%)}：
      否则扩散层整体上移半个按钮高（实测 matrix ty=-23），铺不满按钮 */
   transform: none!important;
@@ -6592,7 +6602,7 @@ html body .partners-slots .partners-group {
 
 #contact .contact-actions .cta:not(#opt-boost):hover::after,
 #contact .contact-actions .cta:not(#opt-boost):focus-visible::after {
-  /* 2.2 倍足以覆盖 212px 宽的按钮（最远点距左下角约 217px） */
+  /* 2.2 倍足以覆盖 212px 宽的按钮（中心原点最远点约 108px，2.2 倍半径远超） */
   scale: 2.2!important;
 }
 
