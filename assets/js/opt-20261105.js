@@ -1622,3 +1622,146 @@
     }
   } catch (err) {}
 })();
+/* opt-20261105.js - §AO · 空间级 3D 景深的滚动驱动（任务 id=76）
+ * ---------------------------------------------------------------------------
+ * CSS 负责透视坐标系与静态 Z 层次；本段只写两个 CSS 变量：
+ *   · --ao-h（写在 .hero 上）：scrollY 0→600 归一化，供首屏四层以不同速率
+ *     叠加向上位移，形成层间相对运动（景深），而不是整体平移。
+ *   · --ao-p（写在 #work .featured-showcase 上）：展示墙穿过视口的进度
+ *     （顶部进入视口=0，底部离开视口=1），CSS 用它把整墙 rotateX 到 -6deg。
+ *
+ * 实现要点：
+ *   · 单帧只做 1 次布局读取（展示墙的 getBoundingClientRect），首屏用 scrollY，
+ *     不逐帧读其它元素；用 rAF 合并多次 scroll 事件。
+ *   · .featured-showcase 由 app.js 运行时创建：findWall() 每次校验 isConnected，
+ *     启动后最多 3s 内轮询补写首帧。
+ *   · prefers-reduced-motion：完全不注册滚动监听、不写变量（CSS 的 calc 归零），
+ *     运行中切换也会清空变量并停在静态 Z 层次。
+ *   · 不触碰 transform、不改 DOM 结构、不改任何计数或文案。
+ */
+(function () {
+  'use strict';
+
+  var HERO_SEL = '.hero';
+  var WALL_SEL = '#work .featured-showcase';
+  var HERO_RANGE = 600;            /* 首屏景深滚动区间（px） */
+  var hero = null;
+  var wall = null;
+  var frame = 0;
+  var lastH = -1;
+  var lastP = -1;
+  var reduced = false;
+  var mq = null;
+
+  function mediaReduce() {
+    try {
+      return window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    } catch (e) { return null; }
+  }
+  function clamp01(n) { return n < 0 ? 0 : (n > 1 ? 1 : n); }
+  function scrollTop() {
+    return window.pageYOffset || document.documentElement.scrollTop || 0;
+  }
+  function findHero() {
+    if (!hero || !hero.isConnected) hero = document.querySelector(HERO_SEL);
+    return hero;
+  }
+  function findWall() {
+    if (!wall || !wall.isConnected) wall = document.querySelector(WALL_SEL);
+    return wall;
+  }
+
+  function heroProgress() { return clamp01(scrollTop() / HERO_RANGE); }
+
+  /* 0 = 元素顶边刚进入视口底部；1 = 元素底边刚离开视口顶部 */
+  function wallProgress(el) {
+    var r = el.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    if (!(r.height > 0) || !(vh > 0)) return 0;
+    return clamp01((vh - r.top) / (vh + r.height));
+  }
+
+  function paint() {
+    frame = 0;
+    if (reduced) return;
+
+    var h = heroProgress();
+    if (Math.abs(h - lastH) > 0.0005) {
+      var heroRoot = findHero();
+      if (heroRoot) {
+        heroRoot.style.setProperty('--ao-h', h.toFixed(4));
+        lastH = h;
+      }
+    }
+
+    var el = findWall();
+    if (el) {
+      var p = wallProgress(el);
+      if (Math.abs(p - lastP) > 0.001) {
+        el.style.setProperty('--ao-p', p.toFixed(4));
+        lastP = p;
+      }
+    }
+  }
+
+  function request() {
+    if (frame) return;
+    frame = window.requestAnimationFrame
+      ? window.requestAnimationFrame(paint)
+      : window.setTimeout(paint, 16);
+  }
+
+  function cancel() {
+    if (!frame) return;
+    if (window.cancelAnimationFrame) window.cancelAnimationFrame(frame);
+    else window.clearTimeout(frame);
+    frame = 0;
+  }
+
+  function reset() {
+    cancel();
+    lastH = -1;
+    lastP = -1;
+    var heroRoot = findHero();
+    if (heroRoot) heroRoot.style.removeProperty('--ao-h');
+    var el = findWall();
+    if (el) el.style.removeProperty('--ao-p');
+  }
+
+  function syncReduced() {
+    reduced = !!(mq && mq.matches);
+    if (reduced) reset();
+    else request();
+  }
+
+  function start() {
+    mq = mediaReduce();
+    if (mq) {
+      if (typeof mq.addEventListener === 'function') mq.addEventListener('change', syncReduced);
+      else if (typeof mq.addListener === 'function') mq.addListener(syncReduced);
+      reduced = mq.matches;
+    }
+    if (reduced) { reset(); return; }
+
+    request();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request, { passive: true });
+    window.addEventListener('orientationchange', request, { passive: true });
+    window.addEventListener('load', request, false);
+
+    /* app.js 随后创建 .featured-showcase：最多轮询 30 次（约 3s）补写首帧 */
+    var tries = 0;
+    var timer = window.setInterval(function () {
+      tries += 1;
+      if (!findWall() && tries < 30) return;
+      window.clearInterval(timer);
+      request();
+    }, 100);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
+})();

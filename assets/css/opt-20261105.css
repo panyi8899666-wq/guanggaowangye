@@ -6707,3 +6707,175 @@ html body .partners-slots .partners-group {
     background-size: 100% 100%, auto, auto!important;
   }
 }
+/* ==========================================================================
+   §AO · 空间级 3D 景深重做（任务 id=76）
+   --------------------------------------------------------------------------
+   用户反馈「没有本质的变化，要的是效果真实做出来」：本段不做 hover 微动效，
+   而是给 #work 精选案例墙与首屏建立真实的透视坐标系（perspective + 子级
+   translateZ），形成前后层次与随滚动变化的景深。
+
+   硬约束（本项目基线）：
+     · 不写 transform：基线存在 transform:none!important，且 app.js 每帧给卡片
+       写内联 transform；本段一律使用独立 translate / rotate 属性，二者与
+       transform 是不同属性，互不覆盖。
+     · .featured-showcase / .featured-card 由 app.js 运行时生成，无法改 markup，
+       只能按类名压样式。
+     · 3D 子元素只有在祖先有 perspective 时才产生透视缩放；preserve-3d 也写在
+       承载 perspective 的容器上。
+
+   实测几何（真实 Chrome 156，改前 depth-raw-before.json）：
+     · .featured-showcase 在 1440 是 2 列 648px（不是 4 列一行），列距 24px、
+       行距 36px；1280 为 2 列 596px，390 为单列 362px。
+     · 视口余量：1440 = 60px、1280 = 32px、390 = 14px。
+     · #work / .wrap 的 overflow 均为 visible，父级不裁切；只有 .hero 是
+       overflow:hidden（首屏层的超界由它兜住，不会产生页面横向滚动）。
+   ⇒ 因此 Z 位移不能照搬「4 列一行」的 1400px 透视 + ±140 全量：2 列时最外侧
+     卡片的近边会被透视放大到容器之外。桌面端给 .featured-showcase 加
+     padding-inline（把网格宽度收回 52px 量级，专门留给投影外扩），窄屏则把
+     Z 幅度降到 ±70，保证 390 不溢出。
+
+   层级：卡片 hover 的 z-index:5 只在 #work 的 3D 渲染上下文内生效，
+   导航（.topline z-index:80）、进度线（60）、FAB（2450）均不受影响。
+   ========================================================================== */
+
+/* ---------- AO-1 · #work 精选案例墙：真透视纵深 ---------- */
+html body #work .featured-showcase {
+  perspective: 1400px!important;
+  perspective-origin: 50% 45%!important;
+  transform-style: preserve-3d!important;
+  /* 整墙俯仰：--ao-p 由 §AO IIFE 按滚动进度写入（0→1），不写 transition，
+     避免逐帧变量被过渡二次延迟。 */
+  rotate: x calc(var(--ao-p, 0) * -6deg)!important;
+  will-change: rotate;
+  /* 容器自身位于 z=0 平面，会把 translateZ 为负的卡片挡在命中测试之外
+     （实测 elementFromPoint 只返回 .featured-showcase）。容器不承担任何交互，
+     故让出命中测试，由卡片自己接管点击/hover。 */
+  pointer-events: none!important;
+}
+
+html body #work .featured-showcase > .featured-card {
+  pointer-events: auto!important;
+}
+
+/* 桌面/平板：给透视外扩留出水平余量（不改列数、不改 gap） */
+@media (min-width: 900px) {
+  html body #work .featured-showcase {
+    padding-inline: clamp(36px, 4vw, 52px)!important;
+  }
+}
+
+/* 四张卡按阅读顺序递增 Z（左上最深 → 右下最近），rotateY 符号交替形成
+   左右两侧向观者围合的弧面。 */
+html body #work .featured-showcase > .featured-card:nth-child(1) {
+  translate: 0 0 -140px!important;
+  rotate: y 9deg!important;
+}
+html body #work .featured-showcase > .featured-card:nth-child(2) {
+  translate: 0 0 -50px!important;
+  rotate: y -4deg!important;
+}
+html body #work .featured-showcase > .featured-card:nth-child(3) {
+  translate: 0 0 50px!important;
+  rotate: y 4deg!important;
+}
+html body #work .featured-showcase > .featured-card:nth-child(4) {
+  translate: 0 0 140px!important;
+  rotate: y -9deg!important;
+}
+
+/* 过渡：覆盖 §AD 的 .72s，按时长 .5s 走 translate / rotate（其余观感属性沿用） */
+html body #work .featured-showcase > .featured-card:nth-child(-n+4) {
+  transition:
+    translate .5s cubic-bezier(.22, .9, .24, 1),
+    rotate .5s cubic-bezier(.22, .9, .24, 1),
+    opacity .5s cubic-bezier(.22, .9, .24, 1),
+    border-color .35s var(--ease-out),
+    box-shadow .35s var(--ease-out)!important;
+  will-change: translate, rotate;
+}
+
+/* hover / 键盘聚焦：把这张抬到最前（Z 最大、z-index 最高、rotateY 回正）。
+   选择器带 :nth-child(-n+4) 以取得与 §AD hover 相同的特异性，靠文件顺序覆盖。 */
+html body #work .featured-showcase > .featured-card:nth-child(-n+4):hover,
+html body #work .featured-showcase > .featured-card:nth-child(-n+4):focus-visible {
+  translate: 0 -10px 180px!important;
+  rotate: y 0deg!important;
+  z-index: 5!important;
+}
+
+/* 窄屏（单列/双列小卡）：视口余量只有 14–30px，±140 的透视外扩会顶出屏幕，
+   故把纵深幅度收到 ±70，hover 抬到 90（实测 390 下右边缘仍 ≤ innerWidth）。 */
+@media (max-width: 899.98px) {
+  html body #work .featured-showcase > .featured-card:nth-child(1) {
+    translate: 0 0 -70px!important;
+    rotate: y 3deg!important;
+  }
+  html body #work .featured-showcase > .featured-card:nth-child(2) {
+    translate: 0 0 -25px!important;
+    rotate: y -2deg!important;
+  }
+  html body #work .featured-showcase > .featured-card:nth-child(3) {
+    translate: 0 0 25px!important;
+    rotate: y 2deg!important;
+  }
+  html body #work .featured-showcase > .featured-card:nth-child(4) {
+    translate: 0 0 70px!important;
+    rotate: y -3deg!important;
+  }
+  html body #work .featured-showcase > .featured-card:nth-child(-n+4):hover,
+  html body #work .featured-showcase > .featured-card:nth-child(-n+4):focus-visible {
+    translate: 0 -8px 90px!important;
+    rotate: y 0deg!important;
+    z-index: 5!important;
+  }
+}
+
+/* ---------- AO-2 · 首屏分层真景深 ----------
+   承载 perspective 的必须是这些层的共同父级。实测 DOM：h1 / .hero-copy /
+   .hero-side-panel / .hero-ribbon 都是 .hero-main 的直接子元素（不是 .hero
+   的子元素），故透视写在 .hero-main 上。
+   四层给不同的 translateZ：标题最靠前（40），副标在零平面，右侧面板退后 80，
+   轮转带最远 160；滚动 0→600px 时再叠加不同速率的向上位移（--ao-h 由 IIFE
+   写入），从而产生「层与层之间相对运动」的景深，而不是整体平移。 */
+html body .hero .hero-main {
+  perspective: 1200px!important;
+  perspective-origin: 50% 42%!important;
+  transform-style: preserve-3d!important;
+}
+
+html body .hero h1.hero-title-sweep {
+  translate: 0 calc(var(--ao-h, 0) * -18px) 40px!important;
+  will-change: translate;
+}
+html body .hero .hero-copy {
+  translate: 0 calc(var(--ao-h, 0) * -10px) 0px!important;
+  will-change: translate;
+}
+html body .hero .hero-side-panel {
+  translate: 0 calc(var(--ao-h, 0) * -30px) -80px!important;
+  will-change: translate;
+}
+html body .hero .hero-ribbon {
+  translate: 0 calc(var(--ao-h, 0) * -46px) -160px!important;
+  will-change: translate;
+}
+
+/* ---------- AO-3 · prefers-reduced-motion：关闭全部空间动效 ----------
+   静态 Z 层次不算动效，保留；只停掉整墙俯仰、hover 过渡与滚动位移
+   （--ao-h / --ao-p 由 IIFE 在降级时清空，calc 自然归零）。 */
+@media (prefers-reduced-motion: reduce) {
+  html body #work .featured-showcase {
+    rotate: none!important;
+    will-change: auto!important;
+  }
+  html body #work .featured-showcase > .featured-card:nth-child(-n+4) {
+    transition: none!important;
+    will-change: auto!important;
+  }
+  html body .hero h1.hero-title-sweep,
+  html body .hero .hero-copy,
+  html body .hero .hero-side-panel,
+  html body .hero .hero-ribbon {
+    will-change: auto!important;
+  }
+}
