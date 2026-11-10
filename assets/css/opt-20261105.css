@@ -6879,3 +6879,29 @@ html body .hero .hero-ribbon {
     will-change: auto!important;
   }
 }
+/* ==========================================================================
+   §AP · 首屏 h1 撤销 Z 位移，恢复与正文左对齐（任务 id=77）
+   --------------------------------------------------------------------------
+   问题：§AO-2 给 h1 写了 translateZ(40px)，它处在 .hero-main 的
+   perspective:1200px 透视坐标系内，被放大 1.0345 倍（880 → 910.34），透视
+   投影把 h1 左边线从 60 推到 37.5，首个 .hero-char「让」随之左移 22.5px，
+   与 .hero-copy（x = 60）的正文左边线不对齐。
+
+   修法：只把 h1 的 translate 覆盖为「0 y 0」——撤销 z 分量（z=0 即落在零平面，
+   不再被透视放大），保留 §AO 的滚动 y 位移（--ao-h × -18px），滚动景深不丢。
+   .hero-side-panel(-80) / .hero-ribbon(-160) 的负 Z 是景深来源，保留不动。
+
+   特异性：§AO 用 html body .hero h1.hero-title-sweep（0,2,3）。本段用
+   body.hero-ready 提升到（0,3,2），高于 §AO 且位于文件末尾，双重保证生效。
+   注：实测 DOM 中 h1 是 .hero-main 的直接子元素（不是 .hero 的直接子元素），
+   故用后代选择器 .hero h1，另附 .hero-main > h1 写法兜住结构微调。
+   ========================================================================== */
+html body.hero-ready .hero h1.hero-title-sweep,
+html body.hero-ready .hero-main > h1.hero-title-sweep {
+  translate: 0 calc(var(--ao-h, 0) * -18px) 0 !important;
+}
+/* AP-2：§AO 把 h1 标记为 will-change:translate，本段只改分量、动画仍在，保留；
+   prefers-reduced-motion 时 §AO-3 已将 will-change 归零，此处无需重复。 */
+html body .hero h1.hero-title-sweep {
+  will-change: translate;
+}
