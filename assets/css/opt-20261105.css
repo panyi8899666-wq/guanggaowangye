@@ -6531,3 +6531,169 @@ html body .partners-slots .partners-group {
   border-color: var(--accent)!important;
   color: var(--ink)!important;
 }
+/* ==========================================================================
+   §AN · 2026-11-10 按钮动效升级（任务 id=75，纯 CSS / 零布局位移）
+   --------------------------------------------------------------------------
+   实测环境：真实 Chrome 156 / CDP 9380 / 全新 profile / bypass SW / 禁缓存，
+   逐项数值见 btn-before.json / btn-after.json。
+
+   ① .cta → Interactive Hover Button（圆形色块扩散）
+      改前实测：`::before` 的 content 为 `""`，是 18×18 的图标层（占用），
+                `::after` 的 content 为 `none`、display:none（空闲），
+                故扩散层复用 `::after`，不碰图标。
+      纯 CSS 降级：Magic UI 的扩散原点取自 pointermove 的光标坐标，需要 JS
+      写 `--x/--y`；本轮禁止改 opt JS，故原点固定为按钮左下角
+      （transform-origin:0% 100%），视觉为「从左下角涌起铺满」。
+      `transform` 被基线 `transform:none!important` / 磁吸 translate 独占，
+      这里用独立 `scale` 属性（scale 不被 transform 简写命中），
+      过渡只补在 scale 上，磁吸 translate 过渡保持不变。
+      文字抬高到 z-index:1；hover/focus 文字转深色 var(--surface)=#0d0d0f。
+   --------------------------------------------------------------------------
+   ② .copy-email → 填充滑动（从左向右填满、文字反相）
+      用 background-image 的最上层做金色填充，background-size 0% → 100%
+      过渡；下面两层保留基线按钮的渐变皮肤，避免把按钮变成透明底。
+      不改 rect：84×36、min-width:76px 由既有规则决定，本段只动背景/颜色。
+   --------------------------------------------------------------------------
+   ③ 以下全部在 prefers-reduced-motion:reduce 下退化为瞬时终态
+      （transition:none，扩散层 scale:none + opacity 直切）。
+   ========================================================================== */
+
+/* ---------- AN-1 · .cta 圆形扩散层 ---------- */
+#contact .contact-actions .cta:not(#opt-boost) {
+  /* 建立独立层叠上下文，保证扩散层 z-index:0 只压在本按钮背景之上 */
+  isolation: isolate;
+}
+
+#contact .contact-actions .cta:not(#opt-boost)::after {
+  /* 覆盖：基线 .cta::after{content:none;display:none;width:20px;height:20px;
+     top:50%;right:17px;bottom:auto;left:20px;z-index:4;opacity:.92} */
+  content: ""!important;
+  display: block!important;
+  position: absolute!important;
+  inset: 0!important;
+  width: auto!important;
+  height: auto!important;
+  margin: 0!important;
+  border-radius: 999px!important;
+  background-color: var(--accent)!important;
+  background-image: none!important;
+  opacity: 1!important;
+  z-index: 0!important;
+  pointer-events: none!important;
+  /* 纯 CSS 降级：无光标坐标，固定从左下角扩散 */
+  transform-origin: 0% 100%!important;
+  /* 覆盖基线 .contact-actions .cta:after{transform:translateY(-50%)}：
+     否则扩散层整体上移半个按钮高（实测 matrix ty=-23），铺不满按钮 */
+  transform: none!important;
+  scale: 0!important;
+  transition: scale .45s cubic-bezier(.22, .9, .24, 1)!important;
+  will-change: scale;
+}
+
+#contact .contact-actions .cta:not(#opt-boost):hover::after,
+#contact .contact-actions .cta:not(#opt-boost):focus-visible::after {
+  /* 2.2 倍足以覆盖 212px 宽的按钮（最远点距左下角约 217px） */
+  scale: 2.2!important;
+}
+
+/* ---------- AN-2 · .cta 文字层（压过扩散层）与反相 ---------- */
+#contact .contact-actions .cta > .cta-copy:not(#opt-boost) {
+  position: relative!important;
+  z-index: 1!important;
+}
+#contact .contact-actions .cta > .cta-copy > span:not(#opt-boost),
+#contact .contact-actions .cta > .cta-copy > small:not(#opt-boost) {
+  transition: color .24s var(--ease-out);
+}
+
+/* 覆盖：body.hero-ready :is(.cta,…):hover{background:var(--accent)!important;
+   color:#111!important} —— 会把整按钮染金、扩散层失去对比。
+   hover 时恢复基线渐变皮肤（两层均取自基线既有值），只让 ::after 承担金色。 */
+#contact .contact-actions .cta:not(#opt-boost):hover,
+#contact .contact-actions .cta:not(#opt-boost):focus-visible {
+  background-color: transparent!important;
+  background-image:
+    linear-gradient(rgba(236, 234, 228, .07), rgba(236, 234, 228, 0) 48%),
+    linear-gradient(rgb(30, 30, 33) 0%, rgb(19, 19, 21) 58%, rgb(11, 11, 13) 100%)!important;
+  color: var(--surface)!important;
+}
+
+/* 覆盖：F3 的 hover>small / Q1 的 .cta-copy>small{color:var(--accent)} */
+#contact .contact-actions .cta:not(#opt-boost):hover > .cta-copy > span,
+#contact .contact-actions .cta:not(#opt-boost):hover > .cta-copy > small,
+#contact .contact-actions .cta:not(#opt-boost):focus-visible > .cta-copy > span,
+#contact .contact-actions .cta:not(#opt-boost):focus-visible > .cta-copy > small {
+  color: var(--surface)!important;
+}
+
+/* 箭头/图标右移 2px：基线给 ::before 写了 transform:none!important，
+   这里同样使用独立 translate，避免与 transform 互压。 */
+#contact .contact-actions .cta:not(#opt-boost)::before {
+  transition: translate .32s cubic-bezier(.22, .9, .24, 1)!important;
+}
+#contact .contact-actions .cta:not(#opt-boost):hover::before,
+#contact .contact-actions .cta:not(#opt-boost):focus-visible::before {
+  translate: 2px 0!important;
+}
+
+/* ---------- AN-3 · .copy-email 从左向右填充 ----------
+   最上层 = 90deg 金色实色条（0 0 结束色标 → 纯色），background-size 0%→100%；
+   第二/三层 = 基线的墨色高光 + 按钮渐变皮肤，保持非 hover 外观不变。
+   覆盖：G6 hover 的 112deg 光泽层（background-image/size/position 全带 !important）。 */
+#contact .contact-details.diagnostic-email-only .copy-email:not(#opt-boost) {
+  background-image:
+    linear-gradient(90deg, var(--accent) 0 0),
+    linear-gradient(rgba(236, 234, 228, .07), rgba(236, 234, 228, 0) 48%),
+    linear-gradient(rgb(30, 30, 33) 0%, rgb(19, 19, 21) 58%, rgb(11, 11, 13) 100%)!important;
+  background-size: 0% 100%, auto, auto!important;
+  background-position: 0 0, 0 0, 0 0!important;
+  background-repeat: no-repeat, no-repeat, no-repeat!important;
+  transition: background-size .32s cubic-bezier(.22, .9, .24, 1),
+              color .24s var(--ease-out),
+              border-color .24s var(--ease-out),
+              background-color .24s var(--ease-out)!important;
+}
+
+#contact .contact-details.diagnostic-email-only .copy-email:not(#opt-boost):hover,
+#contact .contact-details.diagnostic-email-only .copy-email:not(#opt-boost):focus-visible {
+  background-size: 100% 100%, auto, auto!important;
+  background-position: 0 0, 0 0, 0 0!important;
+  color: var(--surface)!important;
+  border-color: var(--accent)!important;
+}
+
+/* 微信卡「复制」按钮：AM-4 的 hover 规则多一层 `.contact-wechat`，特异性同为
+   (2,4,0) 且同样带 !important；本段位于文件末尾，用等价选择器补一条即可让
+   反相色真正生效（否则填充铺满后文字仍是浅色，对比不足）。 */
+#contact .contact-details.diagnostic-email-only .contact-wechat .copy-email:not(#opt-boost):hover,
+#contact .contact-details.diagnostic-email-only .contact-wechat .copy-email:not(#opt-boost):focus-visible {
+  background-size: 100% 100%, auto, auto!important;
+  color: var(--surface)!important;
+  border-color: var(--accent)!important;
+}
+
+/* ---------- AN-4 · prefers-reduced-motion：直接到终态 ----------
+   扩散层不缩放（scale:none）+ 不做过渡，只保留 hover 的颜色反相；
+   复制按钮的填充不做滑动，hover 时数值直接为 100%。 */
+@media (prefers-reduced-motion: reduce) {
+  #contact .contact-actions .cta:not(#opt-boost)::after {
+    transition: none!important;
+    scale: none!important;
+    opacity: 0!important;
+  }
+  #contact .contact-actions .cta:not(#opt-boost):hover::after,
+  #contact .contact-actions .cta:not(#opt-boost):focus-visible::after {
+    scale: none!important;
+    opacity: 1!important;
+  }
+  #contact .contact-actions .cta:not(#opt-boost)::before {
+    transition: none!important;
+  }
+  #contact .contact-details.diagnostic-email-only .copy-email:not(#opt-boost) {
+    transition: none!important;
+  }
+  #contact .contact-details.diagnostic-email-only .copy-email:not(#opt-boost):hover,
+  #contact .contact-details.diagnostic-email-only .copy-email:not(#opt-boost):focus-visible {
+    background-size: 100% 100%, auto, auto!important;
+  }
+}
