@@ -6900,8 +6900,30 @@ html body.hero-ready .hero h1.hero-title-sweep,
 html body.hero-ready .hero-main > h1.hero-title-sweep {
   translate: 0 calc(var(--ao-h, 0) * -18px) 0 !important;
 }
-/* AP-2：§AO 把 h1 标记为 will-change:translate，本段只改分量、动画仍在，保留；
-   prefers-reduced-motion 时 §AO-3 已将 will-change 归零，此处无需重复。 */
-html body .hero h1.hero-title-sweep {
-  will-change: translate;
+/* AP-2：撤销 §AO 给 h1 标的 will-change（AP-1 已无 z 分量；滚动 y 仍走 translate，
+   故保留 will-change，仅此说明，不再重复声明，避免覆盖 reduced-motion 的归零）。 */
+
+/* AP-3 · 窄屏把 h1 与 .hero-copy 的盒宽/左边距设为**同一套规则**（521–1079.98px）
+   基线里两者各用不同公式：h1 `margin-left:max(50vw - 880px,48px)`；
+   .hero-copy `margin-left:max(50vw - 660px,max(16px,min(2.5vw,36px)))`，
+   且 copy 宽度被 opt 层设为 min(100%,760px)。两套公式在 768–1079 之间会差
+   10–22px。AP-3 初版误把它改成 `width:720px + margin-inline:auto`，导致 1024 档
+   h1 被居中到 144.5 而正文仍在 25.6 → 差 118.9px（已实测）。
+   本版改为**对两者施加同一组 width/max-width/margin-left**，从构造上保证
+   h1.x === copy.x，不依赖各自公式是否巧合相等。≥1080px 不命中（宽屏已一致）。 */
+@media (min-width: 521px) and (max-width: 1079.98px) {
+  html body.hero-ready .hero .hero-copy,
+  html body.hero-ready .hero h1.hero-title-sweep {
+    width: min(100% - 42px, 760px) !important;
+    max-width: 760px !important;
+    margin-left: max(50vw - 660px, max(16px, min(2.5vw, 36px))) !important;
+    margin-right: auto !important;
+  }
+}
+/* ≤520px：两者宽度同为 calc(100% - 42px) 且居中，实测已对齐，保持原状 */
+@media (max-width: 520px) {
+  html body.hero-ready .hero h1.hero-title-sweep {
+    width: calc(100% - 42px) !important;
+    margin-inline: auto !important;
+  }
 }
