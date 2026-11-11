@@ -1365,15 +1365,8 @@
     }
 
     /* ---------- 组装（.featured-ledger 由 app.js 异步生成，未就绪时短轮询） ---------- */
-    function isNarrow() {
-      try { return !!(window.matchMedia && window.matchMedia('(max-width: 820px)').matches); }
-      catch (e) { return false; }
-    }
-
     function build() {
       if (ribbon.querySelector('.hero-mq')) return true;
-      /* 窄屏改用 HTML 里的静态主图，避免 51×2 张轮播卡拖住首屏最大内容 */
-      if (isNarrow()) return false;
 
       var projects = Array.prototype.slice.call(
         document.querySelectorAll('.featured-ledger .project'));
@@ -1395,6 +1388,8 @@
 
       scrubNumbers(mq);
       ribbon.appendChild(mq);
+      /* 轮播挂上之后再藏静态主图，首屏最大内容仍是那张已经画出来的主图 */
+      ribbon.classList.add('hero-ribbon--live');
       return true;
     }
 
@@ -1402,15 +1397,6 @@
     var tries = 0;
 
     function start() {
-      if (isNarrow()) {
-        try {
-          var mq = window.matchMedia('(max-width: 820px)');
-          var onChange = function () { if (!mq.matches) build(); };
-          if (mq.addEventListener) mq.addEventListener('change', onChange);
-          else if (mq.addListener) mq.addListener(onChange);
-        } catch (e) {}
-        return;
-      }
       if (build()) return;
       timer = setInterval(function () {
         tries += 1;
@@ -1418,14 +1404,18 @@
           clearInterval(timer);
           timer = null;
         }
-      }, 100);
+      }, 120);
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', start, { once: true });
-    } else {
-      start();
+    /* 等首屏画完再组 51 张卡，避免轮播图抢在主图之前成为最大内容 */
+    function boot() {
+      /* load 之后主图已经进文档；再等一小段，让它先画出来，再组轮播 */
+      var go = function () { setTimeout(start, 1600); };
+      if (document.readyState === 'complete') go();
+      else window.addEventListener('load', go, { once: true });
     }
+
+    boot();
   } catch (err) {}
 })();
 /* §AL · 合作品牌墙：缩略小图 + 三带 16/16/16（任务 id=73）
@@ -1820,28 +1810,42 @@
     });
   }
 
-  /* 屏外暂停无限滚动，避免首屏持续合成 */
-  function pauseOffscreen(roots, tracks) {
+  /* 屏外或标签页隐藏时暂停轮转，只用 animation-play-state，不改布局 */
+  var pauseRoots = [];
+  function applyPause(root) {
+    if (!root) return;
+    var hidden = document.hidden;
+    var off = root.getAttribute('data-offscreen') === '1';
+    var state = (hidden || off) ? 'paused' : 'running';
+    var list = root.querySelectorAll('.hero-mq__track, .ab-mq__track');
+    for (var i = 0; i < list.length; i++) list[i].style.animationPlayState = state;
+  }
+  function watchPause(selector) {
     if (!('IntersectionObserver' in window)) return;
-    var nodes = document.querySelectorAll(roots);
+    var nodes = document.querySelectorAll(selector);
     if (!nodes.length) return;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        var list = en.target.querySelectorAll(tracks);
-        for (var i = 0; i < list.length; i++) {
-          list[i].style.animationPlayState = en.isIntersecting ? 'running' : 'paused';
-        }
+        en.target.setAttribute('data-offscreen', en.isIntersecting ? '0' : '1');
+        applyPause(en.target);
       });
     }, { rootMargin: '120px' });
-    nodes.forEach(function (n) { io.observe(n); });
+    nodes.forEach(function (n) {
+      if (pauseRoots.indexOf(n) !== -1) return;
+      pauseRoots.push(n);
+      io.observe(n);
+    });
   }
   function armPause() {
-    pauseOffscreen('.ab-mq', '.ab-mq__track');
-    pauseOffscreen('.hero-mq', '.hero-mq__track');
+    watchPause('.ab-mq');
+    watchPause('.hero-mq');
   }
+  document.addEventListener('visibilitychange', function () {
+    for (var i = 0; i < pauseRoots.length; i++) applyPause(pauseRoots[i]);
+  });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', armPause);
   else armPause();
-  window.addEventListener('load', armPause);
+  window.addEventListener('load', function () { setTimeout(armPause, 1600); });
 
   /* 三层视差：一个滚动变量，CSS 乘不同系数。窄屏 / 省流 / 减少动效不启用。 */
   if (!reduced() && !narrow() && !lowPower()) {
