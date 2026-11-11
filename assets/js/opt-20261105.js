@@ -1365,8 +1365,15 @@
     }
 
     /* ---------- 组装（.featured-ledger 由 app.js 异步生成，未就绪时短轮询） ---------- */
+    function isNarrow() {
+      try { return !!(window.matchMedia && window.matchMedia('(max-width: 820px)').matches); }
+      catch (e) { return false; }
+    }
+
     function build() {
       if (ribbon.querySelector('.hero-mq')) return true;
+      /* 窄屏改用 HTML 里的静态主图，避免 51×2 张轮播卡拖住首屏最大内容 */
+      if (isNarrow()) return false;
 
       var projects = Array.prototype.slice.call(
         document.querySelectorAll('.featured-ledger .project'));
@@ -1395,6 +1402,15 @@
     var tries = 0;
 
     function start() {
+      if (isNarrow()) {
+        try {
+          var mq = window.matchMedia('(max-width: 820px)');
+          var onChange = function () { if (!mq.matches) build(); };
+          if (mq.addEventListener) mq.addEventListener('change', onChange);
+          else if (mq.addListener) mq.addListener(onChange);
+        } catch (e) {}
+        return;
+      }
       if (build()) return;
       timer = setInterval(function () {
         tries += 1;
@@ -1764,4 +1780,182 @@
   } else {
     start();
   }
+})();
+
+/* §AR · 2026-11-11 联系兜底、层叠滑卡、参数计数、轻视差、屏外暂停动画 */
+(function () {
+  'use strict';
+  function reduced() {
+    try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+    catch (e) { return false; }
+  }
+  function narrow() {
+    try { return !!(window.matchMedia && window.matchMedia('(max-width: 820px)').matches); }
+    catch (e) { return false; }
+  }
+  function lowPower() {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    return !!(c && (c.saveData || c.effectiveType === 'slow-2g' || c.effectiveType === '2g'));
+  }
+
+  var consultBtn = document.getElementById('mContactConsult');
+  var fab = document.getElementById('consultFab');
+  if (consultBtn && fab) {
+    consultBtn.addEventListener('click', function () { fab.click(); });
+  }
+  var wechatBtn = document.getElementById('mContactWechat');
+  if (wechatBtn) {
+    wechatBtn.addEventListener('click', function () {
+      var value = wechatBtn.getAttribute('data-copy') || '';
+      var done = function () {
+        var prev = '微信';
+        wechatBtn.textContent = '已复制';
+        window.setTimeout(function () { wechatBtn.textContent = prev; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done).catch(function () { wechatBtn.textContent = value; });
+      } else {
+        wechatBtn.textContent = value;
+      }
+    });
+  }
+
+  /* 屏外暂停无限滚动，避免首屏持续合成 */
+  function pauseOffscreen(roots, tracks) {
+    if (!('IntersectionObserver' in window)) return;
+    var nodes = document.querySelectorAll(roots);
+    if (!nodes.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var list = en.target.querySelectorAll(tracks);
+        for (var i = 0; i < list.length; i++) {
+          list[i].style.animationPlayState = en.isIntersecting ? 'running' : 'paused';
+        }
+      });
+    }, { rootMargin: '120px' });
+    nodes.forEach(function (n) { io.observe(n); });
+  }
+  function armPause() {
+    pauseOffscreen('.ab-mq', '.ab-mq__track');
+    pauseOffscreen('.hero-mq', '.hero-mq__track');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', armPause);
+  else armPause();
+  window.addEventListener('load', armPause);
+
+  /* 三层视差：一个滚动变量，CSS 乘不同系数。窄屏 / 省流 / 减少动效不启用。 */
+  if (!reduced() && !narrow() && !lowPower()) {
+    var y = 0, frame = 0;
+    function paintY() {
+      frame = 0;
+      document.documentElement.style.setProperty('--tide-y', Math.min(y, 480) + 'px');
+    }
+    window.addEventListener('scroll', function () {
+      y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      if (!frame) frame = window.requestAnimationFrame(paintY);
+    }, { passive: true });
+  }
+
+  /* 案例详情：已有多示图排成层叠滑卡；数字只取页面上已经写明的参数。 */
+  var modal = document.getElementById('caseModal');
+  if (!modal) return;
+  var SPEC = ['applicationSize', 'applicationMaterial', 'applicationProcess', 'dielineSize', 'xvDielineSize', 'statTouchpoints', 'statRoles', 'statOriginal'];
+  var stackIndex = 0;
+  var stackFigs = [];
+  var countToken = 0;
+
+  function figs() {
+    var grid = document.getElementById('multiViewGrid');
+    if (!grid) return [];
+    return Array.prototype.slice.call(grid.querySelectorAll('.case-view'));
+  }
+
+  function paintStack() {
+    var grid = document.getElementById('multiViewGrid');
+    stackFigs = figs();
+    if (!grid || stackFigs.length < 2) return;
+    grid.classList.add('tide-stack');
+    var ui = grid.parentNode.querySelector('.tide-stack-ui');
+    if (!ui) {
+      ui = document.createElement('div');
+      ui.className = 'tide-stack-ui';
+      ui.innerHTML = '<button type="button" data-dir="-1">上一张</button><span class="tide-stack-count" aria-live="polite"></span><button type="button" data-dir="1">下一张</button>';
+      grid.insertAdjacentElement('afterend', ui);
+      ui.addEventListener('click', function (e) {
+        var b = e.target.closest('button');
+        if (!b) return;
+        var dir = Number(b.getAttribute('data-dir')) || 0;
+        stackIndex = (stackIndex + dir + stackFigs.length) % stackFigs.length;
+        paintStack();
+      });
+    }
+    stackFigs.forEach(function (fig, n) {
+      var d = n - stackIndex;
+      if (d < 0) d += stackFigs.length;
+      var depth = d > 3 ? 4 : d;
+      fig.style.setProperty('--tide-d', String(depth));
+      fig.classList.toggle('is-front', n === stackIndex);
+      fig.toggleAttribute('hidden', d !== 0 && d > 3);
+      if (n === stackIndex) fig.removeAttribute('aria-hidden');
+      else fig.setAttribute('aria-hidden', 'true');
+    });
+    var count = ui.querySelector('.tide-stack-count');
+    if (count) count.textContent = (stackIndex + 1) + ' / ' + stackFigs.length;
+  }
+
+  function parseNum(text) {
+    var m = /(-?\d+(?:\.\d+)?)/.exec(text || '');
+    if (!m) return null;
+    return { raw: m[1], index: m.index, target: Number(m[1]), decimals: (m[1].split('.')[1] || '').length };
+  }
+  function formatNum(v, decimals) {
+    return decimals ? v.toFixed(decimals) : String(Math.round(v));
+  }
+  function countSpecs() {
+    if (reduced()) return;
+    var token = ++countToken;
+    var jobs = [];
+    SPEC.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var text = el.textContent || '';
+      var parsed = parseNum(text);
+      if (!parsed || !isFinite(parsed.target)) return;
+      jobs.push({ el: el, text: text, parsed: parsed });
+    });
+    if (!jobs.length) return;
+    var t0 = performance.now();
+    var dur = 900;
+    function step(now) {
+      if (token !== countToken) return;
+      var p = Math.min(1, (now - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      jobs.forEach(function (job) {
+        var val = job.parsed.target * e;
+        var shown = formatNum(val, job.parsed.decimals);
+        job.el.textContent = job.text.slice(0, job.parsed.index) + shown + job.text.slice(job.parsed.index + job.parsed.raw.length);
+      });
+      if (p < 1) requestAnimationFrame(step);
+      else jobs.forEach(function (job) { job.el.textContent = job.text; });
+    }
+    requestAnimationFrame(step);
+  }
+
+  function onModal() {
+    var open = modal.classList.contains('open') || modal.getAttribute('aria-hidden') === 'false';
+    if (!open) {
+      countToken++;
+      stackIndex = 0;
+      return;
+    }
+    window.setTimeout(function () {
+      if (!(modal.classList.contains('open') || modal.getAttribute('aria-hidden') === 'false')) return;
+      stackIndex = 0;
+      paintStack();
+      countSpecs();
+    }, 360);
+  }
+  try {
+    new MutationObserver(onModal).observe(modal, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
+  } catch (e) {}
 })();
