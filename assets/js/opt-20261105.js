@@ -1388,6 +1388,8 @@
 
       scrubNumbers(mq);
       ribbon.appendChild(mq);
+      /* 轮播挂上之后再藏静态主图，首屏最大内容仍是那张已经画出来的主图 */
+      ribbon.classList.add('hero-ribbon--live');
       return true;
     }
 
@@ -1402,14 +1404,18 @@
           clearInterval(timer);
           timer = null;
         }
-      }, 100);
+      }, 120);
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', start, { once: true });
-    } else {
-      start();
+    /* 等首屏画完再组 51 张卡，避免轮播图抢在主图之前成为最大内容 */
+    function boot() {
+      /* load 之后主图已经进文档；再等一小段，让它先画出来，再组轮播 */
+      var go = function () { setTimeout(start, 1600); };
+      if (document.readyState === 'complete') go();
+      else window.addEventListener('load', go, { once: true });
     }
+
+    boot();
   } catch (err) {}
 })();
 /* §AL · 合作品牌墙：缩略小图 + 三带 16/16/16（任务 id=73）
@@ -1764,4 +1770,196 @@
   } else {
     start();
   }
+})();
+
+/* §AR · 2026-11-11 联系兜底、层叠滑卡、参数计数、轻视差、屏外暂停动画 */
+(function () {
+  'use strict';
+  function reduced() {
+    try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+    catch (e) { return false; }
+  }
+  function narrow() {
+    try { return !!(window.matchMedia && window.matchMedia('(max-width: 820px)').matches); }
+    catch (e) { return false; }
+  }
+  function lowPower() {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    return !!(c && (c.saveData || c.effectiveType === 'slow-2g' || c.effectiveType === '2g'));
+  }
+
+  var consultBtn = document.getElementById('mContactConsult');
+  var fab = document.getElementById('consultFab');
+  if (consultBtn && fab) {
+    consultBtn.addEventListener('click', function () { fab.click(); });
+  }
+  var wechatBtn = document.getElementById('mContactWechat');
+  if (wechatBtn) {
+    wechatBtn.addEventListener('click', function () {
+      var value = wechatBtn.getAttribute('data-copy') || '';
+      var done = function () {
+        var prev = '微信';
+        wechatBtn.textContent = '已复制';
+        window.setTimeout(function () { wechatBtn.textContent = prev; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done).catch(function () { wechatBtn.textContent = value; });
+      } else {
+        wechatBtn.textContent = value;
+      }
+    });
+  }
+
+  /* 屏外或标签页隐藏时暂停轮转，只用 animation-play-state，不改布局 */
+  var pauseRoots = [];
+  function applyPause(root) {
+    if (!root) return;
+    var hidden = document.hidden;
+    var off = root.getAttribute('data-offscreen') === '1';
+    var state = (hidden || off) ? 'paused' : 'running';
+    var list = root.querySelectorAll('.hero-mq__track, .ab-mq__track');
+    for (var i = 0; i < list.length; i++) list[i].style.animationPlayState = state;
+  }
+  function watchPause(selector) {
+    if (!('IntersectionObserver' in window)) return;
+    var nodes = document.querySelectorAll(selector);
+    if (!nodes.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        en.target.setAttribute('data-offscreen', en.isIntersecting ? '0' : '1');
+        applyPause(en.target);
+      });
+    }, { rootMargin: '120px' });
+    nodes.forEach(function (n) {
+      if (pauseRoots.indexOf(n) !== -1) return;
+      pauseRoots.push(n);
+      io.observe(n);
+    });
+  }
+  function armPause() {
+    watchPause('.ab-mq');
+    watchPause('.hero-mq');
+  }
+  document.addEventListener('visibilitychange', function () {
+    for (var i = 0; i < pauseRoots.length; i++) applyPause(pauseRoots[i]);
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', armPause);
+  else armPause();
+  window.addEventListener('load', function () { setTimeout(armPause, 1600); });
+
+  /* 三层视差：一个滚动变量，CSS 乘不同系数。窄屏 / 省流 / 减少动效不启用。 */
+  if (!reduced() && !narrow() && !lowPower()) {
+    var y = 0, frame = 0;
+    function paintY() {
+      frame = 0;
+      document.documentElement.style.setProperty('--tide-y', Math.min(y, 480) + 'px');
+    }
+    window.addEventListener('scroll', function () {
+      y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      if (!frame) frame = window.requestAnimationFrame(paintY);
+    }, { passive: true });
+  }
+
+  /* 案例详情：已有多示图排成层叠滑卡；数字只取页面上已经写明的参数。 */
+  var modal = document.getElementById('caseModal');
+  if (!modal) return;
+  var SPEC = ['applicationSize', 'applicationMaterial', 'applicationProcess', 'dielineSize', 'xvDielineSize', 'statTouchpoints', 'statRoles', 'statOriginal'];
+  var stackIndex = 0;
+  var stackFigs = [];
+  var countToken = 0;
+
+  function figs() {
+    var grid = document.getElementById('multiViewGrid');
+    if (!grid) return [];
+    return Array.prototype.slice.call(grid.querySelectorAll('.case-view'));
+  }
+
+  function paintStack() {
+    var grid = document.getElementById('multiViewGrid');
+    stackFigs = figs();
+    if (!grid || stackFigs.length < 2) return;
+    grid.classList.add('tide-stack');
+    var ui = grid.parentNode.querySelector('.tide-stack-ui');
+    if (!ui) {
+      ui = document.createElement('div');
+      ui.className = 'tide-stack-ui';
+      ui.innerHTML = '<button type="button" data-dir="-1">上一张</button><span class="tide-stack-count" aria-live="polite"></span><button type="button" data-dir="1">下一张</button>';
+      grid.insertAdjacentElement('afterend', ui);
+      ui.addEventListener('click', function (e) {
+        var b = e.target.closest('button');
+        if (!b) return;
+        var dir = Number(b.getAttribute('data-dir')) || 0;
+        stackIndex = (stackIndex + dir + stackFigs.length) % stackFigs.length;
+        paintStack();
+      });
+    }
+    stackFigs.forEach(function (fig, n) {
+      var d = n - stackIndex;
+      if (d < 0) d += stackFigs.length;
+      var depth = d > 3 ? 4 : d;
+      fig.style.setProperty('--tide-d', String(depth));
+      fig.classList.toggle('is-front', n === stackIndex);
+      fig.toggleAttribute('hidden', d !== 0 && d > 3);
+      if (n === stackIndex) fig.removeAttribute('aria-hidden');
+      else fig.setAttribute('aria-hidden', 'true');
+    });
+    var count = ui.querySelector('.tide-stack-count');
+    if (count) count.textContent = (stackIndex + 1) + ' / ' + stackFigs.length;
+  }
+
+  function parseNum(text) {
+    var m = /(-?\d+(?:\.\d+)?)/.exec(text || '');
+    if (!m) return null;
+    return { raw: m[1], index: m.index, target: Number(m[1]), decimals: (m[1].split('.')[1] || '').length };
+  }
+  function formatNum(v, decimals) {
+    return decimals ? v.toFixed(decimals) : String(Math.round(v));
+  }
+  function countSpecs() {
+    if (reduced()) return;
+    var token = ++countToken;
+    var jobs = [];
+    SPEC.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var text = el.textContent || '';
+      var parsed = parseNum(text);
+      if (!parsed || !isFinite(parsed.target)) return;
+      jobs.push({ el: el, text: text, parsed: parsed });
+    });
+    if (!jobs.length) return;
+    var t0 = performance.now();
+    var dur = 900;
+    function step(now) {
+      if (token !== countToken) return;
+      var p = Math.min(1, (now - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      jobs.forEach(function (job) {
+        var val = job.parsed.target * e;
+        var shown = formatNum(val, job.parsed.decimals);
+        job.el.textContent = job.text.slice(0, job.parsed.index) + shown + job.text.slice(job.parsed.index + job.parsed.raw.length);
+      });
+      if (p < 1) requestAnimationFrame(step);
+      else jobs.forEach(function (job) { job.el.textContent = job.text; });
+    }
+    requestAnimationFrame(step);
+  }
+
+  function onModal() {
+    var open = modal.classList.contains('open') || modal.getAttribute('aria-hidden') === 'false';
+    if (!open) {
+      countToken++;
+      stackIndex = 0;
+      return;
+    }
+    window.setTimeout(function () {
+      if (!(modal.classList.contains('open') || modal.getAttribute('aria-hidden') === 'false')) return;
+      stackIndex = 0;
+      paintStack();
+      countSpecs();
+    }, 360);
+  }
+  try {
+    new MutationObserver(onModal).observe(modal, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
+  } catch (e) {}
 })();

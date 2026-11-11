@@ -1,3 +1,5 @@
+# 规范网址使用 GitHub Pages。本文件在 GitHub Pages（/guanggaowangye/）
+# 与 Cloudflare Pages（站点根路径）上内容相同，站点地图只收录规范地址。
 User-agent: *
 Allow: /
 
