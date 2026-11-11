@@ -7988,3 +7988,16 @@ html body .af-progress-rail > .af-progress-fill {
   display: none !important;
   visibility: hidden !important;
 }
+
+/* Spatial case marks in the hero side strip: show the whole signature, no crop. */
+html body .hero-side-case img.case-mark {
+  object-fit: contain;
+  background: #141311;
+  aspect-ratio: 1 / 1;
+}
+
+/* A fourth named color stays on one row instead of opening a tall second band. */
+html body .color-swatches.is-many {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: 96px;
+}
