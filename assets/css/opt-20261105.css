@@ -7479,8 +7479,8 @@ html body .consult-fallback a { color: #c6a15b; }
    拉成一块金色马赛克。扫光与逐字揭示都不可靠，改为静态金渐变，两行同一画法。
    光斑：.hero-lights 的圆点带 translate3d，父级 preserve-3d 让 z-index:-1 失效，
    圆斑压在按钮和侧栏上。整层关掉。光晕层恢复大模糊，只留在文字后面。
-   竖线：.hero-main:before（左 61.8% 的 1px 金线）在基线 site CSS，
-   .af-progress-rail 在 §AF，都早于 PR #2，按要求保留。
+   竖线：基线 .hero-main:before（左 61.8% 金线）与 §AF .af-progress-rail
+   （右侧灰轨）都关掉。轨节点仍由 JS 创建，boot 与视差变量照旧，只是不显示。
    ========================================================================== */
 
 /* ---------- AS-1 标题：静态金渐变，取消位移 / 扫光 / 混合模式 ---------- */
@@ -7970,4 +7970,21 @@ html body.hero-ready :is(
     white-space: nowrap !important;
     overflow: hidden !important;
   }
+}
+
+/* ---------- AS-7 去掉首屏金竖线与右侧滚动灰轨（桌面与手机都关） ----------
+   .hero-main::before 是基线 ≥1024px 的 1px 金线（absolute，不占流）。
+   .af-progress-rail 由 opt JS 插到 body，position:fixed，不占流。
+   只 display:none，不删节点：createRail() 失败会让 §AF 的 boot 提前 return，
+   视差层就不再启动。--af-progress 仍写在 documentElement 上。 */
+html body .hero-main::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  width: 0 !important;
+}
+html body .af-progress-rail,
+html body .af-progress-rail > .af-progress-fill {
+  display: none !important;
+  visibility: hidden !important;
 }
