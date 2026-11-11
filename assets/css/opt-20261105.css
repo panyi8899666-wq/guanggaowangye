@@ -7468,3 +7468,523 @@ html body .consult-fallback a { color: #c6a15b; }
     display: flex !important;
   }
 }
+
+/* ==========================================================================
+   §AS · 2026-11-11 首屏标题、光斑、流程背景、联系卡、页脚与统一按钮
+   --------------------------------------------------------------------------
+   标题：PR #2 用 animation:none 停掉逐字入场，但基线 .hero-char 仍写着
+   transform:translateY(24px) 与 will-change:transform。字形停在位移后的合成层上，
+   再叠 §AQ 的双层 background-clip:text + background-blend-mode:screen，
+   Chrome 按瓦片栅格化被裁切的渐变，笔画被挖成矩形缺口，首字另被 ::first-letter
+   拉成一块金色马赛克。扫光与逐字揭示都不可靠，改为静态金渐变，两行同一画法。
+   光斑：.hero-lights 的圆点带 translate3d，父级 preserve-3d 让 z-index:-1 失效，
+   圆斑压在按钮和侧栏上。整层关掉。光晕层恢复大模糊，只留在文字后面。
+   竖线：基线 .hero-main:before（左 61.8% 金线）与 §AF .af-progress-rail
+   （右侧灰轨）都关掉。轨节点仍由 JS 创建，boot 与视差变量照旧，只是不显示。
+   ========================================================================== */
+
+/* ---------- AS-1 标题：静态金渐变，取消位移 / 扫光 / 混合模式 ---------- */
+html body.hero-ready .hero h1.hero-title-sweep:not(#opt-boost) {
+  animation: none !important;
+  --aq-shiny-x: -160% !important;
+  padding-inline-start: 0 !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: transparent !important;
+  -webkit-text-stroke: 0 !important;
+}
+html body.hero-ready .hero h1.hero-title-sweep .hero-char:not(#opt-boost),
+html body.hero-ready .hero h1.hero-title-sweep em .hero-char:not(#opt-boost),
+html body.hero-ready .hero h1.hero-title-sweep .line:first-child > .hero-title-sans > .hero-char:first-child:not(#opt-boost) {
+  opacity: 1 !important;
+  animation: none !important;
+  filter: none !important;
+  transform: none !important;
+  translate: none !important;
+  will-change: auto !important;
+  background-image: linear-gradient(90deg, #9a7638 0%, #f0e2bf 100%) !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  background-position: 0 0 !important;
+  background-blend-mode: normal !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: .5px rgba(198, 161, 91, .28) !important;
+}
+html body.hero-ready .hero h1.hero-title-sweep .hero-char.space:not(#opt-boost) {
+  background-image: none !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 0 !important;
+}
+html body.hero-ready .hero h1.hero-title-sweep::first-letter {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  -webkit-text-stroke: 0 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html body.hero-ready .hero h1.hero-title-sweep:not(#opt-boost),
+  html body.hero-ready .hero h1.hero-title-sweep .hero-char:not(#opt-boost) {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- AS-2 光斑：去掉硬边圆点，光晕留在内容后面 ---------- */
+html body .hero-lights {
+  display: none !important;
+}
+html body .hero-main::after {
+  animation: none !important;
+  translate: none !important;
+  scale: none !important;
+  transform: none !important;
+  filter: blur(72px) !important;
+  opacity: .22 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .hero-main::after,
+  html body .hero-lights span {
+    animation: none !important;
+    translate: none !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- AS-3 流程区：四步共用花间集门头（已有压缩图）+ 暗遮罩 ---------- */
+html body #process.process-section::before,
+html body #process .process-grid .step::after {
+  background-image: url("../../assets/r/huajianji-01-w960.webp") !important;
+  background-size: cover !important;
+  background-position: center 42% !important;
+  background-repeat: no-repeat !important;
+  filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+html body #process .process-grid .step:not(#opt-boost) {
+  background-color: #0d0d0f !important;
+  background-image:
+    linear-gradient(180deg, rgba(13, 13, 15, .84), rgba(13, 13, 15, .62) 42%, rgba(13, 13, 15, .88)),
+    url("../../assets/r/huajianji-01-w960.webp") !important;
+  background-size: cover, cover !important;
+  background-position: center, center 42% !important;
+  background-repeat: no-repeat !important;
+}
+html body #process.process-section::after,
+html body #process .process-grid .step::before {
+  background: linear-gradient(180deg, rgba(13, 13, 15, .55), rgba(13, 13, 15, .28) 46%, rgba(13, 13, 15, .72)) !important;
+}
+@media (max-width: 820px) {
+  html body #process.process-section::before,
+  html body #process .process-grid .step::after {
+    background-image: url("../../assets/r/huajianji-01-w480.webp") !important;
+  }
+  html body #process .process-grid .step:not(#opt-boost) {
+    background-image:
+      linear-gradient(180deg, rgba(13, 13, 15, .84), rgba(13, 13, 15, .62) 42%, rgba(13, 13, 15, .88)),
+      url("../../assets/r/huajianji-01-w480.webp") !important;
+  }
+}
+
+/* ---------- AS-4 联系卡：窄屏单列、文字可断行、底栏不盖住 ---------- */
+@media (max-width: 860px) {
+  html body main {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  }
+  html body #contact .contact-details.diagnostic-email-only:not(#opt-boost) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html body #contact .contact-details.diagnostic-email-only .contact-detail:not(#opt-boost) {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  html body #contact .contact-details.diagnostic-email-only .contact-detail > .copy-row > strong:not(#opt-boost),
+  html body #contact .contact-details.diagnostic-email-only .contact-detail strong a:not(#opt-boost),
+  html body #contact .contact-details.diagnostic-email-only .contact-detail > .copy-row > .contact-note:not(#opt-boost),
+  html body #contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info:not(#opt-boost),
+  html body #contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong:not(#opt-boost),
+  html body #contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info strong a:not(#opt-boost),
+  html body #contact .contact-details.diagnostic-email-only .contact-wechat .wechat-info small:not(#opt-boost) {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  html body #contact .contact-details.diagnostic-email-only .contact-wechat .wechat-value:not(#opt-boost) {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    gap: 12px !important;
+  }
+  html body #contact .contact-details.diagnostic-email-only .contact-wechat .wechat-qr:not(#opt-boost) {
+    width: 72px !important;
+    height: 72px !important;
+  }
+  html body #contact .contact-details.diagnostic-email-only .contact-detail > .copy-row > .copy-email:not(#opt-boost) {
+    justify-self: end !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ---------- AS-5 桌面页脚：顶对齐三栏，给吉祥物留出右侧空位（不改 ≤1023） ---------- */
+@media (min-width: 1024px) {
+  html body footer.footer-meta {
+    display: grid !important;
+    grid-template-columns: max-content minmax(220px, 1fr) max-content !important;
+    align-items: start !important;
+    justify-content: stretch !important;
+    column-gap: clamp(28px, 3vw, 56px) !important;
+    row-gap: 36px !important;
+    padding: 52px 120px 40px 0 !important;
+  }
+  html body footer.footer-meta .footer-brand strong {
+    white-space: nowrap !important;
+  }
+  html body footer.footer-meta > .footer-left,
+  html body footer.footer-meta > .footer-cols,
+  html body footer.footer-meta > .footer-contact {
+    align-self: start !important;
+    justify-content: flex-start !important;
+    margin-top: 0 !important;
+  }
+  html body footer.footer-meta .footer-brand strong {
+    margin-top: 0 !important;
+  }
+  html body footer.footer-meta > .footer-watermark {
+    margin-top: 28px !important;
+  }
+  html body #mascot3d {
+    right: 16px !important;
+    bottom: 20px !important;
+    width: 92px !important;
+    height: 194px !important;
+    pointer-events: none !important;
+  }
+}
+
+/* ---------- AS-6 全站按钮：共用「立即开始设计」的金边胶囊 ----------
+   尺寸：default 主按钮 / small 复制·前往·对话 / compact 底栏与图标钮。
+   光环画在 ::after（图标仍在 ::before）。桌面主按钮才转光环；
+   触控与 prefers-reduced-motion 只留静态金边，不做无限重绘。 */
+html body.hero-ready :is(
+  button,
+  .hero-actions > a,
+  .nav-cta,
+  .about-cta,
+  .copy-email,
+  .contact-go,
+  .pricing-open,
+  .partners-cta,
+  .m-contact-bar a,
+  .m-contact-bar button,
+  .production-quote a,
+  .footer-consult
+):not(.consult-fab):not(.nav-burger):not(.modal-close):not(.faq-modal-close):not(.mini-modal-close):not(.consult-close):not(.consult-minimize):not(#opt-boost) {
+  position: relative;
+}
+html body.hero-ready :is(
+  button,
+  .hero-actions > a,
+  .nav-cta,
+  .about-cta,
+  .copy-email,
+  .contact-go,
+  .pricing-open,
+  .partners-cta,
+  .m-contact-bar a,
+  .production-quote a,
+  .consult-fab,
+  .footer-consult,
+  .btnstd.btnstd.btnstd
+):not(.nav-burger):not(#opt-boost) {
+  isolation: isolate;
+  color: #eceae4 !important;
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(180deg, rgba(255, 244, 214, .13), rgba(255, 244, 214, 0) 46%),
+    linear-gradient(180deg, #2b2517 0%, #171410 56%, #0b0a08 100%) !important;
+  background-size: auto !important;
+  background-position: 0 0 !important;
+  border: 1px solid rgba(216, 194, 143, .92) !important;
+  border-radius: 999px !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 246, 220, .34),
+    inset 0 -8px 14px rgba(0, 0, 0, .55),
+    0 0 0 1px rgba(198, 161, 91, .22),
+    0 8px 22px rgba(0, 0, 0, .45) !important;
+  text-shadow: none !important;
+}
+html body.hero-ready :is(
+  .hero-actions > a,
+  .footer-consult,
+  .about-cta,
+  .contact-actions .cta,
+  .pricing-open,
+  .mini-modal-consult
+):not(#opt-boost) {
+  min-height: 58px !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 12px 22px !important;
+}
+html body.hero-ready .nav-cta:not(#opt-boost) {
+  min-height: 40px !important;
+  width: auto !important;
+  padding: 8px 14px !important;
+}
+html body.hero-ready .consult-fab:not(#opt-boost) {
+  min-height: 58px !important;
+  min-width: 196px !important;
+  padding: 12px 22px !important;
+}
+html body.hero-ready :is(
+  .copy-email,
+  .contact-go,
+  .consult-send,
+  .consult-option,
+  .consult-action,
+  .consult-human,
+  .consult-back,
+  .consult-restart,
+  .pwa-install-btn,
+  .case-end button,
+  .tide-stack-ui button,
+  .mini-modal-ok,
+  .filterbar .filter,
+  .partners-cta
+):not(#opt-boost) {
+  min-height: 36px !important;
+  height: auto !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+html body.hero-ready :is(
+  .m-contact-bar a,
+  .m-contact-bar button,
+  .faq-modal-close,
+  .modal-close,
+  .mini-modal-close,
+  .consult-close,
+  .consult-minimize
+):not(#opt-boost) {
+  min-height: 40px !important;
+  padding: 0 10px !important;
+  font-size: 13px !important;
+}
+html body.hero-ready :is(.faq-modal-close, .modal-close, .mini-modal-close, .consult-close, .consult-minimize):not(#opt-boost) {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  padding: 0 !important;
+}
+html body.hero-ready :is(
+  .consult-fab,
+  .footer-consult,
+  .hero-actions > a,
+  .contact-actions .cta,
+  .about-cta,
+  .pricing-open,
+  .mini-modal-consult
+):not(#opt-boost) > span {
+  color: #f7f1e4 !important;
+  letter-spacing: .06em !important;
+}
+html body.hero-ready :is(
+  .consult-fab,
+  .footer-consult,
+  .hero-actions > a,
+  .contact-actions .cta,
+  .about-cta,
+  .pricing-open,
+  .mini-modal-consult
+):not(#opt-boost) > small,
+html body.hero-ready :is(
+  .consult-fab,
+  .footer-consult,
+  .hero-actions > a,
+  .contact-actions .cta
+):not(#opt-boost) small {
+  color: #e2c78a !important;
+  opacity: .9 !important;
+}
+html body.hero-ready :is(
+  button,
+  .hero-actions > a,
+  .nav-cta,
+  .about-cta,
+  .copy-email,
+  .contact-go,
+  .pricing-open,
+  .partners-cta,
+  .m-contact-bar a,
+  .consult-fab,
+  .footer-consult,
+  .btnstd.btnstd.btnstd
+):not(.nav-burger):not(.footer-links a):not(.footer-services a):not(#opt-boost)::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  inset: -3px !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 1.5px !important;
+  border: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background: conic-gradient(from var(--ab7-ring, 0deg),
+    transparent 0deg 250deg,
+    rgba(198, 161, 91, .95) 292deg,
+    rgba(255, 246, 220, .98) 300deg,
+    rgba(198, 161, 91, .95) 308deg,
+    transparent 350deg) !important;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
+  mask-composite: exclude !important;
+  filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  scale: none !important;
+  animation: none !important;
+}
+html body.hero-ready :is(
+  .consult-fab,
+  .footer-consult,
+  .hero-actions > a,
+  .contact-actions .cta,
+  .nav-cta,
+  .about-cta
+):not(#opt-boost)::before {
+  position: static !important;
+  z-index: auto !important;
+  align-self: center !important;
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (min-width: 821px) {
+  html body.hero-ready :is(.consult-fab, .footer-consult):not(#opt-boost)::after {
+    animation: ab7Ring 3.4s linear infinite !important;
+  }
+  html body.hero-ready :is(
+    button,
+    .hero-actions > a,
+    .nav-cta,
+    .about-cta,
+    .copy-email,
+    .consult-fab,
+    .footer-consult
+  ):not(.nav-burger):not(#opt-boost):hover::after,
+  html body.hero-ready :is(
+    button,
+    .hero-actions > a,
+    .nav-cta,
+    .about-cta,
+    .copy-email,
+    .consult-fab,
+    .footer-consult
+  ):not(.nav-burger):not(#opt-boost):focus-visible::after {
+    animation: ab7Ring 3.4s linear infinite !important;
+  }
+  html body.hero-ready :is(
+    button,
+    .hero-actions > a,
+    .nav-cta,
+    .about-cta,
+    .copy-email,
+    .contact-go,
+    .pricing-open,
+    .partners-cta,
+    .consult-fab,
+    .footer-consult
+  ):not(.nav-burger):not(#opt-boost):hover {
+    translate: 0 -2px;
+    border-color: #e2c78a !important;
+  }
+  html body.hero-ready :is(
+    button,
+    .hero-actions > a,
+    .nav-cta,
+    .about-cta,
+    .copy-email,
+    .consult-fab,
+    .footer-consult
+  ):not(.nav-burger):not(#opt-boost):active {
+    translate: 0 1px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body.hero-ready :is(
+    button,
+    .hero-actions > a,
+    .nav-cta,
+    .about-cta,
+    .copy-email,
+    .consult-fab,
+    .footer-consult,
+    .m-contact-bar a,
+    .m-contact-bar button
+  ):not(#opt-boost),
+  html body.hero-ready :is(
+    button,
+    .hero-actions > a,
+    .nav-cta,
+    .about-cta,
+    .copy-email,
+    .consult-fab,
+    .footer-consult
+  ):not(#opt-boost)::after {
+    animation: none !important;
+    transition: none !important;
+    translate: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+@media (max-width: 860px) {
+  html body .m-contact-bar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr) !important;
+  }
+  html body .m-contact-bar a,
+  html body .m-contact-bar button {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 0 6px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+}
+
+/* ---------- AS-7 去掉首屏金竖线与右侧滚动灰轨（桌面与手机都关） ----------
+   .hero-main::before 是基线 ≥1024px 的 1px 金线（absolute，不占流）。
+   .af-progress-rail 由 opt JS 插到 body，position:fixed，不占流。
+   只 display:none，不删节点：createRail() 失败会让 §AF 的 boot 提前 return，
+   视差层就不再启动。--af-progress 仍写在 documentElement 上。 */
+html body .hero-main::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  width: 0 !important;
+}
+html body .af-progress-rail,
+html body .af-progress-rail > .af-progress-fill {
+  display: none !important;
+  visibility: hidden !important;
+}
