@@ -6927,3 +6927,108 @@ html body.hero-ready .hero-main > h1.hero-title-sweep {
     margin-inline: auto !important;
   }
 }
+/* ==========================================================================
+   §AQ · 首屏 H1 金色光带扫光 Shiny Text（任务 id=79）
+   --------------------------------------------------------------------------
+   需求：一道金色光带周期性扫过 H1 文字，只提亮字形，5s 周期，尊重
+   prefers-reduced-motion，不改字号/渐变/布局。
+
+   **为什么不用 .hero-char::after + mix-blend-mode:screen（任务推荐形态）**
+   本 H1 由 JS 逐字拆成 16 个 .hero-char（inline-block，12 汉字 + 4 空格），
+   渐变逐字绘制在每个字自身（§Y7）。经实测：
+     · .hero-char 加 overflow:hidden 会裁掉字形（字盒高 91.75px < 字形墨迹
+       需要的空间，§AG 已记录首字被裁），因此不能用它限制伪元素；
+     · .hero-char::after 的 inset:0 矩形光带铺满整个字盒（74.38 × 91.75），
+       而字形墨迹几乎贴满字盒：实测相邻字盒紧贴（x 差恰为 74.38px），边界
+       处只有 1–2 物理像素的低亮度过渡列（luma 37–38，背景 34–35），
+       矩形光带必然在字盒的上下留白与字腔内留下横向亮条；
+     · 用 clip-path/inset 收紧只能按固定几何收，汉字（如「品」的三个口之间）
+       的字腔仍会被点亮，属"光带溢出"，与验收口径冲突，故放弃 A/B/C。
+
+   本实现（方案 D：字形级多层背景）：
+     把 §Y7 在 .hero-char 上的「单层静态金渐变」扩展成两层背景：
+       第 1 层 = 105deg 金色光带（260% 宽，横向位移，位于最上层）；
+       第 2 层 = 原静态金渐变（90deg，#9a7638 → #f0e2bf，原样保留）；
+       顺序必须是「光带在上」——不透明的金渐变若在上层会把光带整体遮住
+       （首版实测字形峰值完全不变，已修正）。
+     两层共用 §Y7 已有的 background-clip:text，于是**光带被直接裁剪成字形**，
+     字形外（字间、字上下留白、字腔）零绘制——从机制上杜绝亮条，而不是靠
+     几何收窄去逼近。
+     §Y7 的 background-position:0 0!important 会压掉任何 background-position
+     动画（§AA 光束同款坑），所以这里不改动画目标属性，而是：
+       · @property 注册 --aq-shiny-x（<percentage>，可插值）；
+       · .hero-char 的 background-position 第 1 层（光带层）改写为
+         var(--aq-shiny-x)，金渐变层保持 0 0；
+       · 动画作用在 h1 上（h1 无既有 animation），变量 inherits:true 下发给
+         每个 .hero-char —— 动画只写自定义属性，!important 的静态声明照常
+         生效，规避「动画在跑、画面不动」。
+     background-blend-mode:screen, normal：光带层（第 1 层）与下方金渐变做
+     screen 混合，保留任务要求的 screen 语义（原推荐形态是 mix-blend-mode:screen）。
+     空格（.hero-char.space，19.44px 宽、无字形）显式跳过背景层。
+     不支持 background-clip:text 的引擎整体跳过（不会退化成实心色块），
+     文字仍由 §Y7 的 @supports not 兜底为纯色 #eceae4。
+
+   特异性：§Y7 为 body.hero-ready .hero h1.hero-title-sweep .hero-char（0,4,2），
+   本段加 html 前缀（0,4,3）且位于文件末尾，双重保证覆盖。
+   降级：--aq-shiny-x 初始值 -160%（光带整体在字盒右侧外），即使动画被禁用或
+   @property 不受支持，界面与改前像素一致（见证据 shiny-reduce / diff）。
+   ========================================================================== */
+
+/* AQ-1 · 注册可插值的扫光位移变量（动画只改这个变量，不碰 background-position） */
+@property --aq-shiny-x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: -160%;
+}
+
+/* AQ-2 · 5s 线性循环：-160% → 260%（-160% 与 260% 均把光带完全置于字盒之外，
+   循环接缝处无跳变；光带在 17%–83% 区间扫过字身） */
+@keyframes aqShinySweep {
+  0%   { --aq-shiny-x: -160%; }
+  100% { --aq-shiny-x: 260%; }
+}
+
+/* AQ-3 · 仅在支持 background-clip:text 的引擎启用（与 §Y7 兜底 @supports not 互斥） */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  html body.hero-ready .hero h1.hero-title-sweep {
+    animation: aqShinySweep 5s linear infinite !important;
+  }
+
+  /* AQ-4 · 字形级双层背景：光带被 background-clip:text 裁到字形内部
+     图层顺序：光带在最上层、金渐变在下层，background-blend-mode:screen 让光带与
+     本金渐变混合（若金色在上层，不透明层会把光带整体遮住，实测字形峰值不变）。 */
+  html body.hero-ready .hero h1.hero-title-sweep .hero-char,
+  html body.hero-ready .hero h1.hero-title-sweep em .hero-char {
+    background-image:
+      linear-gradient(105deg,
+        rgba(255, 246, 224, 0) 43%,
+        rgba(255, 246, 224, .30) 47%,
+        rgba(255, 252, 242, .50) 50%,
+        rgba(255, 246, 224, .30) 53%,
+        rgba(255, 246, 224, 0) 57%),
+      linear-gradient(90deg, rgb(154, 118, 56) 0%, rgb(240, 226, 191) 100%) !important;
+    background-size: 260% 100%, 100% 100% !important;
+    background-position: var(--aq-shiny-x, -160%) 0, 0 0 !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-blend-mode: screen, normal !important;
+    -webkit-background-clip: text, text !important;
+    background-clip: text, text !important;
+  }
+
+  /* AQ-5 · 空格不参与：无字形即无绘制，显式去掉背景层以省一次合成 */
+  html body.hero-ready .hero h1.hero-title-sweep .hero-char.space {
+    background-image: none !important;
+    background-size: auto !important;
+    background-position: 0 0 !important;
+    animation: none !important;
+  }
+}
+
+/* AQ-6 · 尊重减弱动效：动画关掉并把变量锁在初始值（光带停在字盒外，
+   文字与改前逐像素一致） */
+@media (prefers-reduced-motion: reduce) {
+  html body.hero-ready .hero h1.hero-title-sweep {
+    animation: none !important;
+    --aq-shiny-x: -160% !important;
+  }
+}
